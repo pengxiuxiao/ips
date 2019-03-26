@@ -14,26 +14,7 @@ import java.util.UUID;
  * @date: 2016年12月29日 下午4:28:24
 */
 public class FileUtil {
-	 /**
-     * 读取配置文件
-     * @return value
-     */
-    public static String getProperValue(String key) {
-    	
-    	Properties prop=new Properties();
-    	String value="";
-    	try {
-    		InputStream input = new FileInputStream(FileUtil.class.getClassLoader()
-    				.getResource("config.properties").getPath());
-    		InputStreamReader instr = new InputStreamReader(input, "utf-8");
-    		prop.load(instr);
-    		value = prop.getProperty(key);
-    	} catch (Exception e) {
-    		// TODO: handle exception
-    		e.printStackTrace();
-    	}
-    	return value;
-    }
+
 	/**
 	 * 生成随机数
 	 * @return

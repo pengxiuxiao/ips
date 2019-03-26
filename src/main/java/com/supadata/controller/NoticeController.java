@@ -29,9 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -119,7 +117,7 @@ public class NoticeController {
         //更新轮询表
         Check check = new Check();
         check.setChModule("1");
-        check.setChUrl(FileUtil.getProperValue("SERVICEURL") + "ips/pad/notice");
+        check.setChUrl(config.getSERVICEURL() + "ips/pad/notice");
         check.setUpdateTime(DateUtil.getCurDate());
         res = checkService.add(check);
         return msgJson;
@@ -186,7 +184,7 @@ public class NoticeController {
         //更新轮询表
         Check check = new Check();
         check.setChModule("1");
-        check.setChUrl(FileUtil.getProperValue("SERVICEURL") + "ips/pad/notice");
+        check.setChUrl(config.getSERVICEURL() + "ips/pad/notice");
         check.setUpdateTime(DateUtil.getCurDate());
         res = checkService.add(check);
         return msgJson;
@@ -230,7 +228,7 @@ public class NoticeController {
         //更新轮询表
         Check check = new Check();
         check.setChModule(notice.getnType());
-        check.setChUrl(FileUtil.getProperValue("SERVICEURL") + "ips/pad/notice");
+        check.setChUrl(config.getSERVICEURL() + "ips/pad/notice");
         check.setUpdateTime(DateUtil.getCurDate());
         res = checkService.add(check);
         return msgJson;
@@ -329,13 +327,25 @@ public class NoticeController {
             loacalPath = config.getLINUXDOCPATH();
         }
         String filePath =  FileType.getKey(suffix) + File.separator;
-        File targetFile = new File(loacalPath + filePath, fileName);
+        File targetFile = new File(loacalPath + filePath);
         if (!targetFile.exists()) {
             targetFile.mkdirs();
         }
         // 保存
         try {
-            file.transferTo(targetFile);
+            //输入流
+            InputStream in = file.getInputStream();
+            //输出流
+            FileOutputStream out = new FileOutputStream(loacalPath + filePath + fileName);
+            //创建缓冲区
+            byte buffer[] = new byte[1024];
+            int len = 0;
+            while ((len = in.read(buffer)) > 0){
+                out.write(buffer,0, len);
+            }
+            //关闭流
+            in.close();
+            out.close();
             if (System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") != 0) {
                 Runtime.getRuntime().exec("chmod -R 777 " + loacalPath + filePath);
             }
@@ -370,7 +380,7 @@ public class NoticeController {
         }
         notice.setnUser(user_id);
         notice.setnStatus("2");
-        notice.setnUrl(FileUtil.getProperValue("SERVICEURL") + "ips/notice/fileDownLoad?name=" + fileName);
+        notice.setnUrl(config.getSERVICEURL() + "ips/notice/fileDownLoad?name=" + fileName);
         notice.setUpdateTime(DateUtil.getCurDate());
         int res = 0;
 
@@ -391,7 +401,7 @@ public class NoticeController {
             for (String imgName : imgNames) {
                 System.out.println(imgName);
                 notice.setFilePath(loacalPath + filePath + imgName);
-                notice.setnUrl(FileUtil.getProperValue("SERVICEURL") + "ips/notice/fileDownLoad?name=" + imgName);
+                notice.setnUrl(config.getSERVICEURL() + "ips/notice/fileDownLoad?name=" + imgName);
                 res = noticeService.addNotice(notice);
             }
         }
@@ -408,7 +418,7 @@ public class NoticeController {
         //更新轮询表
         Check check = new Check();
         check.setChModule(notice.getnType());
-        check.setChUrl(FileUtil.getProperValue("SERVICEURL") + "ips/pad/notice");
+        check.setChUrl(config.getSERVICEURL() + "ips/pad/notice");
         check.setUpdateTime(DateUtil.getCurDate());
         res = checkService.add(check);
         return msgJson;
@@ -565,9 +575,9 @@ public class NoticeController {
 
         String filePath = "";
         if (System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") == 0) {//windows环境
-            filePath = FileUtil.getProperValue("WINPATH");
+            filePath = config.getWINPATH();
         } else {
-            filePath = FileUtil.getProperValue("LINUXDOCPATH");
+            filePath = config.getLINUXDOCPATH();
         }
         if (fileName.startsWith("PPT")){
             filePath = filePath + "ppt" + File.separator + fileName;

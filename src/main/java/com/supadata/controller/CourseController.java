@@ -2,6 +2,7 @@ package com.supadata.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.supadata.constant.Config;
 import com.supadata.pojo.Check;
 import com.supadata.pojo.Course;
 import com.supadata.pojo.Room;
@@ -57,6 +58,9 @@ public class CourseController {
 
     @Autowired
     public ICheckService checkService;
+
+    @Autowired
+    private Config config;
 
     @RequestMapping("/upload")
     public @ResponseBody
@@ -278,9 +282,9 @@ public class CourseController {
         fileName = StringUtil.getRandom() + suffix;
         String loacalPath = "";
         if (System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") == 0) {//windows环境
-            loacalPath = FileUtil.getProperValue("WINPATH");
+            loacalPath = config.getWINPATH();
         } else {
-            loacalPath = FileUtil.getProperValue("LINUXDOCPATH");
+            loacalPath = config.getLINUXDOCPATH();
         }
         String filePath =  "course" + File.separator;
         File targetFile = new File(loacalPath + filePath, fileName);
@@ -289,7 +293,19 @@ public class CourseController {
         }
         // 保存
         try {
-            file.transferTo(targetFile);
+            //输入流
+            InputStream in = file.getInputStream();
+            //输出流
+            FileOutputStream out = new FileOutputStream(loacalPath + filePath + fileName);
+            //创建缓冲区
+            byte buffer[] = new byte[1024];
+            int len = 0;
+            while ((len = in.read(buffer)) > 0){
+                out.write(buffer,0, len);
+            }
+            //关闭流
+            in.close();
+            out.close();
             if (System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") != 0) {
                 Runtime.getRuntime().exec("chmod -R 777 " + loacalPath + filePath);
             }

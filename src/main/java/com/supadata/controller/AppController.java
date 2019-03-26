@@ -2,6 +2,7 @@ package com.supadata.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.supadata.constant.Config;
 import com.supadata.pojo.App;
 import com.supadata.pojo.Check;
 import com.supadata.service.IAppService;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -46,6 +48,9 @@ public class AppController {
 
     @Autowired
     public ICheckService checkService;
+
+    @Autowired
+    private Config config;
 
     /**
      * 功能描述: 查询发版记录
@@ -107,9 +112,9 @@ public class AppController {
         fileName = DateUtil.getOutTradeNo() + suffix;
         String loacalPath = "";
         if (System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") == 0) {//windows环境
-            loacalPath = FileUtil.getProperValue("WINPATH");
+            loacalPath = config.getWINPATH();
         } else {
-            loacalPath = FileUtil.getProperValue("LINUXDOCPATH");
+            loacalPath = config.getLINUXDOCPATH();
         }
         String filePath =  "app" + File.separator;
         File targetFile = new File(loacalPath + filePath, fileName);
@@ -118,7 +123,19 @@ public class AppController {
         }
         // 保存
         try {
-            file.transferTo(targetFile);
+            //输入流
+            InputStream in = file.getInputStream();
+            //输出流
+            FileOutputStream out = new FileOutputStream(loacalPath + filePath + fileName);
+            //创建缓冲区
+            byte buffer[] = new byte[1024];
+            int len = 0;
+            while ((len = in.read(buffer)) > 0){
+                out.write(buffer,0, len);
+            }
+            //关闭流
+            in.close();
+            out.close();
             if (System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") != 0) {
                 Runtime.getRuntime().exec("chmod -R 777 " + loacalPath + filePath);
             }
@@ -167,9 +184,9 @@ public class AppController {
         String filePath = "";
         String fileName = app.getSeRemark();
         if (System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") == 0) {//windows环境
-            filePath = FileUtil.getProperValue("WINPATH");
+            filePath = config.getWINPATH();
         } else {
-            filePath = FileUtil.getProperValue("LINUXDOCPATH");
+            filePath = config.getLINUXDOCPATH();
         }
         filePath = filePath + "app" + File.separator + fileName;
         InputStream in = new FileInputStream(new File(filePath));//将该文件加入到输入流之中

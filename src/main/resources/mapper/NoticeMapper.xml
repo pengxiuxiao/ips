@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.supadata.dao.NoticeMapper" >
+  <resultMap id="BaseResultMap" type="com.supadata.pojo.Notice" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="n_title" property="nTitle" jdbcType="VARCHAR" />
+    <result column="n_content" property="nContent" jdbcType="VARCHAR" />
+    <result column="n_type" property="nType" jdbcType="VARCHAR" />
+    <result column="n_status" property="nStatus" jdbcType="VARCHAR" />
+    <result column="publish_room" property="publishRoom" jdbcType="VARCHAR" />
+    <result column="publish_room_id" property="publishRoomId" jdbcType="VARCHAR" />
+    <result column="n_time" property="nTime" jdbcType="TIMESTAMP" />
+    <result column="n_user" property="nUser" jdbcType="VARCHAR" />
+    <result column="file_path" property="filePath" jdbcType="VARCHAR" />
+    <result column="n_url" property="nUrl" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="n_remark" property="nRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, n_title, n_content, n_type, n_status, publish_room, publish_room_id, n_time, n_user, n_url, file_path, update_time,
+    n_remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_notice
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByStatusAndType" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_notice
+    where n_status = #{status}
+    and n_type  = #{type}
+    <if test="type == 3">
+    order by update_time desc
+    limit 1
+    </if>
+  </select>
+  <select id="selectByTypeContainsKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_notice
+    where n_type  = #{type}
+    <if test="key != null">
+      and CONCAT(IFNULL(`n_title`,''),IFNULL(`n_content`,'')) LIKE CONCAT('%', #{key}, '%')
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_notice
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.supadata.pojo.Notice" >
+    insert into tb_notice (id, n_title, n_content, 
+      n_type, n_status, publish_room, 
+      n_time, n_user, n_url, 
+      update_time, n_remark)
+    values (#{id,jdbcType=INTEGER}, #{nTitle,jdbcType=VARCHAR}, #{nContent,jdbcType=VARCHAR}, 
+      #{nType,jdbcType=VARCHAR}, #{nStatus,jdbcType=VARCHAR}, #{publishRoom,jdbcType=VARCHAR}, 
+      #{nTime,jdbcType=TIMESTAMP}, #{nUser,jdbcType=VARCHAR}, #{nUrl,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{nRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.supadata.pojo.Notice" >
+    insert into tb_notice
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="nTitle != null" >
+        n_title,
+      </if>
+      <if test="nContent != null" >
+        n_content,
+      </if>
+      <if test="nType != null" >
+        n_type,
+      </if>
+      <if test="nStatus != null" >
+        n_status,
+      </if>
+      <if test="publishRoom != null" >
+        publish_room,
+      </if>
+      <if test="publishRoomId != null" >
+        publish_room_id,
+      </if>
+      <if test="nTime != null" >
+        n_time,
+      </if>
+      <if test="nUser != null" >
+        n_user,
+      </if>
+      <if test="nUrl != null" >
+        n_url,
+      </if>
+      <if test="filePath != null" >
+        file_path,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="nRemark != null" >
+        n_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="nTitle != null" >
+        #{nTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="nContent != null" >
+        #{nContent,jdbcType=VARCHAR},
+      </if>
+      <if test="nType != null" >
+        #{nType,jdbcType=VARCHAR},
+      </if>
+      <if test="nStatus != null" >
+        #{nStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="publishRoom != null" >
+        #{publishRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="publishRoomId != null" >
+        #{publishRoomId,jdbcType=VARCHAR},
+      </if>
+      <if test="nTime != null" >
+        #{nTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nUser != null" >
+        #{nUser,jdbcType=VARCHAR},
+      </if>
+      <if test="nUrl != null" >
+        #{nUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nRemark != null" >
+        #{nRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.supadata.pojo.Notice" >
+    update tb_notice
+    <set >
+      <if test="nTitle != null" >
+        n_title = #{nTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="nContent != null" >
+        n_content = #{nContent,jdbcType=VARCHAR},
+      </if>
+      <if test="nType != null" >
+        n_type = #{nType,jdbcType=VARCHAR},
+      </if>
+      <if test="nStatus != null" >
+        n_status = #{nStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="publishRoom != null" >
+        publish_room = #{publishRoom,jdbcType=VARCHAR},
+      </if>
+      <if test="publishRoomId != null" >
+        publish_room_id = #{publishRoomId,jdbcType=VARCHAR},
+      </if>
+      <if test="nTime != null" >
+        n_time = #{nTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nUser != null" >
+        n_user = #{nUser,jdbcType=VARCHAR},
+      </if>
+      <if test="nUrl != null" >
+        n_url = #{nUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        file_path = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nRemark != null" >
+        n_remark = #{nRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.supadata.pojo.Notice" >
+    update tb_notice
+    set n_title = #{nTitle,jdbcType=VARCHAR},
+      n_content = #{nContent,jdbcType=VARCHAR},
+      n_type = #{nType,jdbcType=VARCHAR},
+      n_status = #{nStatus,jdbcType=VARCHAR},
+      publish_room = #{publishRoom,jdbcType=VARCHAR},
+      n_time = #{nTime,jdbcType=TIMESTAMP},
+      n_user = #{nUser,jdbcType=VARCHAR},
+      n_url = #{nUrl,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      n_remark = #{nRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,53 @@
+.layui-pull-right{
+    float: right;
+}
+.layui-pull-left{
+    float: left;
+}
+.layui-clear-fix{
+    content: '';
+    display: table;
+    clear: both;
+}
+.text-center{
+    text-align: center;
+}
+.layui-form-item.sets {
+    margin-bottom: 30px;
+    clear: both;
+}
+.layui-form-item.btn {
+    margin-bottom: 80px;
+    clear: both;
+}
+.layui-form-label.module {
+    float: left;
+    display: block;
+    padding: 9px 15px;
+    width: 85px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: right;
+}
+.layui-btn.confirm {
+    display: inline-block;
+    margin-left: 8px;
+    height: 38px;
+    line-height: 38px;
+    padding: 0 18px;
+    padding-top: 0px;
+    padding-right: 18px;
+    padding-bottom: 0px;
+    padding-left: 18px;
+    background-color: #009688;
+    color: #fff;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 14px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+.layui-btn+.layui-btn.cancel {
+     margin-left: 20px;
+ }

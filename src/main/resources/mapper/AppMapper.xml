@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.supadata.dao.AppMapper" >
+  <resultMap id="BaseResultMap" type="com.supadata.pojo.App" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="a_version" property="aVersion" jdbcType="VARCHAR" />
+    <result column="a_type" property="aType" jdbcType="VARCHAR" />
+    <result column="a_desc" property="aDesc" jdbcType="VARCHAR" />
+    <result column="a_url" property="aUrl" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="se_remark" property="seRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, a_version, a_type, a_desc, a_url, update_time, se_remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_app
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_app
+    where 1 = 1
+    order by update_time
+  </select>
+  <select id="selectNewest" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_app
+    where a_type = #{type}
+    order by update_time desc
+    limit 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_app
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.supadata.pojo.App" >
+    insert into tb_app (id, a_version, a_type, 
+      a_desc, a_url, update_time, 
+      se_remark)
+    values (#{id,jdbcType=INTEGER}, #{aVersion,jdbcType=VARCHAR}, #{aType,jdbcType=VARCHAR}, 
+      #{aDesc,jdbcType=VARCHAR}, #{aUrl,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{seRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.supadata.pojo.App" >
+    insert into tb_app
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="aVersion != null" >
+        a_version,
+      </if>
+      <if test="aType != null" >
+        a_type,
+      </if>
+      <if test="aDesc != null" >
+        a_desc,
+      </if>
+      <if test="aUrl != null" >
+        a_url,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="seRemark != null" >
+        se_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="aVersion != null" >
+        #{aVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="aType != null" >
+        #{aType,jdbcType=VARCHAR},
+      </if>
+      <if test="aDesc != null" >
+        #{aDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="aUrl != null" >
+        #{aUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="seRemark != null" >
+        #{seRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.supadata.pojo.App" >
+    update tb_app
+    <set >
+      <if test="aVersion != null" >
+        a_version = #{aVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="aType != null" >
+        a_type = #{aType,jdbcType=VARCHAR},
+      </if>
+      <if test="aDesc != null" >
+        a_desc = #{aDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="aUrl != null" >
+        a_url = #{aUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="seRemark != null" >
+        se_remark = #{seRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.supadata.pojo.App" >
+    update tb_app
+    set a_version = #{aVersion,jdbcType=VARCHAR},
+      a_type = #{aType,jdbcType=VARCHAR},
+      a_desc = #{aDesc,jdbcType=VARCHAR},
+      a_url = #{aUrl,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      se_remark = #{seRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

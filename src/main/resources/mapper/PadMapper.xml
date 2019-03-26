@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.supadata.dao.PadMapper" >
+  <resultMap id="BaseResultMap" type="com.supadata.pojo.Pad" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="p_ip" property="pIp" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="room_name" property="roomName" jdbcType="VARCHAR" />
+    <result column="room_id" property="roomId" jdbcType="INTEGER" />
+    <result column="p_location" property="pLocation" jdbcType="VARCHAR" />
+    <result column="p_status" property="pStatus" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="start_time" property="startTime" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+    <result column="p_remark" property="pRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, p_ip, code, room_name, room_id, p_location, p_status, update_time, start_time, 
+    end_time, p_remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_pad
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_pad
+    where code = #{code}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_pad
+    where 1 = 1
+    <if test="key != null" >
+      and CONCAT(IFNULL(`room_name`,''), IFNULL(`p_location`,'')) like CONCAT('%', #{key}, '%')
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_pad
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.supadata.pojo.Pad" >
+    insert into tb_pad (id, p_ip, code, 
+      room_name, room_id, p_location, 
+      p_status, update_time, start_time, 
+      end_time, p_remark)
+    values (#{id,jdbcType=INTEGER}, #{pIp,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
+      #{roomName,jdbcType=VARCHAR}, #{roomId,jdbcType=INTEGER}, #{pLocation,jdbcType=VARCHAR}, 
+      #{pStatus,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=VARCHAR}, 
+      #{endTime,jdbcType=VARCHAR}, #{pRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.supadata.pojo.Pad" >
+    insert into tb_pad
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="pIp != null" >
+        p_ip,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="roomName != null" >
+        room_name,
+      </if>
+      <if test="roomId != null" >
+        room_id,
+      </if>
+      <if test="pLocation != null" >
+        p_location,
+      </if>
+      <if test="pStatus != null" >
+        p_status,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="pRemark != null" >
+        p_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="pIp != null" >
+        #{pIp,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="roomName != null" >
+        #{roomName,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=INTEGER},
+      </if>
+      <if test="pLocation != null" >
+        #{pLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="pStatus != null" >
+        #{pStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="pRemark != null" >
+        #{pRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.supadata.pojo.Pad" >
+    update tb_pad
+    <set >
+      <if test="pIp != null" >
+        p_ip = #{pIp,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="roomName != null" >
+        room_name = #{roomName,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        room_id = #{roomId,jdbcType=INTEGER},
+      </if>
+      <if test="pLocation != null" >
+        p_location = #{pLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="pStatus != null" >
+        p_status = #{pStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="pRemark != null" >
+        p_remark = #{pRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.supadata.pojo.Pad" >
+    update tb_pad
+    set p_ip = #{pIp,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      room_name = #{roomName,jdbcType=VARCHAR},
+      room_id = #{roomId,jdbcType=INTEGER},
+      p_location = #{pLocation,jdbcType=VARCHAR},
+      p_status = #{pStatus,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      start_time = #{startTime,jdbcType=VARCHAR},
+      end_time = #{endTime,jdbcType=VARCHAR},
+      p_remark = #{pRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateTimeByCode" >
+    update tb_pad
+    set
+      update_time = #{curDate}
+    where code = #{code}
+  </update>
+</mapper>

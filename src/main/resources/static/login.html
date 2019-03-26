@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>登录</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<link rel="stylesheet" href="dist/lib/weui.min.css">
+<link rel="stylesheet" href="dist/css/jquery-weui.min.css">
+<link rel="stylesheet" href="css/myStyle.css">
+</head>
+<body class="login" ontouchstart="">
+	<!-- BEGIN LOGO -->
+	<div class="logo">
+		<!--<img src="images/logo-big.png" alt=""/>-->
+	</div>
+	<!-- END LOGO -->
+	<!-- BEGIN LOGIN -->
+
+	<div class="content">
+		<h3 class="form-title font-green">信息发布系统</h3>
+		<!-- 容器 -->
+		<div class="weui-tab">
+			<div class="weui-tab__bd">
+				<div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+					<!-- BEGIN LOGIN FORM -->
+					<form class="login-form">
+					<input class="weui-input userType" type="hidden" name="userType" value="1">
+						<div class="weui-cells">
+							<div class="weui-cell">
+								<div class="weui-cell__bd">
+									<input class="weui-input userNumber" type="text"
+										placeholder="用户名" name="userNumber">
+								</div>
+							</div>
+						</div>
+						<div class="weui-cells">
+							<div class="weui-cell">
+								<div class="weui-cell__bd">
+									<input class="weui-input password" type="text" placeholder="密码"
+										name="password">
+								</div>
+							</div>
+						</div>
+					</form>
+					<!-- END LOGIN FORM -->
+				</div>
+			</div>
+			<label for="weuiAgree" class="weui-agree"> <input
+				id="weuiAgree" type="checkbox" class="weui-agree__checkbox">
+				<span class="weui-agree__text">记住密码</a>
+			</span>
+			</label>
+			<div class="form-actions">
+				<button type="button" class="weui-btn weui-btn_login">登录</button>
+			</div>
+		</div>
+	</div>
+	<!--jquery-->
+	<script src="dist/lib/jquery-2.1.4.js"></script>
+	<script src="js/plugins/jquery.cookie.js"></script>
+	<script src="dist/js/jquery-weui.min.js"></script>
+	<script src="js/dataApi.js"></script>
+	<script src="js/login.js"></script>
+</body>
+</html>

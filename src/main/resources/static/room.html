@@ -1,0 +1,141 @@
+<html>
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>信息发布系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="assets/layui/css/layui.css"  media="all">
+
+    <style>
+        .layui-form{
+            padding: 20px 20px 10px;
+        }
+        .modal-content{
+            display: none;
+        }
+        .layui-form-selected dl{
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <!--header-->
+    <div class="layui-header header header-demo" spring="">
+        <div class="layui-main">
+            <a class="logo" href="index.html" style="position: absolute;top: -15px; left: 40px">
+                <img src="img/logo.png" alt="layui" width="251" height="90">
+            </a>
+            <a class="logo" href="login.html" style="position: absolute; top: 16px; right: 40px">
+                <img src="img/out.png" alt="layui" width="94" height="32">
+            </a>
+        </div>
+    </div>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree site-demo-nav">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="javascript:;" href="javascript:;">
+                        后台管理
+                        <span class="layui-nav-more"></span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="index.html">信息发布</a>
+                        </dd>
+						<dd>
+							<a href="course.html">课程管理</a>
+						</dd>
+                        <dd class="layui-this">
+                            <a href="room.html">教室管理</a>
+                        </dd>
+                        <dd>
+                            <a href="set.html">设置管理</a>
+                        </dd>
+                        <dd>
+                            <a href="pad.html">pad状态</a>
+                        </dd>
+                        <dd>
+                            <a href="app.html">版本管理</a>
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+
+    <!--main-->
+    <div class="layui-body layui-tab-content">
+        <div class="layui-tab-item">
+            <div class="layui-main">
+                <div id="LAY_preview">
+                    <blockquote class="layui-elem-quote">
+                        教室详情
+                    </blockquote>
+                </div>
+                <!--table-->
+                <div class="layui-form layui-clear">
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <input type="text" name="username" lay-verify="required" placeholder="关键字" autocomplete="off" class="layui-input keyWord">
+                            </div>
+                        </div>
+                    <button class="layui-btn doSearch" style="margin-top: -4px;">搜索</button>
+                    <button class="layui-btn add-room-btn" style="float: right; margin-right: 50px">添加教室</button>
+                </div>
+                </div>
+                <table class="layui-hide" id="test" lay-filter="order-form"></table>
+                <!--</table>-->
+                <script type="text/html" id="barDemo">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                </script>
+
+                <script type="text/html" id="createTime">
+                    {{new Date(d.updateTime).format("yyyy-MM-dd hh:mm:ss")}}
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-content">
+    <form class="layui-form" action="" id="imgForm" onsubmit="return false">
+        <div class="layui-form-item">
+            <label class="layui-form-label">教室名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" lay-verify="name" autocomplete="off" placeholder="请输入教室名" class="layui-input name">
+                <input type="text" style="display:none" name="nId" lay-verify="nId" autocomplete="off" class="layui-input nId">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">教室位置：</label>
+            <div class="layui-input-block">
+                <input type="text" name="location" lay-verify="location" autocomplete="off" placeholder="请输入教室位置" class="layui-input location">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">教室Code：</label>
+            <div class="layui-input-block">
+                <input type="text" name="ip" lay-verify="ip" autocomplete="off" placeholder="请输入教室code" class="layui-input ip">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="addbtn">立即提交</button>
+                <button class="layui-btn layui-btn-primary cancel-btn">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="js/dataApi.js"></script>
+<script src="assets/layui/layui.js"></script>
+<script src="js/room.js"></script>
+</body>
+</html>

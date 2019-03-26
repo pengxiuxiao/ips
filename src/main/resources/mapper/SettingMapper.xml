@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.supadata.dao.SettingMapper" >
+  <resultMap id="BaseResultMap" type="com.supadata.pojo.Setting" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="s_start_time" property="sStartTime" jdbcType="TIMESTAMP" />
+    <result column="s_end_time" property="sEndTime" jdbcType="TIMESTAMP" />
+    <result column="display_date" property="displayDate" jdbcType="VARCHAR" />
+    <result column="display_card" property="displayCard" jdbcType="VARCHAR" />
+    <result column="display_daojishi" property="displayDaojishi" jdbcType="VARCHAR" />
+    <result column="daojishi" property="daojishi" jdbcType="VARCHAR" />
+    <result column="word_font" property="wordFont" jdbcType="VARCHAR" />
+    <result column="word_size" property="wordSize" jdbcType="VARCHAR" />
+    <result column="word_color" property="wordColor" jdbcType="VARCHAR" />
+    <result column="rotation_time" property="rotationTime" jdbcType="VARCHAR" />
+    <result column="s_module" property="sModule" jdbcType="VARCHAR" />
+    <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="se_remark" property="seRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, s_start_time, s_end_time, display_date, display_card, display_daojishi, daojishi, 
+    word_font, word_size, word_color, rotation_time, s_module, room_id, update_time, 
+    se_remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_setting
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectNewest" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_setting
+    order by update_time desc
+    limit 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_setting
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.supadata.pojo.Setting" >
+    insert into tb_setting (id, s_start_time, s_end_time, 
+      display_date, display_card, display_daojishi, 
+      daojishi, word_font, word_size, 
+      word_color, rotation_time, s_module, 
+      room_id, update_time, se_remark
+      )
+    values (#{id,jdbcType=INTEGER}, #{sStartTime,jdbcType=TIMESTAMP}, #{sEndTime,jdbcType=TIMESTAMP}, 
+      #{displayDate,jdbcType=VARCHAR}, #{displayCard,jdbcType=VARCHAR}, #{displayDaojishi,jdbcType=VARCHAR}, 
+      #{daojishi,jdbcType=VARCHAR}, #{wordFont,jdbcType=VARCHAR}, #{wordSize,jdbcType=VARCHAR}, 
+      #{wordColor,jdbcType=VARCHAR}, #{rotationTime,jdbcType=VARCHAR}, #{sModule,jdbcType=VARCHAR}, 
+      #{roomId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{seRemark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.supadata.pojo.Setting" >
+    insert into tb_setting
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="sStartTime != null" >
+        s_start_time,
+      </if>
+      <if test="sEndTime != null" >
+        s_end_time,
+      </if>
+      <if test="displayDate != null" >
+        display_date,
+      </if>
+      <if test="displayCard != null" >
+        display_card,
+      </if>
+      <if test="displayDaojishi != null" >
+        display_daojishi,
+      </if>
+      <if test="daojishi != null" >
+        daojishi,
+      </if>
+      <if test="wordFont != null" >
+        word_font,
+      </if>
+      <if test="wordSize != null" >
+        word_size,
+      </if>
+      <if test="wordColor != null" >
+        word_color,
+      </if>
+      <if test="rotationTime != null" >
+        rotation_time,
+      </if>
+      <if test="sModule != null" >
+        s_module,
+      </if>
+      <if test="roomId != null" >
+        room_id,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="seRemark != null" >
+        se_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="sStartTime != null" >
+        #{sStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sEndTime != null" >
+        #{sEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="displayDate != null" >
+        #{displayDate,jdbcType=VARCHAR},
+      </if>
+      <if test="displayCard != null" >
+        #{displayCard,jdbcType=VARCHAR},
+      </if>
+      <if test="displayDaojishi != null" >
+        #{displayDaojishi,jdbcType=VARCHAR},
+      </if>
+      <if test="daojishi != null" >
+        #{daojishi,jdbcType=VARCHAR},
+      </if>
+      <if test="wordFont != null" >
+        #{wordFont,jdbcType=VARCHAR},
+      </if>
+      <if test="wordSize != null" >
+        #{wordSize,jdbcType=VARCHAR},
+      </if>
+      <if test="wordColor != null" >
+        #{wordColor,jdbcType=VARCHAR},
+      </if>
+      <if test="rotationTime != null" >
+        #{rotationTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sModule != null" >
+        #{sModule,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="seRemark != null" >
+        #{seRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.supadata.pojo.Setting" >
+    update tb_setting
+    <set >
+      <if test="sStartTime != null" >
+        s_start_time = #{sStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sEndTime != null" >
+        s_end_time = #{sEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="displayDate != null" >
+        display_date = #{displayDate,jdbcType=VARCHAR},
+      </if>
+      <if test="displayCard != null" >
+        display_card = #{displayCard,jdbcType=VARCHAR},
+      </if>
+      <if test="displayDaojishi != null" >
+        display_daojishi = #{displayDaojishi,jdbcType=VARCHAR},
+      </if>
+      <if test="daojishi != null" >
+        daojishi = #{daojishi,jdbcType=VARCHAR},
+      </if>
+      <if test="wordFont != null" >
+        word_font = #{wordFont,jdbcType=VARCHAR},
+      </if>
+      <if test="wordSize != null" >
+        word_size = #{wordSize,jdbcType=VARCHAR},
+      </if>
+      <if test="wordColor != null" >
+        word_color = #{wordColor,jdbcType=VARCHAR},
+      </if>
+      <if test="rotationTime != null" >
+        rotation_time = #{rotationTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sModule != null" >
+        s_module = #{sModule,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        room_id = #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="seRemark != null" >
+        se_remark = #{seRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.supadata.pojo.Setting" >
+    update tb_setting
+    set s_start_time = #{sStartTime,jdbcType=TIMESTAMP},
+      s_end_time = #{sEndTime,jdbcType=TIMESTAMP},
+      display_date = #{displayDate,jdbcType=VARCHAR},
+      display_card = #{displayCard,jdbcType=VARCHAR},
+      display_daojishi = #{displayDaojishi,jdbcType=VARCHAR},
+      daojishi = #{daojishi,jdbcType=VARCHAR},
+      word_font = #{wordFont,jdbcType=VARCHAR},
+      word_size = #{wordSize,jdbcType=VARCHAR},
+      word_color = #{wordColor,jdbcType=VARCHAR},
+      rotation_time = #{rotationTime,jdbcType=VARCHAR},
+      s_module = #{sModule,jdbcType=VARCHAR},
+      room_id = #{roomId,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      se_remark = #{seRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

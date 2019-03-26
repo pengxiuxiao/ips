@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.supadata.dao.SeatMapper" >
+  <resultMap id="BaseResultMap" type="com.supadata.pojo.Seat" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="course_id" property="courseId" jdbcType="INTEGER" />
+    <result column="s_name" property="sName" jdbcType="VARCHAR" />
+    <result column="stu_name" property="stuName" jdbcType="VARCHAR" />
+    <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+    <result column="r_rank" property="rRank" jdbcType="VARCHAR" />
+    <result column="line_road_index" property="lineRoadIndex" jdbcType="VARCHAR" />
+    <result column="colu_road_index" property="coluRoadIndex" jdbcType="VARCHAR" />
+    <result column="s_line" property="sLine" jdbcType="INTEGER" />
+    <result column="s_column" property="sColumn" jdbcType="INTEGER" />
+    <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+    <result column="room_name" property="roomName" jdbcType="VARCHAR" />
+    <result column="c_desc" property="cDesc" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="s_remark" property="sRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, course_id, s_name, stu_name, card_no, r_rank, line_road_index, colu_road_index, s_line, s_column, room_id, room_name,
+    c_desc, update_time, s_remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_seat
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByCNoAndRoomId" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_seat
+    where card_no = #{card_number}
+    and room_id = #{room_id}
+    and course_id = #{course_id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_seat
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.supadata.pojo.Seat" >
+    insert into tb_seat (id, course_id, s_name, 
+      stu_name, card_no, r_rank, 
+      s_line, s_column, room_id, 
+      room_name, c_desc, update_time, 
+      s_remark)
+    values (#{id,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER}, #{sName,jdbcType=VARCHAR}, 
+      #{stuName,jdbcType=VARCHAR}, #{cardNo,jdbcType=VARCHAR}, #{rRank,jdbcType=VARCHAR}, 
+      #{sLine,jdbcType=INTEGER}, #{sColumn,jdbcType=INTEGER}, #{roomId,jdbcType=VARCHAR}, 
+      #{roomName,jdbcType=VARCHAR}, #{cDesc,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{sRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.supadata.pojo.Seat" >
+    insert into tb_seat
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="courseId != null" >
+        course_id,
+      </if>
+      <if test="sName != null" >
+        s_name,
+      </if>
+      <if test="stuName != null" >
+        stu_name,
+      </if>
+      <if test="cardNo != null" >
+        card_no,
+      </if>
+      <if test="rRank != null" >
+        r_rank,
+      </if>
+      <if test="lineRoadIndex != null" >
+        line_road_index,
+      </if>
+      <if test="coluRoadIndex != null" >
+        colu_road_index,
+      </if>
+      <if test="sLine != null" >
+        s_line,
+      </if>
+      <if test="sColumn != null" >
+        s_column,
+      </if>
+      <if test="roomId != null" >
+        room_id,
+      </if>
+      <if test="roomName != null" >
+        room_name,
+      </if>
+      <if test="cDesc != null" >
+        c_desc,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="sRemark != null" >
+        s_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="courseId != null" >
+        #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="sName != null" >
+        #{sName,jdbcType=VARCHAR},
+      </if>
+      <if test="stuName != null" >
+        #{stuName,jdbcType=VARCHAR},
+      </if>
+      <if test="cardNo != null" >
+        #{cardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="rRank != null" >
+        #{rRank,jdbcType=VARCHAR},
+      </if>
+      <if test="lineRoadIndex != null" >
+        #{lineRoadIndex,jdbcType=VARCHAR},
+      </if>
+      <if test="coluRoadIndex != null" >
+        #{coluRoadIndex,jdbcType=VARCHAR},
+      </if>
+      <if test="sLine != null" >
+        #{sLine,jdbcType=INTEGER},
+      </if>
+      <if test="sColumn != null" >
+        #{sColumn,jdbcType=INTEGER},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomName != null" >
+        #{roomName,jdbcType=VARCHAR},
+      </if>
+      <if test="cDesc != null" >
+        #{cDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sRemark != null" >
+        #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.supadata.pojo.Seat" >
+    update tb_seat
+    <set >
+      <if test="courseId != null" >
+        course_id = #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="sName != null" >
+        s_name = #{sName,jdbcType=VARCHAR},
+      </if>
+      <if test="stuName != null" >
+        stu_name = #{stuName,jdbcType=VARCHAR},
+      </if>
+      <if test="cardNo != null" >
+        card_no = #{cardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="rRank != null" >
+        r_rank = #{rRank,jdbcType=VARCHAR},
+      </if>
+      <if test="lineRoadIndex != null" >
+        line_road_index = #{lineRoadIndex,jdbcType=VARCHAR},
+      </if>
+      <if test="coluRoadIndex != null" >
+        colu_road_index = #{coluRoadIndex,jdbcType=VARCHAR},
+      </if>
+      <if test="sLine != null" >
+        s_line = #{sLine,jdbcType=INTEGER},
+      </if>
+      <if test="sColumn != null" >
+        s_column = #{sColumn,jdbcType=INTEGER},
+      </if>
+      <if test="roomId != null" >
+        room_id = #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomName != null" >
+        room_name = #{roomName,jdbcType=VARCHAR},
+      </if>
+      <if test="cDesc != null" >
+        c_desc = #{cDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sRemark != null" >
+        s_remark = #{sRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.supadata.pojo.Seat" >
+    update tb_seat
+    set course_id = #{courseId,jdbcType=INTEGER},
+      s_name = #{sName,jdbcType=VARCHAR},
+      stu_name = #{stuName,jdbcType=VARCHAR},
+      card_no = #{cardNo,jdbcType=VARCHAR},
+      r_rank = #{rRank,jdbcType=VARCHAR},
+      s_line = #{sLine,jdbcType=INTEGER},
+      s_column = #{sColumn,jdbcType=INTEGER},
+      room_id = #{roomId,jdbcType=VARCHAR},
+      room_name = #{roomName,jdbcType=VARCHAR},
+      c_desc = #{cDesc,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      s_remark = #{sRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

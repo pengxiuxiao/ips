@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.supadata.dao.CheckMapper" >
+  <resultMap id="BaseResultMap" type="com.supadata.pojo.Check" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="ch_module" property="chModule" jdbcType="VARCHAR" />
+    <result column="ch_url" property="chUrl" jdbcType="VARCHAR" />
+    <result column="ch_user" property="chUser" jdbcType="VARCHAR" />
+    <result column="ch_status" property="chStatus" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="sc_remark" property="scRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, ch_module, ch_url, ch_user, ch_status, update_time, sc_remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_check
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectNewest" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_check
+    order by update_time desc
+    limit 1
+  </select>
+  <select id="selectAfterCheckTime" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_check
+    where update_time >= #{check_time}
+    group by ch_module
+    order by update_time
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_check
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.supadata.pojo.Check" >
+    insert into tb_check (id, ch_module, ch_url, 
+      ch_user, ch_status, update_time, 
+      sc_remark)
+    values (#{id,jdbcType=INTEGER}, #{chModule,jdbcType=VARCHAR}, #{chUrl,jdbcType=VARCHAR}, 
+      #{chUser,jdbcType=VARCHAR}, #{chStatus,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{scRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.supadata.pojo.Check" >
+    insert into tb_check
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="chModule != null" >
+        ch_module,
+      </if>
+      <if test="chUrl != null" >
+        ch_url,
+      </if>
+      <if test="chUser != null" >
+        ch_user,
+      </if>
+      <if test="chStatus != null" >
+        ch_status,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="scRemark != null" >
+        sc_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="chModule != null" >
+        #{chModule,jdbcType=VARCHAR},
+      </if>
+      <if test="chUrl != null" >
+        #{chUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="chUser != null" >
+        #{chUser,jdbcType=VARCHAR},
+      </if>
+      <if test="chStatus != null" >
+        #{chStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="scRemark != null" >
+        #{scRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.supadata.pojo.Check" >
+    update tb_check
+    <set >
+      <if test="chModule != null" >
+        ch_module = #{chModule,jdbcType=VARCHAR},
+      </if>
+      <if test="chUrl != null" >
+        ch_url = #{chUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="chUser != null" >
+        ch_user = #{chUser,jdbcType=VARCHAR},
+      </if>
+      <if test="chStatus != null" >
+        ch_status = #{chStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="scRemark != null" >
+        sc_remark = #{scRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.supadata.pojo.Check" >
+    update tb_check
+    set ch_module = #{chModule,jdbcType=VARCHAR},
+      ch_url = #{chUrl,jdbcType=VARCHAR},
+      ch_user = #{chUser,jdbcType=VARCHAR},
+      ch_status = #{chStatus,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      sc_remark = #{scRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,207 @@
+package com.supadata.controller;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.supadata.pojo.Room;
+import com.supadata.service.IRoomService;
+import com.supadata.utils.DateUtil;
+import com.supadata.utils.MsgJson;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+/**
+ * @ClassName: RoomController
+ * @Description:
+ * @Auther: pxx
+ * @Date: 2018/6/19 18:47
+ * @Description:
+ */
+@RestController
+@RequestMapping("/room")
+public class RoomController {
+
+    private static Logger logger = Logger.getLogger(CourseController.class);
+
+    @Autowired
+    public IRoomService roomService;
+
+
+    /**
+     * 功能描述:插入单条教室信息
+     * @auther: pxx
+     * @param: [request]
+     * @return: com.supadata.utils.MsgJson
+     * @date: 2018/6/19 19:34
+     */
+    @RequestMapping("/add")
+    public @ResponseBody
+    MsgJson addRoom(HttpServletRequest request) {
+        MsgJson msg = new MsgJson(0,"添加成功！");
+        String user_id = request.getParameter("user_id");
+        String name = request.getParameter("name");
+        String ip = request.getParameter("ip");
+        String location = request.getParameter("location");
+        String capacity = request.getParameter("capacity");
+        String rank = request.getParameter("rank");
+        String remark = request.getParameter("remark");
+        if (StringUtils.isEmpty(user_id)) {
+            msg.setCode(1);
+            msg.setMsg("user_id为空！");
+            return msg;
+        }
+        if (StringUtils.isEmpty(name)) {
+            msg.setCode(1);
+            msg.setMsg("name为空！");
+            return msg;
+        }
+        if (StringUtils.isEmpty(ip)) {
+            msg.setCode(1);
+            msg.setMsg("ip为空！");
+            return msg;
+        }
+        Room room = new Room();
+        room.setrName(name);
+        room.setrIp(ip);
+        room.setUpdateTime(DateUtil.getCurDate());
+        if (StringUtils.isNotEmpty(capacity)) {
+            room.setCapacity(Integer.parseInt(capacity));
+        }
+        room.setrLocation(location);
+        room.setrRank(rank);
+        room.setrRemark(remark);
+        if (roomService.add(room) != 1){
+            msg.setCode(2);
+            msg.setMsg("添加失败！");
+            return msg;
+        }
+        return msg;
+    }
+
+    /**
+     * 功能描述:编辑教室信息
+     * @auther: pxx
+     * @param: [request]
+     * @return: com.supadata.utils.MsgJson
+     * @date: 2018/6/19 19:46
+     */
+    @RequestMapping("/edit")
+    public @ResponseBody
+    MsgJson editRoom(HttpServletRequest request) {
+        MsgJson msg = new MsgJson(0,"修改成功！");
+        String user_id = request.getParameter("user_id");
+        String room_id = request.getParameter("room_id");
+        String name = request.getParameter("name");
+        String ip = request.getParameter("ip");
+        String location = request.getParameter("location");
+
+        if (StringUtils.isEmpty(user_id)) {
+            msg.setCode(1);
+            msg.setMsg("user_id为空！");
+            return msg;
+        }
+        if (StringUtils.isEmpty(room_id)) {
+            msg.setCode(1);
+            msg.setMsg("room_id为空！");
+            return msg;
+        }
+
+        Room room = roomService.queryRoomById(Integer.parseInt(room_id));
+        if (room == null) {
+            msg.setCode(2);
+            msg.setMsg("更新失败！");
+            return msg;
+        }
+        if (StringUtils.isNotEmpty(name)) {
+            room.setrName(name);
+        }
+        if (StringUtils.isNotEmpty(ip)) {
+            room.setrIp(ip);
+        }
+        if (StringUtils.isNotEmpty(location)) {
+            room.setrLocation(location);
+        }
+        if (roomService.updateRoom(room) != 1){
+            msg.setCode(2);
+            msg.setMsg("更新失败！");
+            return msg;
+        }
+        return msg;
+    }
+
+    /**
+     * 功能描述:删除教室
+     * @auther: pxx
+     * @param: [request]
+     * @return: com.supadata.utils.MsgJson
+     * @date: 2018/6/19 19:50
+     */
+    @RequestMapping("/delete")
+    public @ResponseBody
+    MsgJson deleteRoom(HttpServletRequest request) {
+        MsgJson msg = new MsgJson(0,"删除成功！");
+        String user_id = request.getParameter("user_id");
+        String room_id = request.getParameter("room_id");
+
+        if (StringUtils.isEmpty(user_id)) {
+            msg.setCode(1);
+            msg.setMsg("user_id为空！");
+            return msg;
+        }
+        if (StringUtils.isEmpty(room_id)) {
+            msg.setCode(1);
+            msg.setMsg("room_id为空！");
+            return msg;
+        }
+        if (roomService.deleteRoom(Integer.parseInt(room_id)) != 1){
+            msg.setCode(2);
+            msg.setMsg("删除失败！");
+            return msg;
+        }
+        return msg;
+    }
+
+    /**
+     * 功能描述:查找教室列表
+     * @auther: pxx
+     * @param: [request]
+     * @return: com.supadata.utils.MsgJson
+     * @date: 2018/6/19 19:50
+     */
+    @RequestMapping("/list")
+    public @ResponseBody
+    MsgJson listRoom(String user_id, String key, Integer limit, Integer page) {
+        MsgJson msg = new MsgJson(0,"查询成功！");
+
+
+        if (StringUtils.isEmpty(user_id)) {
+            msg.setCode(1);
+            msg.setMsg("user_id为空！");
+            return msg;
+        }
+        if (limit == null) {
+            msg.setCode(1);
+            msg.setMsg("limit为空！");
+            return msg;
+        }
+        if (limit == page) {
+            msg.setCode(1);
+            msg.setMsg("page为空！");
+            return msg;
+        }
+        PageHelper.startPage(page,limit);
+        List<Room> rooms = roomService.queryRoom(key);
+        PageInfo<Room> pageInfo = new PageInfo<Room>(rooms);
+        msg.setData(rooms);
+        msg.setCount(pageInfo.getTotal());
+        return msg;
+    }
+
+
+}

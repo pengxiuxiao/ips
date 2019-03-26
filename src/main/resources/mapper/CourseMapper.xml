@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.supadata.dao.CourseMapper" >
+  <resultMap id="BaseResultMap" type="com.supadata.pojo.Course" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="c_name" property="cName" jdbcType="VARCHAR" />
+    <result column="c_room_id" property="cRoomId" jdbcType="INTEGER" />
+    <result column="c_room_name" property="cRoomName" jdbcType="VARCHAR" />
+    <result column="c_desc" property="cDesc" jdbcType="VARCHAR" />
+    <result column="c_teacher" property="cTeacher" jdbcType="VARCHAR" />
+    <result column="c_start_time" property="cStartTime" jdbcType="TIMESTAMP" />
+    <result column="c_end_time" property="cEndTime" jdbcType="TIMESTAMP" />
+    <result column="c_people" property="cPeople" jdbcType="INTEGER" />
+    <result column="c_status" property="cStatus" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="c_remark" property="cRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, c_name, c_room_id, c_room_name, c_desc, c_teacher, c_start_time, c_end_time, c_people, c_status, update_time,
+    c_remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_course
+    where c_status = 0
+    and id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectCourseAfterTime" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_course
+    where c_status = 0
+    and c_end_time > #{time}
+  </select>
+  <select id="selectCourseByRoomIdAndCNo" resultMap="BaseResultMap" >
+    select
+    cs.id, cs.c_name, cs.c_room_id, cs.c_room_name, cs.c_desc, cs.c_teacher, cs.c_start_time, cs.c_end_time, cs.c_people, cs.c_status,
+    cs.update_time, cs.c_remark
+    from tb_course cs
+    where cs.c_status = 0
+    and cs.c_room_id = #{room_id}
+    and cs.c_end_time > #{currentDateTime}
+    and cs.id in (
+    select se.course_id from tb_seat se
+    where se.card_no = #{card_number}
+    )
+    order by cs.c_start_time
+    limit 1
+  </select>
+  <select id="selectCourseByCNo" resultMap="BaseResultMap" >
+    select
+    cs.id, cs.c_name, cs.c_room_id, cs.c_room_name, cs.c_desc, cs.c_teacher, cs.c_start_time, cs.c_end_time, cs.c_people, cs.c_status,
+    cs.update_time, cs.c_remark
+    from tb_course cs
+    where cs.c_status = 0
+    and cs.c_end_time > #{currentDateTime}
+    and cs.id in (
+    select se.course_id from tb_seat se
+    where se.card_no = #{card_number}
+    )
+    order by cs.c_start_time
+    limit 1
+  </select>
+  <select id="selectAllCourse" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_course
+    where  c_status = 0
+    <if test="key != null">
+      and CONCAT(IFNULL(`c_name`,'')) LIKE CONCAT('%', #{key}, '%')
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_course
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.supadata.pojo.Course" >
+    insert into tb_course (id, c_name, c_room_id, 
+      c_desc, c_teacher, c_start_time, 
+      c_end_time, c_people, update_time, 
+      c_remark)
+    values (#{id,jdbcType=INTEGER}, #{cName,jdbcType=VARCHAR}, #{cRoomId,jdbcType=INTEGER}, 
+      #{cDesc,jdbcType=VARCHAR}, #{cTeacher,jdbcType=VARCHAR}, #{cStartTime,jdbcType=TIMESTAMP}, 
+      #{cEndTime,jdbcType=TIMESTAMP}, #{cPeople,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{cRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.supadata.pojo.Course" >
+    insert into tb_course
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cName != null" >
+        c_name,
+      </if>
+      <if test="cRoomId != null" >
+        c_room_id,
+      </if>
+      <if test="cRoomName != null" >
+        c_room_name,
+      </if>
+      <if test="cDesc != null" >
+        c_desc,
+      </if>
+      <if test="cTeacher != null" >
+        c_teacher,
+      </if>
+      <if test="cStartTime != null" >
+        c_start_time,
+      </if>
+      <if test="cEndTime != null" >
+        c_end_time,
+      </if>
+      <if test="cPeople != null" >
+        c_people,
+      </if>
+      <if test="cStatus != null" >
+        c_status,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="cRemark != null" >
+        c_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cName != null" >
+        #{cName,jdbcType=VARCHAR},
+      </if>
+      <if test="cRoomId != null" >
+        #{cRoomId,jdbcType=INTEGER},
+      </if>
+      <if test="cRoomName != null" >
+        #{cRoomName,jdbcType=VARCHAR},
+      </if>
+      <if test="cDesc != null" >
+        #{cDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="cTeacher != null" >
+        #{cTeacher,jdbcType=VARCHAR},
+      </if>
+      <if test="cStartTime != null" >
+        #{cStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cEndTime != null" >
+        #{cEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cPeople != null" >
+        #{cPeople,jdbcType=INTEGER},
+      </if>
+      <if test="cStatus != null" >
+        #{cStatus,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cRemark != null" >
+        #{cRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.supadata.pojo.Course" >
+    update tb_course
+    <set >
+      <if test="cName != null" >
+        c_name = #{cName,jdbcType=VARCHAR},
+      </if>
+      <if test="cRoomId != null" >
+        c_room_id = #{cRoomId,jdbcType=INTEGER},
+      </if>
+      <if test="cRoomName != null" >
+        c_room_name = #{cRoomName,jdbcType=VARCHAR},
+      </if>
+      <if test="cDesc != null" >
+        c_desc = #{cDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="cTeacher != null" >
+        c_teacher = #{cTeacher,jdbcType=VARCHAR},
+      </if>
+      <if test="cStartTime != null" >
+        c_start_time = #{cStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cEndTime != null" >
+        c_end_time = #{cEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cPeople != null" >
+        c_people = #{cPeople,jdbcType=INTEGER},
+      </if>
+      <if test="cStatus != null" >
+        c_status = #{cStatus,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cRemark != null" >
+        c_remark = #{cRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.supadata.pojo.Course" >
+    update tb_course
+    set c_name = #{cName,jdbcType=VARCHAR},
+      c_room_id = #{cRoomId,jdbcType=INTEGER},
+      c_desc = #{cDesc,jdbcType=VARCHAR},
+      c_teacher = #{cTeacher,jdbcType=VARCHAR},
+      c_start_time = #{cStartTime,jdbcType=TIMESTAMP},
+      c_end_time = #{cEndTime,jdbcType=TIMESTAMP},
+      c_people = #{cPeople,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      c_remark = #{cRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateDeleteStatus" parameterType="java.lang.Integer" >
+    update tb_course
+    set c_status = 1
+    where id = #{id}
+  </update>
+</mapper>

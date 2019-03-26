@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>信息发布系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="assets/layui/css/layui.css"  media="all">
+    <link rel="stylesheet" href="css/ips.css"  media="all">
+    <style>
+        .layui-form{
+            padding: 20px 20px 10px;
+        }
+        .course-content{
+            display: none;
+        }
+        .edit-course-content{
+            display: none;
+        }
+        .layui-form-selected dl{
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <!--header-->
+    <div class="layui-header header header-demo" spring="">
+        <div class="layui-main">
+            <a class="logo" href="index.html" style="position: absolute;top: -15px; left: 40px">
+                <img src="img/logo.png" alt="layui" width="251" height="90">
+            </a>
+            <a class="logo" href="login.html" style="position: absolute; top: 16px; right: 40px">
+                <img src="img/out.png" alt="layui" width="94" height="32">
+            </a>
+        </div>
+    </div>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree site-demo-nav">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="javascript:;" href="javascript:;">
+                        后台管理
+                        <span class="layui-nav-more"></span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="index.html">信息发布</a>
+                        </dd>
+                        <dd class="layui-this">
+                            <a href="course.html">课程管理</a>
+                        </dd>
+                        <dd>
+                            <a href="room.html">教室管理</a>
+                        </dd>
+                        <dd>
+                            <a href="set.html">设置管理</a>
+                        </dd>
+                        <dd>
+                            <a href="pad.html">pad状态</a>
+                        </dd>
+                        <dd>
+                            <a href="app.html">版本管理</a>
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+
+    <!--main-->
+    <div class="layui-body">
+        <div class="layui-tab-item">
+            <div class="layui-main">
+                <div id="LAY_preview">
+                    <blockquote class="layui-elem-quote">
+                        信息详情
+                    </blockquote>
+                </div>
+                <!--table-->
+                <div class="layui-form layui-clear-fix" style="width: 100%">
+                    <div class="layui-form-item">
+                        <div class="layui-pull-left">
+                            <div class="layui-inline">
+                                <input type="text" name="username" lay-verify="required" placeholder="关键字" autocomplete="off" class="layui-input keyWord">
+                            </div>
+                            <button class="layui-btn doSearch" style="margin-top: -4px;">搜索</button>
+                        </div>
+                        <button class="layui-btn add-course-btn" style="float: right; margin-right: 40px">上传课程表</button>
+                        <a class="layui-btn down-course-btn"  href="../course/efd" style="float: right; margin-right: 10px">下载模板</a>
+                    </div>
+
+                </div>
+            </div>
+            <table class="layui-hide" id="test" lay-filter="order-table"></table>
+            <!--</table>-->
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+
+            <script type="text/html" id="createTime">
+                {{new Date(d.updateTime).format("yyyy-MM-dd hh:mm:ss")}}
+            </script>
+            <script type="text/html" id="cStartTime">
+                {{new Date(d.cStartTime).format("yyyy-MM-dd hh:mm:ss")}}
+            </script>
+            <script type="text/html" id="cEndTime">
+                {{new Date(d.cEndTime).format("yyyy-MM-dd hh:mm:ss")}}
+            </script>
+        </div>
+    </div>
+</div>
+<!--&lt;!&ndash;选择教室&ndash;&gt;-->
+<!--<div class="selectRooms">-->
+    <!--<form class="layui-form" onsubmit="return false" style="padding: 20px">-->
+        <!--<h3 class="text-center">请选择教室</h3>-->
+        <!--<div class="layui-form-item" pane="">-->
+            <!--<div> <input type="checkbox" lay-skin="primary" title="全选" id="checkAll" lay-filter="checkAll"></div>-->
+            <!--<div class="layui-input-block classRooms-check-box" style="margin: 0;padding-left: 28px">-->
+
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="layui-form-item">-->
+            <!--<div class="text-center" style="margin-top: 40px">-->
+                <!--<button class="layui-btn selectRooms-btn" lay-submit="" lay-filter="selectRooms">下一步</button>-->
+                <!--<button class="layui-btn layui-btn-primary cancel-btn">取消</button>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</form>-->
+<!--</div>-->
+
+<!--添加课程信息-->
+<div class="course-content">
+    <form class="layui-form" id="addCourseForm" onsubmit="return false" style="padding: 20px 20px 0 0">
+        <h3 class="text-center" style="margin-bottom: 20px">上传课表</h3>
+        <div class="layui-form-item">
+            <label class="layui-form-label">课程教室：</label>
+            <div class="layui-input-block">
+                <select name="room" id="room_id" lay-filter="room" lay-verify="room" class="layui-input room_id">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-upload">
+                <label class="layui-form-label">课表文件：</label>
+                <input type="file" name="file" id="upload-excel" accept="file" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn addCourseBtn">立即提交</button>
+                <button class="layui-btn layui-btn-primary cancel-btn">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 编辑课程信息-->
+<div class="edit-course-content">
+    <form class="layui-form" action="" id="editCourseForm" onsubmit="return false">
+        <div class="layui-form-item">
+            <label class="layui-form-label">课程名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" lay-verify="name" autocomplete="off" placeholder="请输入课程名" class="layui-input name">
+                <input type="text" style="display:none" name="nId" lay-verify="nId" autocomplete="off" class="layui-input nId">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">开始时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="start_time" class="layui-input" id="start_time" placeholder="yyyy-MM-dd HH:mm:ss"class="layui-input start_time">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">结束时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="end_time" class="layui-input" id="end_time" placeholder="yyyy-MM-dd HH:mm:ss"class="layui-input end_time">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="editbtn">立即提交</button>
+                <button class="layui-btn layui-btn-primary cancel-btn">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="assets/jquery.min.js"></script>
+<script src="js/dataApi.js"></script>
+<script src="assets/layui/layui.js"></script>
+<script src="js/course.js"></script>
+</body>
+</html>

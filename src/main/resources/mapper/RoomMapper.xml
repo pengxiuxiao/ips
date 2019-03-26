@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.supadata.dao.RoomMapper" >
+  <resultMap id="BaseResultMap" type="com.supadata.pojo.Room" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="r_name" property="rName" jdbcType="VARCHAR" />
+    <result column="r_location" property="rLocation" jdbcType="VARCHAR" />
+    <result column="capacity" property="capacity" jdbcType="INTEGER" />
+    <result column="r_rank" property="rRank" jdbcType="VARCHAR" />
+    <result column="r_ip" property="rIp" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="r_remark" property="rRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, r_name, r_location, capacity, r_rank, r_ip, update_time, r_remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_room
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByIp" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_room
+    where r_ip = #{ip}
+  </select>
+  <select id="selectListIfKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_room
+    where 1 = 1
+    <if test="key != null" >
+      and CONCAT(IFNULL(`r_name`,''), IFNULL(`r_location`,'')) like CONCAT('%', #{key}, '%')
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_room
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.supadata.pojo.Room" >
+    insert into tb_room (id, r_name, r_location, 
+      capacity, r_rank, r_ip, 
+      update_time, r_remark)
+    values (#{id,jdbcType=INTEGER}, #{rName,jdbcType=VARCHAR}, #{rLocation,jdbcType=VARCHAR}, 
+      #{capacity,jdbcType=INTEGER}, #{rRank,jdbcType=VARCHAR}, #{rIp,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{rRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.supadata.pojo.Room" >
+    insert into tb_room
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="rName != null" >
+        r_name,
+      </if>
+      <if test="rLocation != null" >
+        r_location,
+      </if>
+      <if test="capacity != null" >
+        capacity,
+      </if>
+      <if test="rRank != null" >
+        r_rank,
+      </if>
+      <if test="rIp != null" >
+        r_ip,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="rRemark != null" >
+        r_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="rName != null" >
+        #{rName,jdbcType=VARCHAR},
+      </if>
+      <if test="rLocation != null" >
+        #{rLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="capacity != null" >
+        #{capacity,jdbcType=INTEGER},
+      </if>
+      <if test="rRank != null" >
+        #{rRank,jdbcType=VARCHAR},
+      </if>
+      <if test="rIp != null" >
+        #{rIp,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rRemark != null" >
+        #{rRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.supadata.pojo.Room" >
+    update tb_room
+    <set >
+      <if test="rName != null" >
+        r_name = #{rName,jdbcType=VARCHAR},
+      </if>
+      <if test="rLocation != null" >
+        r_location = #{rLocation,jdbcType=VARCHAR},
+      </if>
+      <if test="capacity != null" >
+        capacity = #{capacity,jdbcType=INTEGER},
+      </if>
+      <if test="rRank != null" >
+        r_rank = #{rRank,jdbcType=VARCHAR},
+      </if>
+      <if test="rIp != null" >
+        r_ip = #{rIp,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rRemark != null" >
+        r_remark = #{rRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.supadata.pojo.Room" >
+    update tb_room
+    set r_name = #{rName,jdbcType=VARCHAR},
+      r_location = #{rLocation,jdbcType=VARCHAR},
+      capacity = #{capacity,jdbcType=INTEGER},
+      r_rank = #{rRank,jdbcType=VARCHAR},
+      r_ip = #{rIp,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      r_remark = #{rRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

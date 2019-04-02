@@ -24,7 +24,7 @@ public class NoticeConsumer {
      * @return:
      * @date: 2019/3/27 18:14
      */
-    @JmsListener(destination = "pxx.test")
+    @JmsListener(destination = "pxx.test1")
     public void consumerMessage(String text) {
         System.out.println("收到的消息======" + text);
     }

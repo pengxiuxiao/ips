@@ -28,7 +28,7 @@ public class MQController {
     public MsgJson ActionToMessage(String type, String content) {
 
         if ("1".equals(type)) {
-            Destination destination = new ActiveMQQueue("pxx.test");
+            Destination destination = new ActiveMQQueue("pxx.test1");
 
             producer.sendMessage(destination, content);
 

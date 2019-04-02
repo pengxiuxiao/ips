@@ -1,8 +1,10 @@
 
 package com.supadata.utils;
 
+import com.supadata.constant.Config;
 import com.supadata.utils.secret.Des3;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
@@ -15,7 +17,8 @@ import java.util.UUID;
 */
 public class StringUtil {
 
-	private static Des3 des = new Des3(FileUtil.getProperValue("dkey"));
+	@Autowired
+	private Config config;
 	
 	private static Logger logger = Logger.getLogger(StringUtil.class);
 	/**

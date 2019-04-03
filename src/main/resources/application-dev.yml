@@ -81,3 +81,10 @@ config:
     #SERVICEURL: http://10.69.3.200:8080/
     DESKEY: pengxiuxiaosupadata_test
 
+#mqtt配置项
+mqtt:
+  host: tcp://118.178.84.40:1883
+  topic: topic
+  clientId: clientid
+  userName: admin
+  passWord: admin

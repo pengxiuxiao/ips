@@ -20,9 +20,9 @@ public class ServerMQTT {
     //tcp://MQTT安装的服务器地址:MQTT定义的端口号
     public static final String HOST = "tcp://118.178.84.40:1883";
     //定义一个主题
-    public static final String TOPIC = "mtopic";
+    public static final String TOPIC = "gy-test";
     //定义MQTT的ID，可以在MQTT服务配置中指定
-    private static final String clientid = "server11";
+    private static final String clientid = "server22";
 
     private MqttClient client;
     private MqttTopic topic11;
@@ -83,14 +83,17 @@ public class ServerMQTT {
      * @param args
      * @throws MqttException
      */
-    public static void main(String[] args) throws MqttException {
+    public static void main(String[] args) throws MqttException, InterruptedException {
         ServerMQTT server = new ServerMQTT();
 
         server.message = new MqttMessage();
         server.message.setQos(1);
         server.message.setRetained(true);
-        server.message.setPayload("hello,topic11".getBytes());
-        server.publish(server.topic11 , server.message);
+        for (int i = 0; i < 100; i++) {
+            Thread.sleep(5000);
+            server.message.setPayload((i+ "hello,xuming,I am pxx").getBytes());
+            server.publish(server.topic11 , server.message);
+        }
         System.out.println(server.message.isRetained() + "------ratained状态");
     }
 }

@@ -10,6 +10,7 @@ import com.supadata.utils.MsgJson;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -126,7 +127,6 @@ public class PadController {
 
     /**
      * 功能描述:所有信息变更，通过此接口比较，有变更则请求相应的接口更新数据
-     *
      * @auther: pxx
      * @param:
      * @return:

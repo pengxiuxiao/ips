@@ -9,9 +9,9 @@ spring:
           filters: stat
           driver-class-name: com.mysql.jdbc.Driver
           #基本属性
-          url: jdbc:mysql://rm-2ze1c753hvbdd9q6eo.mysql.rds.aliyuncs.com:3306/avc_db?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: avc
-          password: Gprs9527
+            url: jdbc:mysql://118.178.84.40:3306/ips?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+            username: root
+            password: MageNB9527
           #配置初始化大小/最小/最大
           initial-size: 1
           min-idle: 1

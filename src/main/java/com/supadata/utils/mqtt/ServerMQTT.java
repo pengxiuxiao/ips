@@ -16,9 +16,9 @@ public class ServerMQTT {
     //tcp://MQTT安装的服务器地址:MQTT定义的端口号
     public static final String HOST = "tcp://118.178.84.40:1883";
     //定义一个主题
-    public static final String TOPIC = "mtopic";
+    public static final String TOPIC = "gy-test";
     //定义MQTT的ID，可以在MQTT服务配置中指定
-    private static final String clientid = "server11";
+    private static final String clientid = "server22";
 
     private MqttClient client;
     private MqttTopic topic11;

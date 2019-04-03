@@ -1,5 +1,6 @@
 // var global = 'http://10.69.3.200:8080/ips';
-var global = 'http://pengxiuxiao.55555.io';
+// var global = 'http://pengxiuxiao.55555.io';
+var global = 'http://localhost:8080';
 
 
 //添加文字消息

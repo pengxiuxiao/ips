@@ -11,9 +11,9 @@ spring:
           filters: stat
           driver-class-name: com.mysql.jdbc.Driver
           #基本属性
-          url: jdbc:mysql://118.178.84.40:3306/ips?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          url: jdbc:mysql://localhost:3306/ips?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
           username: root
-          password: MageNB9527
+          password: root
           #配置初始化大小/最小/最大
           initial-size: 1
           min-idle: 1
@@ -56,6 +56,9 @@ spring:
             expiry-timeout: 10000
             idle-timeout: 30000
 
+    #### 开启发布订阅
+    jms:
+    pub-sub-domain: true
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.supadata.pojo
@@ -84,7 +87,7 @@ config:
 #mqtt配置项
 mqtt:
   host: tcp://118.178.84.40:1883
-  topic: topic
-  clientId: clientid
+  topic: gy-test
+  clientId: server22
   userName: admin
   passWord: admin

@@ -32,9 +32,6 @@ public class MQController {
     @Autowired
     private Mqtt mqtt;
 
-    private MqttClient client;
-
-    private MqttConnectOptions options;
 
     @RequestMapping("/login")
     public MsgJson ActionToMessage(String type, String content) {
@@ -54,9 +51,9 @@ public class MQController {
 
         try {
             // host为主机名，clientid即连接MQTT的客户端ID，一般以唯一标识符表示，MemoryPersistence设置clientid的保存形式，默认为以内存保存
-            client = new MqttClient(mqtt.getHost(), mqtt.getClientId(), new MemoryPersistence());
+            MqttClient client = new MqttClient(mqtt.getHost(), mqtt.getClientId(), new MemoryPersistence());
             // MQTT的连接设置
-            options = new MqttConnectOptions();
+            MqttConnectOptions options = new MqttConnectOptions();
             // 设置是否清空session,这里如果设置为false表示服务器会保留客户端的连接记录，这里设置为true表示每次连接到服务器都以新的身份连接
             options.setCleanSession(true);
             // 设置连接的用户名

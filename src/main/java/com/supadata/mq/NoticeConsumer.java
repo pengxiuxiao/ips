@@ -29,4 +29,9 @@ public class NoticeConsumer {
         System.out.println("收到的消息======" + text);
     }
 
+    @JmsListener(destination = "gy-test")
+    public void readActiveTopic(String text) {
+        System.out.println("收到的消息======" + text);
+    }
+
 }

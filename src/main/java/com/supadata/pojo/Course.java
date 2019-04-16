@@ -23,6 +23,8 @@ public class Course {
 
     private Integer cStatus;
 
+    private Integer cWordSize;
+
     private Date updateTime;
 
     private String cRemark;
@@ -121,5 +123,13 @@ public class Course {
 
     public void setcRoomName(String cRoomName) {
         this.cRoomName = cRoomName;
+    }
+
+    public Integer getcWordSize() {
+        return cWordSize;
+    }
+
+    public void setcWordSize(Integer cWordSize) {
+        this.cWordSize = cWordSize;
     }
 }

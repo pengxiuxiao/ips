@@ -27,8 +27,6 @@ public class Setting {
 
     private String sModule;
 
-    private String roomId;
-
     private Date updateTime;
 
     private String seRemark;
@@ -127,14 +125,6 @@ public class Setting {
 
     public void setsModule(String sModule) {
         this.sModule = sModule == null ? null : sModule.trim();
-    }
-
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(String roomId) {
-        this.roomId = roomId == null ? null : roomId.trim();
     }
 
     public Date getUpdateTime() {

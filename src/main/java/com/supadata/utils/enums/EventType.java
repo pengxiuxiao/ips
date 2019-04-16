@@ -15,6 +15,7 @@ public enum EventType {
     REBOOT("reboot"),
     REMOTE_OBSERVE("remote_observe"),
     OFFLINE("offline"),
+    SETTING("setting"),
     ONLINE("online");
 
     public String getEvent() {

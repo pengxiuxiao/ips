@@ -1,5 +1,3 @@
-server:
-  port: 8080
 
 spring:
     datasource:
@@ -11,9 +9,12 @@ spring:
           filters: stat
           driver-class-name: com.mysql.jdbc.Driver
           #基本属性
-          url: jdbc:mysql://localhost:3306/ips?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+#          url: jdbc:mysql://localhost:3306/ips?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+#          username: root
+#          password: 123456
+          url: jdbc:mysql://118.178.84.40:3306/ips_new?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
           username: root
-          password: root
+          password: MageNB9527
           #配置初始化大小/最小/最大
           initial-size: 1
           min-idle: 1
@@ -58,7 +59,8 @@ spring:
 
     #### 开启发布订阅
     jms:
-    pub-sub-domain: true
+      pub-sub-domain: true
+
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.supadata.pojo

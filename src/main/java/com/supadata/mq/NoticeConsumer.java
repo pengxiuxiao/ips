@@ -1,9 +1,9 @@
 package com.supadata.mq;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.annotation.JmsListener;
-import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
  * @Description:
  */
 @Component
+@EnableJms
 public class NoticeConsumer {
 
     /**
@@ -24,14 +25,14 @@ public class NoticeConsumer {
      * @return:
      * @date: 2019/3/27 18:14
      */
-    @JmsListener(destination = "pxx.test1")
-    public void consumerMessage(String text) {
-        System.out.println("收到的消息======" + text);
-    }
+//    @JmsListener(destination = "pxx.test1")
+//    public void consumerMessage(String text) {
+//        System.out.println("收到的消息======" + text);
+//    }
 
     @JmsListener(destination = "gy-test")
-    public void readActiveTopic(String text) {
-        System.out.println("收到的消息======" + text);
+    public void readActiveTopic(MqttMessage text) {
+        System.out.println("收到消息======" + text);
     }
 
 }

@@ -12,11 +12,12 @@
     <result column="c_end_time" property="cEndTime" jdbcType="TIMESTAMP" />
     <result column="c_people" property="cPeople" jdbcType="INTEGER" />
     <result column="c_status" property="cStatus" jdbcType="INTEGER" />
+    <result column="c_word_size" property="cWordSize" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="c_remark" property="cRemark" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, c_name, c_room_id, c_room_name, c_desc, c_teacher, c_start_time, c_end_time, c_people, c_status, update_time,
+    id, c_name, c_room_id, c_room_name, c_desc, c_teacher, c_start_time, c_end_time, c_people, c_status, c_word_size, update_time,
     c_remark
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -36,7 +37,7 @@
   <select id="selectCourseByRoomIdAndCNo" resultMap="BaseResultMap" >
     select
     cs.id, cs.c_name, cs.c_room_id, cs.c_room_name, cs.c_desc, cs.c_teacher, cs.c_start_time, cs.c_end_time, cs.c_people, cs.c_status,
-    cs.update_time, cs.c_remark
+    cs.c_word_size, cs.update_time, cs.c_remark
     from tb_course cs
     where cs.c_status = 0
     and cs.c_room_id = #{room_id}
@@ -51,7 +52,7 @@
   <select id="selectCourseByCNo" resultMap="BaseResultMap" >
     select
     cs.id, cs.c_name, cs.c_room_id, cs.c_room_name, cs.c_desc, cs.c_teacher, cs.c_start_time, cs.c_end_time, cs.c_people, cs.c_status,
-    cs.update_time, cs.c_remark
+    cs.c_word_size, cs.update_time, cs.c_remark
     from tb_course cs
     where cs.c_status = 0
     and cs.c_end_time > #{currentDateTime}
@@ -118,6 +119,9 @@
       <if test="cStatus != null" >
         c_status,
       </if>
+      <if test="cWordSize != null" >
+        c_word_size,
+      </if>
       <if test="updateTime != null" >
         update_time,
       </if>
@@ -156,6 +160,9 @@
       <if test="cStatus != null" >
         #{cStatus,jdbcType=INTEGER},
       </if>
+      <if test="cWordSize != null" >
+        #{cWordSize,jdbcType=INTEGER},
+      </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
@@ -193,6 +200,9 @@
       </if>
       <if test="cStatus != null" >
         c_status = #{cStatus,jdbcType=INTEGER},
+      </if>
+      <if test="cWordSize != null" >
+        c_word_size = #{cWordSize,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},

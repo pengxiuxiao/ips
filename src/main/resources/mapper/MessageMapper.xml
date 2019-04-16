@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.supadata.dao.MessageMapper" >
+  <resultMap id="BaseResultMap" type="com.supadata.pojo.Message" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="m_module" property="mModule" jdbcType="VARCHAR" />
+    <result column="m_url" property="mUrl" jdbcType="VARCHAR" />
+    <result column="m_user" property="mUser" jdbcType="VARCHAR" />
+    <result column="m_status" property="mStatus" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="m_remark" property="mRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, m_module, m_url, m_user, m_status, update_time, m_remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_mesage
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_mesage
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.supadata.pojo.Message" >
+    insert into tb_mesage (id, m_module, m_url, 
+      m_user, m_status, update_time, 
+      m_remark)
+    values (#{id,jdbcType=INTEGER}, #{mModule,jdbcType=VARCHAR}, #{mUrl,jdbcType=VARCHAR}, 
+      #{mUser,jdbcType=VARCHAR}, #{mStatus,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{mRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.supadata.pojo.Message" >
+    insert into tb_mesage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="mModule != null" >
+        m_module,
+      </if>
+      <if test="mUrl != null" >
+        m_url,
+      </if>
+      <if test="mUser != null" >
+        m_user,
+      </if>
+      <if test="mStatus != null" >
+        m_status,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="mRemark != null" >
+        m_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="mModule != null" >
+        #{mModule,jdbcType=VARCHAR},
+      </if>
+      <if test="mUrl != null" >
+        #{mUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="mUser != null" >
+        #{mUser,jdbcType=VARCHAR},
+      </if>
+      <if test="mStatus != null" >
+        #{mStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mRemark != null" >
+        #{mRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.supadata.pojo.Message" >
+    update tb_mesage
+    <set >
+      <if test="mModule != null" >
+        m_module = #{mModule,jdbcType=VARCHAR},
+      </if>
+      <if test="mUrl != null" >
+        m_url = #{mUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="mUser != null" >
+        m_user = #{mUser,jdbcType=VARCHAR},
+      </if>
+      <if test="mStatus != null" >
+        m_status = #{mStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mRemark != null" >
+        m_remark = #{mRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.supadata.pojo.Message" >
+    update tb_mesage
+    set m_module = #{mModule,jdbcType=VARCHAR},
+      m_url = #{mUrl,jdbcType=VARCHAR},
+      m_user = #{mUser,jdbcType=VARCHAR},
+      m_status = #{mStatus,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      m_remark = #{mRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -79,14 +79,17 @@ public class ServerMQTT {
      * @param args
      * @throws MqttException
      */
-    public static void main(String[] args) throws MqttException {
+    public static void main(String[] args) throws MqttException, InterruptedException {
         ServerMQTT server = new ServerMQTT();
 
         server.message = new MqttMessage();
         server.message.setQos(1);
         server.message.setRetained(true);
-        server.message.setPayload("hello,topic11".getBytes());
-        server.publish(server.topic11 , server.message);
-        System.out.println(server.message.isRetained() + "------ratained状态");
+        for (int i = 0; i < 100; i++) {
+            Thread.sleep(5000);
+            server.message.setPayload((i + "hello,pxx").getBytes());
+            server.publish(server.topic11 , server.message);
+            System.out.println(i + "hello,pxx");
+        }
     }
 }

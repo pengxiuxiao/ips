@@ -23,7 +23,7 @@ public class Seat {
 
     private Integer sColumn;
 
-    private String roomId;
+    private Integer roomId;
 
     private String roomName;
 
@@ -97,12 +97,12 @@ public class Seat {
         this.sColumn = sColumn;
     }
 
-    public String getRoomId() {
+    public Integer getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(String roomId) {
-        this.roomId = roomId == null ? null : roomId.trim();
+    public void setRoomId(Integer roomId) {
+        this.roomId = roomId;
     }
 
     public String getRoomName() {

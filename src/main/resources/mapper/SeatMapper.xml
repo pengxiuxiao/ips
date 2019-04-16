@@ -12,7 +12,7 @@
     <result column="colu_road_index" property="coluRoadIndex" jdbcType="VARCHAR" />
     <result column="s_line" property="sLine" jdbcType="INTEGER" />
     <result column="s_column" property="sColumn" jdbcType="INTEGER" />
-    <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+    <result column="room_id" property="roomId" jdbcType="INTEGER" />
     <result column="room_name" property="roomName" jdbcType="VARCHAR" />
     <result column="c_desc" property="cDesc" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
@@ -48,7 +48,7 @@
       s_remark)
     values (#{id,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER}, #{sName,jdbcType=VARCHAR}, 
       #{stuName,jdbcType=VARCHAR}, #{cardNo,jdbcType=VARCHAR}, #{rRank,jdbcType=VARCHAR}, 
-      #{sLine,jdbcType=INTEGER}, #{sColumn,jdbcType=INTEGER}, #{roomId,jdbcType=VARCHAR}, 
+      #{sLine,jdbcType=INTEGER}, #{sColumn,jdbcType=INTEGER}, #{roomId,jdbcType=INTEGER},
       #{roomName,jdbcType=VARCHAR}, #{cDesc,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{sRemark,jdbcType=VARCHAR})
   </insert>
@@ -133,7 +133,7 @@
         #{sColumn,jdbcType=INTEGER},
       </if>
       <if test="roomId != null" >
-        #{roomId,jdbcType=VARCHAR},
+        #{roomId,jdbcType=INTEGER},
       </if>
       <if test="roomName != null" >
         #{roomName,jdbcType=VARCHAR},
@@ -180,7 +180,7 @@
         s_column = #{sColumn,jdbcType=INTEGER},
       </if>
       <if test="roomId != null" >
-        room_id = #{roomId,jdbcType=VARCHAR},
+        room_id = #{roomId,jdbcType=INTEGER},
       </if>
       <if test="roomName != null" >
         room_name = #{roomName,jdbcType=VARCHAR},
@@ -206,7 +206,7 @@
       r_rank = #{rRank,jdbcType=VARCHAR},
       s_line = #{sLine,jdbcType=INTEGER},
       s_column = #{sColumn,jdbcType=INTEGER},
-      room_id = #{roomId,jdbcType=VARCHAR},
+      room_id = #{roomId,jdbcType=INTEGER},
       room_name = #{roomName,jdbcType=VARCHAR},
       c_desc = #{cDesc,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},

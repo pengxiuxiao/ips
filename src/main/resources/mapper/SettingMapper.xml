@@ -14,13 +14,12 @@
     <result column="word_color" property="wordColor" jdbcType="VARCHAR" />
     <result column="rotation_time" property="rotationTime" jdbcType="VARCHAR" />
     <result column="s_module" property="sModule" jdbcType="VARCHAR" />
-    <result column="room_id" property="roomId" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="se_remark" property="seRemark" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, s_start_time, s_end_time, display_date, display_card, display_daojishi, daojishi, 
-    word_font, word_size, word_color, rotation_time, s_module, room_id, update_time, 
+    word_font, word_size, word_color, rotation_time, s_module, update_time,
     se_remark
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -45,13 +44,13 @@
       display_date, display_card, display_daojishi, 
       daojishi, word_font, word_size, 
       word_color, rotation_time, s_module, 
-      room_id, update_time, se_remark
+      update_time, se_remark
       )
     values (#{id,jdbcType=INTEGER}, #{sStartTime,jdbcType=TIMESTAMP}, #{sEndTime,jdbcType=TIMESTAMP}, 
       #{displayDate,jdbcType=VARCHAR}, #{displayCard,jdbcType=VARCHAR}, #{displayDaojishi,jdbcType=VARCHAR}, 
       #{daojishi,jdbcType=VARCHAR}, #{wordFont,jdbcType=VARCHAR}, #{wordSize,jdbcType=VARCHAR}, 
       #{wordColor,jdbcType=VARCHAR}, #{rotationTime,jdbcType=VARCHAR}, #{sModule,jdbcType=VARCHAR}, 
-      #{roomId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{seRemark,jdbcType=VARCHAR}
+      #{updateTime,jdbcType=TIMESTAMP}, #{seRemark,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.supadata.pojo.Setting" >
@@ -92,9 +91,6 @@
       </if>
       <if test="sModule != null" >
         s_module,
-      </if>
-      <if test="roomId != null" >
-        room_id,
       </if>
       <if test="updateTime != null" >
         update_time,
@@ -140,9 +136,6 @@
       <if test="sModule != null" >
         #{sModule,jdbcType=VARCHAR},
       </if>
-      <if test="roomId != null" >
-        #{roomId,jdbcType=VARCHAR},
-      </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
@@ -187,9 +180,6 @@
       <if test="sModule != null" >
         s_module = #{sModule,jdbcType=VARCHAR},
       </if>
-      <if test="roomId != null" >
-        room_id = #{roomId,jdbcType=VARCHAR},
-      </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
@@ -212,7 +202,6 @@
       word_color = #{wordColor,jdbcType=VARCHAR},
       rotation_time = #{rotationTime,jdbcType=VARCHAR},
       s_module = #{sModule,jdbcType=VARCHAR},
-      room_id = #{roomId,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       se_remark = #{seRemark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

@@ -6,6 +6,7 @@ import com.github.pagehelper.util.StringUtil;
 import com.supadata.pojo.StudentCard;
 import com.supadata.service.IStudentCardService;
 import com.supadata.utils.DateUtil;
+import com.supadata.utils.ExcelUtil;
 import com.supadata.utils.MsgJson;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -152,6 +154,34 @@ public class CardController {
         MsgJson msgJson = MsgJson.success(cards, "查询成功！");
         msgJson.setCount(pageInfo.getTotal());
         return msgJson;
+
+    }
+    /**
+     * 功能描述:导出卡片列表信息
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/4/18 15:49
+     */
+    @RequestMapping("/export")
+    public void exportCards(String user_id,  HttpServletResponse response){
+        if (StringUtils.isEmpty(user_id)) {
+            return;
+        }
+        List<StudentCard> cards = studentCardService.selectAllList(new HashedMap());
+        String sheetName = "付费用户";
+        String fileName = "卡片信息表-" + DateUtil.getTimestamp();
+        int columnNumber = 2;
+
+        int[] columnWidth = {20, 20};
+        String[] columnName = {"姓名", "卡号"};
+
+        try {
+            ExcelUtil.ExportWithResponse(sheetName, fileName, columnNumber, columnWidth, columnName, cards, response);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
     }
 }

@@ -312,7 +312,7 @@ public class CourseServiceImpl implements ICourseService {
             Row row = sheet3.getRow(i);
             Cell cell1 = row.getCell(0);
             Cell cell2 = row.getCell(1);
-            cell2.setCellType(CellType.STRING);
+            cell2.setCellType(Cell.CELL_TYPE_STRING);
             String value1 = cell1.getStringCellValue().trim();
             String value2 = cell2.getStringCellValue().trim();
             sc.setStudentName(value1);

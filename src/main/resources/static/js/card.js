@@ -43,6 +43,11 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         getCardList(url);
     })
 
+    //导出
+    $(".out-card-btn").click(function () {
+        window.location.href = global + "/card/export?user_id=" + user_id;
+    })
+
 
     //点击添加
     $(document).on('click', '.add-card-btn', function () {

@@ -1,0 +1,157 @@
+package com.supadata.controller;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.util.StringUtil;
+import com.supadata.pojo.StudentCard;
+import com.supadata.service.IStudentCardService;
+import com.supadata.utils.DateUtil;
+import com.supadata.utils.MsgJson;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @ClassName: CardController
+ * @Description:
+ * @Author: pxx
+ * @Date: 2019/4/18 15:30
+ * @Description:
+ */
+@RestController
+@RequestMapping("/card")
+public class CardController {
+
+    private static Logger logger = Logger.getLogger(CourseController.class);
+
+    @Autowired
+    public IStudentCardService studentCardService;
+
+    /**
+     * 功能描述:添加卡片信息
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/4/18 15:49
+     */
+    @RequestMapping("/add")
+    public MsgJson AddCard(String user_id, String cardNo,  String name){
+        if (StringUtils.isEmpty(user_id) || StringUtils.isEmpty(cardNo) || StringUtils.isEmpty(name)) {
+            return MsgJson.fail("参数包含空值！");
+        }
+        StudentCard card = studentCardService.selectByNumber(cardNo);
+        if (card == null) {
+            StudentCard sc = new StudentCard(name, cardNo, DateUtil.getCurDate());
+            int res = studentCardService.insertSelective(sc);
+            if (res > 0) {
+                return MsgJson.success( "卡片添加成功！");
+            }
+        }
+        return MsgJson.fail("卡号重复!");
+    }
+
+    /**
+     * 功能描述:编辑卡片信息
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/4/18 15:49
+     */
+    @RequestMapping("/edit")
+    public MsgJson editCard(String user_id, Integer id,  String name){
+        if (StringUtils.isEmpty(user_id) || id == null || StringUtils.isEmpty(name)) {
+            return MsgJson.fail("参数包含空值！");
+        }
+        StudentCard sc = studentCardService.selectByPrimaryKey(id);
+        if (sc == null) {
+            return MsgJson.success( "卡片id有误！");
+        }
+        sc.setStudentName(name);
+        sc.setUpdateTime(DateUtil.getCurDate());
+        int res = studentCardService.updateByPrimaryKeySelective(sc);
+        if(res > 0){
+            return MsgJson.success( "修改成功!");
+        }
+        return MsgJson.fail("修改失败!");
+    }
+
+
+    /**
+     * 功能描述:删除卡片信息
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/4/18 15:49
+     */
+    @RequestMapping("/delete")
+    public MsgJson deleteCard(String user_id, Integer id){
+        if (StringUtils.isEmpty(user_id) || id == null) {
+            return MsgJson.fail("参数包含空值！");
+        }
+        int sc = studentCardService.deleteByPrimaryKey(id);
+        if (sc > 0) {
+            return MsgJson.success( "删除成功!");
+        }
+        return MsgJson.fail("删除失败!");
+    }
+
+
+    /**
+     * 功能描述:批量删除卡片信息
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/4/18 15:49
+     */
+    @RequestMapping("/bdc")
+    public MsgJson batchDeleteCard(String user_id, String idList){
+        if (StringUtils.isEmpty(user_id) || StringUtil.isEmpty(idList) || "[]".equals(idList)) {
+            return MsgJson.fail("参数包含空值！");
+        }
+        JSONArray idArry = JSONArray.fromObject(idList);
+        int res = 0;
+        for (Object idData : idArry) {
+            JSONObject idObj = JSONObject.fromObject(idData);
+            Integer id = Integer.valueOf(idObj.getString("id"));
+            System.out.println(id);
+            res = studentCardService.deleteByPrimaryKey(id);
+        }
+        if (res > 0) {
+            return MsgJson.success("批量删除成功!");
+        }
+        return MsgJson.fail("批量删除失败!");
+    }
+
+    /**
+     * 功能描述:查询卡片列表信息
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/4/18 15:49
+     */
+    @RequestMapping("/list")
+    public MsgJson listCards(String user_id, Integer page, Integer limit, String number){
+        if (StringUtils.isEmpty(user_id)) {
+            return MsgJson.fail("参数包含空值！");
+        }
+        Map<String, String> map = new HashedMap();
+        if (StringUtils.isNotEmpty(number)) {
+            map.put("key", number);
+        }
+        PageHelper.startPage(page,limit);
+        List<StudentCard> cards = studentCardService.selectAllList(map);
+        PageInfo<StudentCard> pageInfo = new PageInfo<StudentCard>(cards);
+        MsgJson msgJson = MsgJson.success(cards, "查询成功！");
+        msgJson.setCount(pageInfo.getTotal());
+        return msgJson;
+
+    }
+}

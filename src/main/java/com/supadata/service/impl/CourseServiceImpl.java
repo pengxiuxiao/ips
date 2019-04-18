@@ -159,6 +159,11 @@ public class CourseServiceImpl implements ICourseService {
         return courseMapper.updateByPrimaryKeySelective(course);
     }
 
+    @Override
+    public Course queryCourseByRoomId(Integer roomId) {
+        return courseMapper.selectCourseByRoomId(roomId);
+    }
+
     /**
      * 功能描述: 读取sheet1
      * @auther: pxx
@@ -278,7 +283,6 @@ public class CourseServiceImpl implements ICourseService {
                 seat.setLineRoadIndex(rowGdIndex);
                 seat.setColuRoadIndex(columGdIndex);
                 seat.setCourseId(course.getId());
-                seat.setRoomId(course.getcRoomId()+"");
                 seat.setRoomName(course.getcRoomName());
                 seat.setUpdateTime(com.supadata.utils.DateUtil.getCurDate());
                 seatMapper.insertSelective(seat);

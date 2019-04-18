@@ -163,9 +163,9 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             }else  if (i == 4) {
                 var name = "PPT";
             }
-            // else  if (i == 5) {
-            //     var name = "课堂";
-            // }
+            else  if (i == 5) {
+                var name = "课堂";
+            }
             if (data.sModule == i) {
                 select  = "selected class";
             }else{

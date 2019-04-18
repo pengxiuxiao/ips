@@ -1,5 +1,10 @@
 package com.supadata.service;
 
+import com.supadata.pojo.StudentCard;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * @ClassName: IStudentCardService
  * @Description:
@@ -9,4 +14,15 @@ package com.supadata.service;
  */
 public interface IStudentCardService {
 
+    int deleteByPrimaryKey(Integer id);
+
+    int insertSelective(StudentCard record);
+
+    StudentCard selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(StudentCard record);
+
+    List<StudentCard> selectAllList(Map<String, String> map);
+
+    StudentCard selectByNumber(String number);
 }

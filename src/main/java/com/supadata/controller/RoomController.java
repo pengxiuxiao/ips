@@ -2,10 +2,13 @@ package com.supadata.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.util.StringUtil;
 import com.supadata.pojo.Room;
 import com.supadata.service.IRoomService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +51,6 @@ public class RoomController {
         String name = request.getParameter("name");
         String ip = request.getParameter("ip");
         String location = request.getParameter("location");
-        String capacity = request.getParameter("capacity");
-        String rank = request.getParameter("rank");
         String remark = request.getParameter("remark");
         if (StringUtils.isEmpty(user_id)) {
             msg.setCode(1);
@@ -70,17 +71,14 @@ public class RoomController {
         room.setrName(name);
         room.setrIp(ip);
         room.setUpdateTime(DateUtil.getCurDate());
-        if (StringUtils.isNotEmpty(capacity)) {
-            room.setCapacity(Integer.parseInt(capacity));
-        }
         room.setrLocation(location);
-        room.setrRank(rank);
         room.setrRemark(remark);
         if (roomService.add(room) != 1){
             msg.setCode(2);
             msg.setMsg("添加失败！");
             return msg;
         }
+        logger.info("添加教室成功：name=" + room.getrName() + ",code=" + room.getrIp());
         return msg;
     }
 
@@ -132,8 +130,39 @@ public class RoomController {
             msg.setMsg("更新失败！");
             return msg;
         }
+        logger.info("编辑教室成功：name=" + room.getrName() + ",code=" + room.getrIp());
         return msg;
     }
+
+
+    /**
+     * 功能描述:批量删除教室列表数据
+     *
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2018/12/11 16:39
+     */
+    @RequestMapping(value = "/bdr")
+    public MsgJson batchDeleteRoom(String idList, String user_id) {
+        if (StringUtils.isEmpty(user_id) || StringUtil.isEmpty(idList) || "[]".equals(idList)) {
+            return MsgJson.fail("参数包含空值！");
+        }
+        JSONArray idArry = JSONArray.fromObject(idList);
+        int res = 0;
+        for (Object idData : idArry) {
+            JSONObject idObj = JSONObject.fromObject(idData);
+            Integer id = Integer.valueOf(idObj.getString("id"));
+            System.out.println(id);
+            res = roomService.deleteRoom(id);
+        }
+
+        if (res > 0) {
+            return MsgJson.success( "视频删除成功");
+        }
+        return MsgJson.success( "视频删除失败");
+    }
+
 
     /**
      * 功能描述:删除教室
@@ -164,6 +193,7 @@ public class RoomController {
             msg.setMsg("删除失败！");
             return msg;
         }
+        logger.info("删除教室成功：room_id=" + room_id);
         return msg;
     }
 

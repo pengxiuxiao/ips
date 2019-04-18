@@ -1,6 +1,6 @@
 // var global = 'http://10.69.3.200:8080/ips';
-// var global = 'http://pengxiuxiao.55555.io';
-var global = 'http://pad.supadata.cn/ips';
+var global = 'http://pengxiuxiao.55555.io';
+// var global = 'http://pad.supadata.cn/ips';
 // var global = 'http://localhost:8080';
 
 
@@ -22,6 +22,12 @@ var addRoom=global + '/room/add';
 var editRoom=global + '/room/edit';
 //删除教室
 var deleteRoom=global + '/room/delete';
+//删除卡片
+var deleteCard=global + '/card/delete';
+//添加卡片
+var addCard=global + '/card/add';
+//编辑卡片
+var editCard=global + '/card/edit';
 
 //下载课程模板
 var downCourse=global + '/course/efd';

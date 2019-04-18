@@ -17,6 +17,21 @@
     from tb_student_card
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectAllList" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_student_card
+    where 1 = 1
+    <if test="key != null" >
+      and card_number = #{key}
+    </if>
+  </select>
+  <select id="selectByNumber" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_student_card
+    where card_number = #{number}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from tb_student_card
     where id = #{id,jdbcType=INTEGER}

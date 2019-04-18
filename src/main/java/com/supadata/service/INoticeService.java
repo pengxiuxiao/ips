@@ -66,4 +66,13 @@ public interface INoticeService {
      * @date: 2018/6/20 14:17
      */
     List<Notice> queryAllContainsKey(String type, String key);
+
+    /**
+     * 功能描述:根据roomid、类型查询对应的消息，可能多条
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/4/17 16:09
+     */
+    List<Notice> queryPushNoticeByRoomId(String status, String type, Integer roomId);
 }

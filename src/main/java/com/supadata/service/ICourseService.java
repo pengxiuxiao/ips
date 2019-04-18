@@ -78,4 +78,13 @@ public interface ICourseService {
      * @date: 2018/6/26 15:27
      */
     int editById(Course course);
+
+    /**
+     * 功能描述:
+     * @auther: pxx
+     * @param: 
+     * @return: 
+     * @date: 2019/4/17 17:42
+     */
+    Course queryCourseByRoomId(Integer roomId);
 }

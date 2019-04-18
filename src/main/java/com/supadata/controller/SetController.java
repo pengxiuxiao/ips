@@ -1,5 +1,6 @@
 package com.supadata.controller;
 
+import com.supadata.constant.LRUCache;
 import com.supadata.pojo.Check;
 import com.supadata.pojo.Setting;
 import com.supadata.service.ICheckService;
@@ -35,6 +36,9 @@ public class SetController {
     @Autowired
     public ICheckService checkService;
 
+    @Autowired
+    private LRUCache lruCache;
+
     @RequestMapping("/set")
     public @ResponseBody
     MsgJson setting (HttpServletRequest request) {
@@ -63,9 +67,7 @@ public class SetController {
             msg.setMsg("usre_id为空！");
             return msg;
         }
-
         Setting setting = new Setting();
-        setting.setRoomId(room_id);
         if (StringUtils.isNotEmpty(start_time)) {//开机时间
             setting.setsStartTime(DateUtil.changeDateByStr(start_time));
         }

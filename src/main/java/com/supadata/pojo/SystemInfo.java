@@ -18,12 +18,6 @@ public class SystemInfo {
 
     private String roomName;
 
-    /* 关机时间 hh:mm */
-    private String offTime;
-
-    /* 开机时间 hh:mm */
-    private String onTime;
-
     /**
      * 初始化后将要执行的事件
      * image
@@ -36,13 +30,11 @@ public class SystemInfo {
     public SystemInfo() {
     }
 
-    public SystemInfo(long updateTime, String code, String roomId, String roomName, String offTime, String onTime, String event) {
+    public SystemInfo(long updateTime, String code, String roomId, String roomName, String event) {
         this.updateTime = updateTime;
         this.code = code;
         this.roomId = roomId;
         this.roomName = roomName;
-        this.offTime = offTime;
-        this.onTime = onTime;
         this.event = event;
     }
 
@@ -52,22 +44,6 @@ public class SystemInfo {
 
     public String getRoomId() {
         return roomId;
-    }
-
-    public String getOffTime() {
-        return offTime;
-    }
-
-    public void setOffTime(String offTime) {
-        this.offTime = offTime;
-    }
-
-    public String getOnTime() {
-        return onTime;
-    }
-
-    public void setOnTime(String onTime) {
-        this.onTime = onTime;
     }
 
     public void setRoomId(String roomId) {

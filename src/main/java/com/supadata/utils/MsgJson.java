@@ -1,6 +1,13 @@
 package com.supadata.utils;
 
+import com.github.pagehelper.PageInfo;
+import com.supadata.pojo.StudentCard;
+
 public class MsgJson {
+
+	private static final Integer CODE_SUCCESS = 0;
+
+	private static final Integer CODE_FAIL = 1;
 
 	private Integer code;//返回的状态0---成功，1---失败（一般前端传值错误），2---服务器错误，3---身份验证信息失效,4---对该接口没有权限
 
@@ -10,6 +17,17 @@ public class MsgJson {
 
 	private Long count;
 
+	public static MsgJson fail(String msg) {
+		return new MsgJson(CODE_FAIL,msg);
+	}
+
+	public static MsgJson success(String msg) {
+		return new MsgJson(CODE_SUCCESS,msg);
+	}
+
+	public static MsgJson success(Object data, String msg) {
+		return new MsgJson(CODE_SUCCESS,msg,data);
+	}
 	public void setCode(Integer status) {
 		this.code = status;
 	}
@@ -34,6 +52,8 @@ public class MsgJson {
 		return code;
 	}
 
+	public MsgJson() {
+	}
 
 	public MsgJson(Integer status, String message, Object data) {
 		super();

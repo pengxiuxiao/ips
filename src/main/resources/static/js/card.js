@@ -14,10 +14,10 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
 
 
     //获取列表接口
-    var getOrderList = function (url) {
+    var getCardList = function (url) {
     	
         table.render({
-            elem: '#rooms'
+            elem: '#cards'
             ,url: url
             // ,url: 'js/data.json'
             ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
@@ -25,28 +25,27 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             ,cols: [[
                 {type:'checkbox', fixed: 'left'}
                 ,{field:'id', title: 'id', width: 80}
-                ,{field:'rName', title: '教室名'}
-                ,{field:'rLocation', title: '教室位置'}
-                ,{field:'rIp', title: '教室Code'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
-                // ,{field:'updateTime', title: '操作时间', templet: '#createTime'}
+                ,{field:'studentName', title: '持卡人'}
+                ,{field:'cardNumber', title: '卡号'}
+                ,{field:'updateTime', title: '操作时间', templet: '#createTime'}
                 ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 150}
             ]]
         ,page: true
         });
     };
-    var url = global + '/room/list' + '?user_id='+ user_id;
-    getOrderList(url);
+    var url = global + '/card/list' + '?user_id='+ user_id;
+    getCardList(url);
 
     //搜索
     $(".doSearch").click(function () {
         var content = $(".keyWord").val();
-        url = global + '/room/list' + '?user_id='+ user_id + '&key=' + content;
-        getOrderList(url);
+        url = global + '/card/list' + '?user_id='+ user_id + '&number=' + content;
+        getCardList(url);
     })
 
 
     //点击添加
-    $(document).on('click', '.add-room-btn', function () {
+    $(document).on('click', '.add-card-btn', function () {
         //先清表单数据
         $(".modal-content form input").each(function(){
             $(this).val('');
@@ -72,16 +71,15 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 shadeClose: true,
                 content: $('.modal-content')
             });
-            $(".layui-input.nId").val(obj.data.id);
-            $(".layui-input.name").val(obj.data.rName);
-            $(".layui-input.location").val(obj.data.rLocation);
-            $(".layui-input.ip").val(obj.data.rIp);
+            $(".layui-input.cId").val(obj.data.id);
+            $(".layui-input.name").val(obj.data.studentName);
+            $(".layui-input.number").val(obj.data.cardNumber);
         }else if(obj.event === 'del'){//删除
-            layer.confirm('确认删除 ' + obj.data.rName + '？', function(index){
+            layer.confirm('确认删除 ' + obj.data.cardNumber + '？', function(index){
                 $.ajax({
                     type:'post',
-                    url: deleteRoom,
-                    data:{room_id:obj.data.id, user_id:user_id},
+                    url: deleteCard,
+                    data:{id:obj.data.id, user_id:user_id},
                     dataType:'json',
                     success:function (res) {
                         if(res.code == 0){//
@@ -122,14 +120,14 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     });
 
     //批量删除
-    $('.bdroom-btn').on('click', function(){
-        var checkStatus = table.checkStatus('rooms')
+    $('.bdcard-btn').on('click', function(){
+        var checkStatus = table.checkStatus('cards')
             ,data = checkStatus.data;
         // layer.alert(JSON.stringify(data));
         //ajax调用后台添加接口
         $.ajax({
             type:'post',
-            url: global + '/room/bdr',
+            url: global + '/card/bdc',
             data:{idList:JSON.stringify(data), user_id:user_id},
             dataType:'json',
             success:function (res) {
@@ -162,17 +160,15 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
 
     //添加、编辑学生信息post请求
     function postRoomEdit(indata) {
-        var room_id = indata.field.nId;
+        var c_id = indata.field.cId;
         var postData;
         var postUrl;
-        if(room_id == ""){
-            postUrl = addRoom;
-            postData = {name:indata.field.name, location:indata.field.location, ip:indata.field.ip,
-                user_id:user_id};
+        if(c_id == ""){
+            postUrl = addCard;
+            postData = {cardNo:indata.field.number, name:indata.field.name, user_id:user_id};
         }else{
-            postUrl = editRoom;
-            postData = {room_id:room_id, name:indata.field.name, location:indata.field.location, ip:indata.field.ip,
-                user_id:user_id};
+            postUrl = editCard;
+            postData = {id:indata.field.cId, name:indata.field.name, user_id:user_id};
         }
         //ajax调用后台添加接口
         $.ajax({
@@ -187,7 +183,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                     layer.closeAll();
                     $(".layui-laypage-btn").click();
                 }else {
-                    $.toptip(res.msg, 'error');
+                    layer.msg(res.msg);
                 }
             },
             error:function (err) {

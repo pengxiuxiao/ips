@@ -29,4 +29,6 @@ public interface CourseMapper {
     List<Course> selectAllCourse(@Param("key") String key);
 
     int updateDeleteStatus(@Param("id") Integer id);
+
+    Course selectCourseByRoomId(@Param("roomId") Integer roomId);
 }

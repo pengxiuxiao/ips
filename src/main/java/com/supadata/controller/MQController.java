@@ -1,5 +1,6 @@
 package com.supadata.controller;
 
+import com.supadata.constant.LRUCache;
 import com.supadata.constant.Mqtt;
 import com.supadata.mq.NoticeProducer;
 import com.supadata.mq.PushCallback;
@@ -32,15 +33,14 @@ public class MQController {
     @Autowired
     private Mqtt mqtt;
 
+    @Autowired
+    private LRUCache lruCache;
 
     @RequestMapping("/login")
     public MsgJson ActionToMessage(String type, String content) {
 
         if ("1".equals(type)) {
-            Destination destination = new ActiveMQQueue("pxx.test1");
-
-            producer.sendMessage(destination, content);
-
+            System.out.println(lruCache);
             return new MsgJson(0,"sucess");
         }
         return new MsgJson(1,"fail");

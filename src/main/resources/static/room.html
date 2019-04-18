@@ -10,6 +10,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
     <link rel="stylesheet" href="assets/layui/css/layui.css"  media="all">
+    <link rel="stylesheet" href="css/ips.css"  media="all">
 
     <style>
         .layui-form{
@@ -61,6 +62,9 @@
                             <a href="pad.html">pad状态</a>
                         </dd>
                         <dd>
+                            <a href="card.html">卡片管理</a>
+                        </dd>
+                        <dd>
                             <a href="app.html">版本管理</a>
                         </dd>
                     </dl>
@@ -90,7 +94,12 @@
                     <button class="layui-btn add-room-btn" style="float: right; margin-right: 50px">添加教室</button>
                 </div>
                 </div>
-                <table class="layui-hide" id="test" lay-filter="order-form"></table>
+
+                <!--操作全选-->
+                <div class="layui-btn-group edit-table">
+                    <button class="layui-btn bdroom-btn" data-type="getCheckData">批量删除</button>
+                </div>
+                <table class="layui-hide" id="rooms" lay-filter="order-form"></table>
                 <!--</table>-->
                 <script type="text/html" id="barDemo">
                     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>

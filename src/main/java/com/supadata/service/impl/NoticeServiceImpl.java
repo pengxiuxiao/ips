@@ -6,6 +6,7 @@ import com.supadata.service.INoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.jnlp.IntegrationService;
 import java.util.List;
 
 /**
@@ -106,5 +107,10 @@ public class NoticeServiceImpl implements INoticeService {
     @Override
     public List<Notice> queryAllContainsKey(String type, String key) {
         return noticeMapper.selectByTypeContainsKey(type,key);
+    }
+
+    @Override
+    public List<Notice> queryPushNoticeByRoomId(String status, String type, Integer roomId) {
+        return noticeMapper.selectByRoomIdStatusAndType(status, type, roomId);
     }
 }

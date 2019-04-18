@@ -11,14 +11,19 @@
     <result column="publish_room_id" property="publishRoomId" jdbcType="VARCHAR" />
     <result column="n_time" property="nTime" jdbcType="TIMESTAMP" />
     <result column="n_user" property="nUser" jdbcType="VARCHAR" />
-    <result column="file_path" property="filePath" jdbcType="VARCHAR" />
     <result column="n_url" property="nUrl" jdbcType="VARCHAR" />
+    <result column="file_path" property="filePath" jdbcType="VARCHAR" />
+    <result column="n_word_size" property="nWordSize" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="n_remark" property="nRemark" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, n_title, n_content, n_type, n_status, publish_room, publish_room_id, n_time, n_user, n_url, file_path, update_time,
-    n_remark
+    id, n_title, n_content, n_type, n_status, publish_room, publish_room_id, n_time, n_user, n_url, file_path, n_word_size,
+    update_time, n_remark
+  </sql>
+  <sql id="Join_Column_List" >
+    n.id, n.n_title, n.n_content, n.n_type, n.n_status, n.publish_room, n.publish_room_id, n.n_time, n.n_user, n.n_url, n.file_path,
+    n.n_word_size, n.update_time, n.n_remark
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -36,6 +41,14 @@
     order by update_time desc
     limit 1
     </if>
+  </select>
+  <select id="selectByRoomIdStatusAndType" resultMap="BaseResultMap">
+    select
+    <include refid="Join_Column_List" />
+    from tb_notice n left join tb_room_notice rn on rn.notice_id = n.id
+    where rn.room_id = #{roomId}
+    and n.n_status = #{status}
+    and n.n_type  = #{type}
   </select>
   <select id="selectByTypeContainsKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
@@ -96,6 +109,9 @@
       <if test="filePath != null" >
         file_path,
       </if>
+      <if test="nWordSize != null" >
+        n_word_size,
+      </if>
       <if test="updateTime != null" >
         update_time,
       </if>
@@ -137,6 +153,9 @@
       <if test="filePath != null" >
         #{filePath,jdbcType=VARCHAR},
       </if>
+      <if test="nWordSize != null" >
+        #{nWordSize,jdbcType=INTEGER},
+      </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
@@ -177,6 +196,9 @@
       </if>
       <if test="filePath != null" >
         file_path = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="nWordSize != null" >
+        n_word_size = #{nWordSize,jdbcType=INTEGER},
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},

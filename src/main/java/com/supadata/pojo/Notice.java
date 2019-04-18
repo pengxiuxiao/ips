@@ -25,6 +25,8 @@ public class Notice {
 
     private String filePath;
 
+    private Integer nWordSize;
+
     private Date updateTime;
 
     private String nRemark;
@@ -134,5 +136,13 @@ public class Notice {
 
     public void setPublishRoomId(String publishRoomId) {
         this.publishRoomId = publishRoomId;
+    }
+
+    public Integer getnWordSize() {
+        return nWordSize;
+    }
+
+    public void setnWordSize(Integer nWordSize) {
+        this.nWordSize = nWordSize;
     }
 }

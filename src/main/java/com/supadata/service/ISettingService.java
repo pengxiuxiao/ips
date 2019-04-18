@@ -27,4 +27,13 @@ public interface ISettingService {
      * @date: 2018/6/26 20:13
      */
     int add(Setting setting);
+
+    /**
+     * 功能描述:查询指定roomid的最后一条设置
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/4/16 18:10
+     */
+    Setting querySettingByRoomId(Integer roomId);
 }

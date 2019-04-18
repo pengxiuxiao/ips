@@ -23,4 +23,6 @@ public interface NoticeMapper {
     List<Notice> selectByStatusAndType(@Param("status") String status, @Param("type") String type);
 
     List<Notice> selectByTypeContainsKey(@Param("type") String type, @Param("key") String key);
+
+    List<Notice> selectByRoomIdStatusAndType(@Param("status") String status, @Param("type") String type, @Param("roomId") Integer roomId);
 }

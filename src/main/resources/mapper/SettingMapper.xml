@@ -22,6 +22,10 @@
     word_font, word_size, word_color, rotation_time, s_module, update_time,
     se_remark
   </sql>
+  <sql id="Join_Column_List" >
+    s.id, s.s_start_time, s.s_end_time, s.display_date, s.display_card, s.display_daojishi, s.daojishi, s.word_font, s.word_size,
+    s.word_color, s.rotation_time, s.s_module, s.update_time, s.se_remark
+  </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -33,6 +37,14 @@
     <include refid="Base_Column_List" />
     from tb_setting
     order by update_time desc
+    limit 1
+  </select>
+  <select id="selectSettingByRoomId" resultMap="BaseResultMap" >
+    select
+    <include refid="Join_Column_List" />
+    from tb_setting s left join tb_room_setting rs on s.id = rs.set_id
+    where rs.room_id = #{roomId}
+    order by s.update_time desc
     limit 1
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >

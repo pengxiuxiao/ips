@@ -2,6 +2,7 @@ package com.supadata.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.supadata.constant.LRUCache;
 import com.supadata.utils.enums.EventType;
 import com.supadata.pojo.*;
 import com.supadata.service.*;
@@ -10,7 +11,6 @@ import com.supadata.utils.MsgJson;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,6 +54,12 @@ public class PadController {
     public ISeatService seatService;
 
     /**
+     *构建内存缓存对象
+     */
+    @Autowired
+    private LRUCache lruCache;
+
+    /**
      * 功能描述:
      *
      * @auther: pxx
@@ -82,11 +88,13 @@ public class PadController {
             pad.setRoomName(room.getrName());
             int res = padService.add(pad);
         }
+        lruCache.put(code, pad.getRoomId());
+        System.out.println(lruCache);
 
         //查询后台该pad的设置信息 返回其要执行的事件
+        Setting setting = settingService.querySettingByRoomId(pad.getRoomId());
         SystemInfo si = new SystemInfo(System.currentTimeMillis(), pad.getCode(),
-                pad.getRoomId().toString(), pad.getRoomName(), pad.getEndTime(),
-                pad.getStartTime(), EventType.NOTICE.getEvent());
+                pad.getRoomId().toString(), pad.getRoomName(),EventType.getName(setting.getsModule()));
 
         return new MsgJson(0, "登录成功！", si);
     }
@@ -265,16 +273,20 @@ public class PadController {
         MsgJson msg = new MsgJson(0, "查询消息成功！");
         logger.info("notice:code=" + code);
         if (StringUtils.isEmpty(code)) {
-            msg.setCode(1);
-            msg.setMsg("code为空！");
-            return msg;
+            return new MsgJson(1,"code为空！");
         }
         if (StringUtils.isEmpty(type)) {
-            msg.setCode(1);
-            msg.setMsg("type为空！");
-            return msg;
+            return new MsgJson(1,"type为空！");
         }
-        List<Notice> notices = noticeService.queryPushNotice("2", type);
+
+        if (lruCache.get(code) == null) {
+            Pad pad = padService.queryByCode(code);
+            if(pad == null){
+                return new MsgJson(1,"code错误。");
+            }
+            lruCache.put(code,pad.getRoomId());
+        }
+        List<Notice> notices = noticeService.queryPushNoticeByRoomId("2", type, lruCache.get(code));
         msg.setData(notices);
         return msg;
     }
@@ -289,7 +301,7 @@ public class PadController {
      */
     @RequestMapping("/course")
     public @ResponseBody
-    MsgJson course(String code, Integer room_id) {
+    MsgJson course(String code) {
         MsgJson msg = new MsgJson(0, "查询成功！");
         logger.info("course:code=" + code);
         if (StringUtils.isEmpty(code)) {
@@ -297,12 +309,14 @@ public class PadController {
             msg.setMsg("code为空！");
             return msg;
         }
-//        if (room_id == null) {
-//            msg.setCode(1);
-//            msg.setMsg("room_id为空！");
-//            return msg;
-//        }
-        List<Course> cources = courseService.queryComingCourse(DateUtil.getCurrentDateTime());
+        if (lruCache.get(code) == null) {
+            Pad pad = padService.queryByCode(code);
+            if(pad == null){
+                return new MsgJson(1,"code错误!");
+            }
+            lruCache.put(code,pad.getRoomId());
+        }
+        Course cources = courseService.queryCourseByRoomId(lruCache.get(code));
         msg.setData(cources);
         return msg;
     }

@@ -2,6 +2,7 @@ package com.supadata.dao;
 
 import com.supadata.pojo.Setting;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface SettingMapper {
@@ -18,4 +19,6 @@ public interface SettingMapper {
     int updateByPrimaryKey(Setting record);
 
     Setting selectNewest();
+
+    Setting selectSettingByRoomId(@Param("roomId") Integer roomId);
 }

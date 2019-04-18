@@ -72,6 +72,14 @@
       and CONCAT(IFNULL(`c_name`,'')) LIKE CONCAT('%', #{key}, '%')
     </if>
   </select>
+  <select id="selectCourseByRoomId" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_course
+    where  c_room_id = #{roomId}
+    order by update_time desc
+    limit 1
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from tb_course
     where id = #{id,jdbcType=INTEGER}

@@ -13,6 +13,15 @@ public class StudentCard {
 
     private String scRemark;
 
+    public StudentCard() {
+    }
+
+    public StudentCard(String studentName, String cardNumber, Date updateTime) {
+        this.studentName = studentName;
+        this.cardNumber = cardNumber;
+        this.updateTime = updateTime;
+    }
+
     public Integer getId() {
         return id;
     }

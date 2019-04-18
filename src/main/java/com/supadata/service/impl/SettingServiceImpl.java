@@ -45,4 +45,9 @@ public class SettingServiceImpl implements ISettingService {
     public int add(Setting setting) {
         return settingMapper.insertSelective(setting);
     }
+
+    @Override
+    public Setting querySettingByRoomId(Integer roomId) {
+        return settingMapper.selectSettingByRoomId(roomId);
+    }
 }

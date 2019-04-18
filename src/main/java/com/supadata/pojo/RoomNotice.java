@@ -13,6 +13,15 @@ public class RoomNotice {
 
     private String rsRemark;
 
+    public RoomNotice(Integer roomId, Integer noticeId, Date updateTime) {
+        this.roomId = roomId;
+        this.noticeId = noticeId;
+        this.updateTime = updateTime;
+    }
+
+    public RoomNotice() {
+    }
+
     public Integer getId() {
         return id;
     }

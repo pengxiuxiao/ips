@@ -34,6 +34,24 @@ public class Notice {
     public Notice() {
     }
 
+    public Notice(String nTitle, String nContent, String nType, String publishRoom, String publishRoomId, Integer nWordSize, Date updateTime) {
+        this.nTitle = nTitle;
+        this.nContent = nContent;
+        this.nType = nType;
+        this.publishRoom = publishRoom;
+        this.publishRoomId = publishRoomId;
+        this.nWordSize = nWordSize;
+        this.updateTime = updateTime;
+    }
+
+    public Notice(String nTitle, String nType, String publishRoom, String publishRoomId, Date updateTime) {
+        this.nTitle = nTitle;
+        this.nType = nType;
+        this.publishRoom = publishRoom;
+        this.publishRoomId = publishRoomId;
+        this.updateTime = updateTime;
+    }
+
     public Integer getId() {
         return id;
     }

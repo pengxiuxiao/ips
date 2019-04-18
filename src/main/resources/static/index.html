@@ -107,6 +107,11 @@
 
                 </div>
             </div>
+
+            <!--操作全选-->
+            <div class="layui-btn-group edit-table">
+                <button class="layui-btn bdnotice-btn" data-type="getCheckData">批量删除</button>
+            </div>
                 <table class="layui-hide" id="test" lay-filter="order-table"></table>
                 <!--</table>-->
                 <script type="text/html" id="barDemo">
@@ -154,6 +159,12 @@
             <label class="layui-form-label">消息内容：</label>
             <div class="layui-input-block ">
                 <textarea name="content" rows="3" cols="2" wrap="hard" lay-verify="textareacontent" placeholder="请输入内容" class="layui-input content"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">文字大小：</label>
+            <div class="layui-input-block">
+                <input type="text" name="word_size" lay-verify="word_size" autocomplete="off" placeholder="请输入大小" class="layui-input word_size">
             </div>
         </div>
         <div class="layui-form-item">

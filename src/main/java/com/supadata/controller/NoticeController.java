@@ -219,12 +219,13 @@ public class NoticeController {
             msgJson.setMsg("删除失败！");
             return msgJson;
         }
+        /** 更新消息*/
         //更新轮询表
-        Check check = new Check();
-        check.setChModule(notice.getnType());
-        check.setChUrl(config.getSERVICEURL() + "ips/pad/notice");
-        check.setUpdateTime(DateUtil.getCurDate());
-        res = checkService.add(check);
+//        Check check = new Check();
+//        check.setChModule(notice.getnType());
+//        check.setChUrl(config.getSERVICEURL() + "ips/pad/notice");
+//        check.setUpdateTime(DateUtil.getCurDate());
+//        res = checkService.add(check);
         return msgJson;
     }
 
@@ -377,28 +378,6 @@ public class NoticeController {
             return msgJson;
         }
 
-        String room_id = "";
-        String room_name= "";
-        JSONArray roomArry = JSONArray.fromObject(room_list);
-        for(int i = 0; i < roomArry.size(); i++){
-            JSONObject jsonRoom = roomArry.getJSONObject(i);
-            String id = jsonRoom.getString("id");
-            String name = jsonRoom.getString("name");
-
-        }
-        Notice notice = new Notice();
-        notice.setPublishRoom(room_name);
-        notice.setPublishRoomId(room_id);
-        notice.setnType(NoticeType.getNoticeIndex(FileType.getKey(suffix))+"");
-        if (StringUtils.isNotEmpty(title)) {
-            notice.setnTitle(title);
-        }
-        notice.setnUser(user_id);
-        notice.setnStatus("2");
-        notice.setnUrl(config.getSERVICEURL() + "ips/notice/fileDownLoad?name=" + fileName);
-        notice.setUpdateTime(DateUtil.getCurDate());
-        int res = 0;
-
         //如果是ppt，需要转成图片，并存储
         Map<String,Object> map = null;
         if (".pptx".equals(suffix) || ".PPTX".equals(suffix)){
@@ -410,32 +389,45 @@ public class NoticeController {
                     loacalPath + filePath,
                     "png");
         }
-        //将ppt转换的图片信息插入数据库
-        if (map != null && (Boolean) map.get("converReturnResult")){
-            List<String> imgNames=(List<String>) map.get("imgNames");
-            for (String imgName : imgNames) {
-                System.out.println(imgName);
-                notice.setFilePath(loacalPath + filePath + imgName);
-                notice.setnUrl(config.getSERVICEURL() + "ips/notice/fileDownLoad?name=" + imgName);
-                res = noticeService.addNotice(notice);
+
+        /** 存一次图片，添加多条notice、roomnotice*/
+        JSONArray roomArry = JSONArray.fromObject(room_list);
+        for(int i = 0; i < roomArry.size(); i++){
+            JSONObject jsonRoom = roomArry.getJSONObject(i);
+            String id = jsonRoom.getString("id");
+            String name = jsonRoom.getString("name");
+
+            //String nTitle, String nType, String publishRoom, String publishRoomId, Date updateTime
+            Notice notice = new Notice(title, NoticeType.getNoticeIndex(FileType.getKey(suffix))+"",
+                    name, id, DateUtil.getCurDate());
+            notice.setnUrl(config.getSERVICEURL() + "ips/notice/fileDownLoad?name=" + fileName);
+            notice.setUpdateTime(DateUtil.getCurDate());
+
+            //将ppt转换的图片信息插入数据库
+            if (map != null && (Boolean) map.get("converReturnResult")){
+                List<String> imgNames=(List<String>) map.get("imgNames");
+                for (String imgName : imgNames) {
+                    System.out.println(imgName);
+                    notice.setFilePath(loacalPath + filePath + imgName);
+                    noticeService.addNotice(notice);
+                    roomNoticeService.insertSelective(new RoomNotice(Integer.parseInt(id), notice.getId(),notice.getUpdateTime()));
+                    notice.setId(null);
+                }
+            }else {//将非ppt文件信息插入数据库
+                notice.setFilePath(loacalPath + filePath + fileName);
+                noticeService.addNotice(notice);
+                roomNoticeService.insertSelective(new RoomNotice(Integer.parseInt(id), notice.getId(),notice.getUpdateTime()));
             }
         }
-        //将非ppt文件信息插入数据库
-        else {
-            notice.setFilePath(loacalPath + filePath + fileName);
-            res = noticeService.addNotice(notice);
-        }
-        if (res != 1) {
-            msgJson.setCode(2);
-            msgJson.setMsg("插入数据失败！");
-            return msgJson;
-        }
+
+
+
         //更新轮询表
-        Check check = new Check();
-        check.setChModule(notice.getnType());
-        check.setChUrl(config.getSERVICEURL() + "ips/pad/notice");
-        check.setUpdateTime(DateUtil.getCurDate());
-        res = checkService.add(check);
+//        Check check = new Check();
+//        check.setChModule(notice.getnType());
+//        check.setChUrl(config.getSERVICEURL() + "ips/pad/notice");
+//        check.setUpdateTime(DateUtil.getCurDate());
+//        res = checkService.add(check);
         return msgJson;
     }
 

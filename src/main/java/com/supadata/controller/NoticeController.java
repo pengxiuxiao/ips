@@ -2,11 +2,14 @@ package com.supadata.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.util.StringUtil;
 import com.supadata.constant.Config;
 import com.supadata.pojo.Check;
 import com.supadata.pojo.Notice;
+import com.supadata.pojo.RoomNotice;
 import com.supadata.service.ICheckService;
 import com.supadata.service.INoticeService;
+import com.supadata.service.IRoomNoticeService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.FileUtil;
 import com.supadata.utils.MsgJson;
@@ -53,6 +56,9 @@ public class NoticeController {
     public ICheckService checkService;
 
     @Autowired
+    public IRoomNoticeService roomNoticeService;
+
+    @Autowired
     private Config config;
 
     /**
@@ -70,6 +76,7 @@ public class NoticeController {
         String title = request.getParameter("title");
         String content = request.getParameter("content");
         String room_list = request.getParameter("room_list");
+        String wordSize = request.getParameter("word_size");
         logger.info("addWord:title=" + title + ",content=" + content + ",room_list=" + room_list);
         if (StringUtils.isEmpty(user_id)) {
             msgJson.setCode(1);
@@ -86,40 +93,35 @@ public class NoticeController {
             msgJson.setMsg("content为空！");
             return msgJson;
         }
-        String room_id = "";
-        String room_name= "";
+        if (StringUtils.isEmpty(wordSize)) {
+            msgJson.setCode(1);
+            msgJson.setMsg("wordSize为空！");
+            return msgJson;
+        }
         JSONArray roomArry = JSONArray.fromObject(room_list);
         for(int i = 0; i < roomArry.size(); i++){
             JSONObject jsonRoom = roomArry.getJSONObject(i);
             String id = jsonRoom.getString("id");
             String name = jsonRoom.getString("name");
-            if (i == 0){
-                room_id = room_id + id;
-                room_name = room_name + name;
-            }else{
-                room_id = room_id + "," + id;
-                room_name = room_name + "," + name;
+
+            //String nTitle, String nContent, String nType, String publishRoom, String publishRoomId, Integer nWordSize, Date updateTime
+            Notice notice = new Notice(title, content, "1", name, id, Integer.parseInt(wordSize), DateUtil.getCurDate());
+            int res = noticeService.addNotice(notice);
+            if (res != 1) {
+                msgJson.setCode(2);
+                msgJson.setMsg("添加失败！");
+                return msgJson;
             }
+            RoomNotice rn = new RoomNotice(Integer.parseInt(id), notice.getId(),notice.getUpdateTime());
+            roomNoticeService.insertSelective(rn);
         }
-        Notice notice = new Notice();
-        notice.setnTitle(title);
-        notice.setnContent(content);
-        notice.setPublishRoom(room_name);
-        notice.setPublishRoomId(room_id);
-        notice.setnStatus("2");
-        notice.setUpdateTime(DateUtil.getCurDate());
-        int res = noticeService.addNotice(notice);
-        if (res != 1) {
-            msgJson.setCode(2);
-            msgJson.setMsg("添加失败！");
-            return msgJson;
-        }
-        //更新轮询表
-        Check check = new Check();
-        check.setChModule("1");
-        check.setChUrl(config.getSERVICEURL() + "ips/pad/notice");
-        check.setUpdateTime(DateUtil.getCurDate());
-        res = checkService.add(check);
+
+        /** 更新消息表 */
+//        Check check = new Check();
+//        check.setChModule("1");
+//        check.setChUrl(config.getSERVICEURL() + "ips/pad/notice");
+//        check.setUpdateTime(DateUtil.getCurDate());
+//        res = checkService.add(check);
         return msgJson;
     }
     /**
@@ -137,6 +139,7 @@ public class NoticeController {
         String notice_id = request.getParameter("notice_id");
         String title = request.getParameter("title");
         String content = request.getParameter("content");
+        String wordSize = request.getParameter("word_size");
         logger.info("editWord:title=" + title + ",content=" + content );
 //        String room_list = request.getParameter("room_list");
         if (StringUtils.isEmpty(user_id)) {
@@ -149,6 +152,11 @@ public class NoticeController {
             msgJson.setMsg("notice_id为空！");
             return msgJson;
         }
+        if (StringUtils.isEmpty(wordSize)) {
+            msgJson.setCode(1);
+            msgJson.setMsg("notice_id为空！");
+            return msgJson;
+        }
         Notice notice = noticeService.queryById(Integer.parseInt(notice_id));
         if (StringUtils.isNotEmpty(content)) {
             notice.setnContent(content);
@@ -156,24 +164,9 @@ public class NoticeController {
         if (StringUtils.isNotEmpty(title)) {
             notice.setnTitle(title);
         }
-
-//        String room_id = "";
-//        String room_name= "";
-//        JSONArray roomArry = JSONArray.fromObject(room_list);
-//        for(int i = 0; i < roomArry.size(); i++){
-//            JSONObject jsonRoom = roomArry.getJSONObject(i);
-//            String id = jsonRoom.getString("id");
-//            String name = jsonRoom.getString("name");
-//            if (i == 0){
-//                room_id = room_id + id;
-//                room_name = room_name + name;
-//            }else{
-//                room_id = room_id + "," + id;
-//                room_name = room_name + "," + name;
-//            }
-//        }
-//        notice.setPublishRoom(room_name);
-//        notice.setPublishRoomId(room_id);
+        if (StringUtils.isNotEmpty(wordSize)) {
+            notice.setnWordSize(Integer.parseInt(wordSize));
+        }
         notice.setUpdateTime(DateUtil.getCurDate());
         int res = noticeService.editNotice(notice);
         if (res != 1) {
@@ -181,12 +174,13 @@ public class NoticeController {
             msgJson.setMsg("编辑失败！");
             return msgJson;
         }
-        //更新轮询表
-        Check check = new Check();
-        check.setChModule("1");
-        check.setChUrl(config.getSERVICEURL() + "ips/pad/notice");
-        check.setUpdateTime(DateUtil.getCurDate());
-        res = checkService.add(check);
+        /** 更新消息*/
+//        //更新轮询表
+//        Check check = new Check();
+//        check.setChModule("1");
+//        check.setChUrl(config.getSERVICEURL() + "ips/pad/notice");
+//        check.setUpdateTime(DateUtil.getCurDate());
+//        res = checkService.add(check);
         return msgJson;
     }
     /**
@@ -233,6 +227,33 @@ public class NoticeController {
         res = checkService.add(check);
         return msgJson;
     }
+
+    /**
+     * 批量删除
+     * @param user_id
+     * @param idList
+     * @return
+     */
+    @RequestMapping("/bdn")
+    public MsgJson batchDeleteNotice(String user_id, String idList){
+        if (StringUtils.isEmpty(user_id) || StringUtil.isEmpty(idList) || "[]".equals(idList)) {
+            return MsgJson.fail("参数包含空值！");
+        }
+        JSONArray idArry = JSONArray.fromObject(idList);
+        int res = 0;
+        for (Object idData : idArry) {
+            JSONObject idObj = JSONObject.fromObject(idData);
+            Integer id = Integer.valueOf(idObj.getString("id"));
+            System.out.println(id);
+            res = noticeService.deleteNotice(id);
+        }
+        if (res > 0) {
+            logger.info("批量删除文字消息：idList=" + idArry);
+            return MsgJson.success("批量删除成功!");
+        }
+        return MsgJson.fail("批量删除失败!");
+    }
+
     /**
      * 功能描述:查询文字消息
      * @auther: pxx
@@ -363,13 +384,7 @@ public class NoticeController {
             JSONObject jsonRoom = roomArry.getJSONObject(i);
             String id = jsonRoom.getString("id");
             String name = jsonRoom.getString("name");
-            if (i == 0){
-                room_id = room_id + id;
-                room_name = room_name + name;
-            }else{
-                room_id = room_id + "," + id;
-                room_name = room_name + "," + name;
-            }
+
         }
         Notice notice = new Notice();
         notice.setPublishRoom(room_name);

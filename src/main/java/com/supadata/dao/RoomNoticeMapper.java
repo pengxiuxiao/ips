@@ -1,7 +1,9 @@
 package com.supadata.dao;
 
 import com.supadata.pojo.RoomNotice;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface RoomNoticeMapper {
     int deleteByPrimaryKey(Integer id);
 

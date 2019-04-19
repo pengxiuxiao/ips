@@ -54,6 +54,7 @@ public class CardController {
             StudentCard sc = new StudentCard(name, cardNo, DateUtil.getCurDate());
             int res = studentCardService.insertSelective(sc);
             if (res > 0) {
+                logger.info("添加卡片：id=" + sc.getId() + ",name=" + name + ",number=" + cardNo);
                 return MsgJson.success( "卡片添加成功！");
             }
         }
@@ -80,6 +81,7 @@ public class CardController {
         sc.setUpdateTime(DateUtil.getCurDate());
         int res = studentCardService.updateByPrimaryKeySelective(sc);
         if(res > 0){
+            logger.info("编辑卡片：id=" + sc.getId() + ",name=" + name  + ",number=" + sc.getCardNumber());
             return MsgJson.success( "修改成功!");
         }
         return MsgJson.fail("修改失败!");
@@ -100,6 +102,7 @@ public class CardController {
         }
         int sc = studentCardService.deleteByPrimaryKey(id);
         if (sc > 0) {
+            logger.info("删除卡片：id=" + id);
             return MsgJson.success( "删除成功!");
         }
         return MsgJson.fail("删除失败!");
@@ -127,6 +130,7 @@ public class CardController {
             res = studentCardService.deleteByPrimaryKey(id);
         }
         if (res > 0) {
+            logger.info("批量删除卡片：idList=" + idArry);
             return MsgJson.success("批量删除成功!");
         }
         return MsgJson.fail("批量删除失败!");

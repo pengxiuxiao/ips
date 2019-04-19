@@ -21,11 +21,12 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             ,limit: 10
             ,cols: [[
-                {field:'id', title: 'id', width: 80}
+                {type:'checkbox', fixed: 'left'}
+                ,{field:'id', title: 'id', width: 80}
                 ,{field:'nTitle', title: '标题'}
                 ,{field:'nContent', title: '内容'}
                 ,{field:'publishRoom', title: '推送教室'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
-                // ,{field:'nUser', title: '操作人'}
+                ,{field:'nWordSize', title: '字体大小'}
                 ,{field:'updateTime', title: '操作时间', templet: '#createTime'}
                 ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 180}
             ]]
@@ -58,6 +59,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         $(".layui-input.nId").val('');
         $(".layui-input.title").val('');
         $(".layui-input.content").val('');
+        $(".layui-input.word_size").val('');
         $.ajax({
             type:'post',
             url: roomList,
@@ -446,6 +448,30 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         layer.closeAll();
     })
 
+    //批量删除
+    $('.bdnotice-btn').on('click', function(){
+        var checkStatus = table.checkStatus('test')
+            ,data = checkStatus.data;
+        // layer.alert(JSON.stringify(data));
+        //ajax调用后台添加接口
+        $.ajax({
+            type:'post',
+            url: global + '/notice/bdn',
+            data:{idList:JSON.stringify(data), user_id:user_id},
+            dataType:'json',
+            success:function (res) {
+                if(res.code == 0){//0
+                    layer.msg('操作成功');
+                    $(".layui-laypage-btn").click();
+                }else {
+                    layer.msg('操作失败');
+                }
+            },
+            error:function (err) {
+                layer.msg('操作失败');
+            }
+        })
+    });
 
 //    切换消息类型，刷新数据
     form.on('select(msg-type)', function(data){

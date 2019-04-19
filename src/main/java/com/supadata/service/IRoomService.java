@@ -23,4 +23,6 @@ public interface IRoomService {
     int deleteRoom(Integer id);
 
     List<Room> queryRoom(String key);
+
+    List<Room> slelectAllRoom();
 }

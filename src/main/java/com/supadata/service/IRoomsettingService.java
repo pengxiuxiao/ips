@@ -1,19 +1,20 @@
-package com.supadata.dao;
+package com.supadata.service;
 
 import com.supadata.pojo.RoomSetting;
-import org.apache.ibatis.annotations.Mapper;
 
-@Mapper
-public interface RoomSettingMapper {
+/**
+ * @ClassName: IRoomsettingService
+ * @Description:
+ * @Author: pxx
+ * @Date: 2019/4/19 16:11
+ * @Description:
+ */
+public interface IRoomsettingService {
     int deleteByPrimaryKey(Integer id);
-
-    int insert(RoomSetting record);
 
     int insertSelective(RoomSetting record);
 
     RoomSetting selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(RoomSetting record);
-
-    int updateByPrimaryKey(RoomSetting record);
 }

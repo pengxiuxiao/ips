@@ -23,4 +23,6 @@ public interface RoomMapper {
     Room selectByIp(@Param("ip") String ip);
 
     List<Room> selectListIfKey(@Param("key") String key);
+
+    List<Room> slelectAllRoom();
 }

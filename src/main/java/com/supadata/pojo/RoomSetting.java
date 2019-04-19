@@ -13,6 +13,15 @@ public class RoomSetting {
 
     private String rsRemark;
 
+    public RoomSetting() {
+    }
+
+    public RoomSetting(Integer roomId, Integer setId, Date updateTime) {
+        this.roomId = roomId;
+        this.setId = setId;
+        this.updateTime = updateTime;
+    }
+
     public Integer getId() {
         return id;
     }

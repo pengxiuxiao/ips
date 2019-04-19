@@ -58,13 +58,13 @@
                         <dd>
                             <a href="set.html">设置管理</a>
                         </dd>
-                        <dd>
+                        <dd class="layui-this">
                             <a href="module.html">显示模块</a>
                         </dd>
                         <dd>
                             <a href="pad.html">pad状态</a>
                         </dd>
-                        <dd class="layui-this">
+                        <dd>
                             <a href="card.html">卡片管理</a>
                         </dd>
                         <dd>
@@ -86,28 +86,30 @@
                         教室详情
                     </blockquote>
                 </div>
-                <!--table-->
-                <div class="layui-form layui-clear">
-                        <div class="layui-inline">
+                    <!--table-->
+                    <div class="layui-form layui-clear">
+
+                        <div class="layui-inline module">
+                            <label class="layui-form-label module">展示模块</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="username" lay-verify="required" placeholder="卡号" autocomplete="off" class="layui-input keyWord">
+                                <select name="modules" id="modules" lay-verify="required" lay-filter="msg-type" class="layui-input modules">
+                                    <!--<option value="0" selected>请选择显示内容</option>-->
+                                    <!--<option value="1" selected>文字</option>-->
+                                    <!--<option value="2">图片</option>-->
+                                    <!--<option value="3">视频</option>-->
+                                    <!--<option value="4">PPT</option>-->
+                                    <!--<option value="5">课堂</option>-->
+                                </select>
                             </div>
+                            <button class="layui-btn module-btn" style="float: right; margin-right: 50px">确认显示</button>
                         </div>
-                    <button class="layui-btn doSearch" style="margin-top: -4px;">搜索</button>
-                    <button class="layui-btn add-card-btn" style="float: right; margin-right: 50px">添加卡片</button>
-                    <button class="layui-btn out-card-btn" style="float: right; margin-right: 50px">导出卡片</button>
-                </div>
+                    </div>
                 </div>
 
-                <!--操作全选-->
-                <div class="layui-btn-group edit-table">
-                    <button class="layui-btn bdcard-btn" data-type="getCheckData">批量删除</button>
-                </div>
-                <table class="layui-hide" id="cards" lay-filter="order-form"></table>
+                <table class="layui-hide" id="rooms" lay-filter="order-form"></table>
                 <!--</table>-->
                 <script type="text/html" id="barDemo">
-                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">修改显示</a>
                 </script>
 
                 <script type="text/html" id="createTime">
@@ -118,24 +120,32 @@
     </div>
 </div>
 <div class="modal-content">
-    <form class="layui-form" action="" id="cardForm" onsubmit="return false">
+    <form class="layui-form" action="" id="imgForm" onsubmit="return false">
+
         <div class="layui-form-item">
-            <label class="layui-form-label">持卡人：</label>
-            <div class="layui-input-block">
-                <input type="text" name="name" lay-verify="name" autocomplete="off" placeholder="请输入姓名" class="layui-input name">
+            <label class="layui-form-label">显示模块：</label>
+            <div class="layui-input-inline">
+                <select name="location" id="location" lay-verify="required" lay-filter="location" class="location" lay-search>
+                    <option value="0" selected>请选择显示内容</option>
+                    <option value="1" selected>文字</option>
+                    <option value="2">图片</option>
+                    <option value="3">视频</option>
+                    <option value="4">PPT</option>
+                    <option value="5">课堂</option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">卡号：</label>
+            <label class="layui-form-label">教室名：</label>
             <div class="layui-input-block">
-                <input type="text" name="number" lay-verify="number" autocomplete="off" placeholder="请输入卡号" class="layui-input number">
-                <input type="text" style="display:none" name="cId" lay-verify="cId" autocomplete="off" class="layui-input cId">
+                <input type="text" name="name" lay-verify="name" autocomplete="off" placeholder="请输入教室名" class="layui-input name">
+                <input type="text" style="display:none" name="nId" lay-verify="nId" autocomplete="off" class="layui-input nId">
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">教室Code：</label>
             <div class="layui-input-block">
-                <button class="layui-btn" lay-submit="" lay-filter="addbtn">立即提交</button>
-                <button class="layui-btn layui-btn-primary cancel-btn">取消</button>
+                <input type="text" name="ip" lay-verify="ip" autocomplete="off" placeholder="请输入教室code" class="layui-input ip">
             </div>
         </div>
     </form>
@@ -143,6 +153,6 @@
 
 <script src="js/dataApi.js"></script>
 <script src="assets/layui/layui.js"></script>
-<script src="js/card.js"></script>
+<script src="js/module.js"></script>
 </body>
 </html>

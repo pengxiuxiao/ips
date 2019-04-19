@@ -50,4 +50,9 @@ public class RoomServiceImpl implements IRoomService {
     public List<Room> queryRoom(String key) {
         return roomMapper.selectListIfKey(key);
     }
+
+    @Override
+    public List<Room> slelectAllRoom() {
+        return roomMapper.slelectAllRoom();
+    }
 }

@@ -3,8 +3,13 @@ package com.supadata.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
+import com.supadata.pojo.Check;
 import com.supadata.pojo.Room;
+import com.supadata.pojo.RoomSetting;
+import com.supadata.pojo.Setting;
 import com.supadata.service.IRoomService;
+import com.supadata.service.IRoomsettingService;
+import com.supadata.service.ISettingService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
 import net.sf.json.JSONArray;
@@ -35,6 +40,11 @@ public class RoomController {
     @Autowired
     public IRoomService roomService;
 
+    @Autowired
+    public ISettingService settingService;
+
+    @Autowired
+    public IRoomsettingService roomsettingService;
 
     /**
      * 功能描述:插入单条教室信息
@@ -233,5 +243,40 @@ public class RoomController {
         return msg;
     }
 
+
+    /**
+     * 功能描述:设置教室显示模块
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/4/19 15:33
+     */
+    @RequestMapping("/set")
+    public @ResponseBody
+    MsgJson setRoomModule (HttpServletRequest request) {
+        String user_id = request.getParameter("user_id");
+        String s_module = request.getParameter("s_module");
+
+        logger.info("全部设置显示="+ s_module );
+        if (StringUtils.isEmpty(user_id)) {
+            return MsgJson.fail("usre_id为空！");
+        }
+        Setting setting = new Setting();
+        if (StringUtils.isNotEmpty(s_module)) {
+            setting.setsModule(s_module);
+        }
+        setting.setUpdateTime(DateUtil.getCurDate());
+        int res = settingService.add(setting);
+        if (res > 0) {
+            List<Room> rooms = roomService.slelectAllRoom();
+            for (Room room : rooms) {
+                res = roomsettingService.insertSelective(new RoomSetting(room.getId(), setting.getId(), setting.getUpdateTime()));
+                if (res > 0) {
+                }
+            }
+            return MsgJson.success("设置成功！");
+        }
+        return MsgJson.fail("设置失败！");
+    }
 
 }

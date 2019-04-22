@@ -12,11 +12,12 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="start_time" property="startTime" jdbcType="VARCHAR" />
     <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+    <result column="is_black" property="isBlack" jdbcType="VARCHAR" />
     <result column="p_remark" property="pRemark" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, p_ip, code, room_name, room_id, p_location, p_status, update_time, start_time, 
-    end_time, p_remark
+    end_time, is_black, p_remark
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -89,6 +90,9 @@
       <if test="pRemark != null" >
         p_remark,
       </if>
+      <if test="isBlack != null" >
+        is_black,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -120,6 +124,9 @@
       </if>
       <if test="endTime != null" >
         #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="isBlack != null" >
+        #{isBlack,jdbcType=VARCHAR},
       </if>
       <if test="pRemark != null" >
         #{pRemark,jdbcType=VARCHAR},
@@ -155,6 +162,9 @@
       </if>
       <if test="endTime != null" >
         end_time = #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="isBlack != null" >
+        is_black = #{isBlack,jdbcType=VARCHAR},
       </if>
       <if test="pRemark != null" >
         p_remark = #{pRemark,jdbcType=VARCHAR},

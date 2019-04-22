@@ -25,6 +25,8 @@ public class Pad {
 
     private String pRemark;
 
+    private String isBlack;
+
     public Integer getId() {
         return id;
     }
@@ -103,6 +105,14 @@ public class Pad {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime == null ? null : endTime.trim();
+    }
+
+    public String getIsBlack() {
+        return isBlack;
+    }
+
+    public void setIsBlack(String isBlack) {
+        this.isBlack = isBlack;
     }
 
     public String getpRemark() {

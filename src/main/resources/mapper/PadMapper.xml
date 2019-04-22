@@ -14,10 +14,26 @@
     <result column="end_time" property="endTime" jdbcType="VARCHAR" />
     <result column="is_black" property="isBlack" jdbcType="VARCHAR" />
     <result column="p_remark" property="pRemark" jdbcType="VARCHAR" />
+    <result column="p_module" property="pModule" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="JoinResultMap" type="com.supadata.pojo.Pad" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="p_ip" property="pIp" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="room_name" property="roomName" jdbcType="VARCHAR" />
+    <result column="room_id" property="roomId" jdbcType="INTEGER" />
+    <result column="p_location" property="pLocation" jdbcType="VARCHAR" />
+    <result column="p_status" property="pStatus" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="start_time" property="startTime" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+    <result column="is_black" property="isBlack" jdbcType="VARCHAR" />
+    <result column="p_remark" property="pRemark" jdbcType="VARCHAR" />
+    <result column="r_module" property="pModule" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, p_ip, code, room_name, room_id, p_location, p_status, update_time, start_time, 
-    end_time, is_black, p_remark
+    end_time, is_black, p_remark, p_module
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -31,10 +47,11 @@
     from tb_pad
     where code = #{code}
   </select>
-  <select id="selectAll" resultMap="BaseResultMap" >
+  <select id="selectAll" resultMap="JoinResultMap" >
     select
-    <include refid="Base_Column_List" />
-    from tb_pad
+    p.id, p.p_ip, p.code, p.room_name, p.room_id, p.p_location, p.p_status, p.update_time,
+    p.start_time, p.end_time, p.is_black, p.p_remark, r.r_module
+    from tb_pad p left join tb_room r on p.room_id = r.id
     where 1 = 1
     <if test="key != null" >
       and CONCAT(IFNULL(`room_name`,''), IFNULL(`p_location`,'')) like CONCAT('%', #{key}, '%')

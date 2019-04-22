@@ -216,10 +216,10 @@ public class PadController {
             msg.setMsg("请求失败！");
             return msg;
         }
-        if (StringUtils.isEmpty(pad.getpRemark()) || pad.getpRemark().equals("1")) {//未锁
-            pad.setpRemark("2");
+        if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("否")) {//未锁
+            pad.setIsBlack("是");
         } else {//已锁
-            pad.setpRemark("1");
+            pad.setIsBlack("否");
         }
         int res = padService.update(pad);
         //更新轮询表
@@ -400,10 +400,10 @@ public class PadController {
             if (pad.getUpdateTime() != null && "0".equals(DateUtil.getDistanceTimes(DateUtil.fromDateToStr(pad.getUpdateTime()), DateUtil.getCurrentDateTime()))) {
                 pad.setpStatus("在线");
             }
-            if (StringUtils.isEmpty(pad.getpRemark()) || pad.getpRemark().equals("1")) {
-                pad.setpRemark("未黑屏");
+            if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("否")) {
+                pad.setIsBlack("否");
             } else {
-                pad.setpRemark("已黑屏");
+                pad.setIsBlack("是");
             }
         }
         PageInfo<Pad> pageInfo = new PageInfo<>(pads);

@@ -19,6 +19,8 @@ public class Room {
 
     private String rRemark;
 
+    private String rModule;
+
     public Integer getId() {
         return id;
     }
@@ -81,5 +83,13 @@ public class Room {
 
     public void setrRemark(String rRemark) {
         this.rRemark = rRemark == null ? null : rRemark.trim();
+    }
+
+    public String getrModule() {
+        return rModule;
+    }
+
+    public void setrModule(String rModule) {
+        this.rModule = rModule;
     }
 }

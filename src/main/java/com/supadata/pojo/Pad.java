@@ -27,6 +27,8 @@ public class Pad {
 
     private String isBlack;
 
+    private String pModule;
+
     public Integer getId() {
         return id;
     }
@@ -121,5 +123,29 @@ public class Pad {
 
     public void setpRemark(String pRemark) {
         this.pRemark = pRemark == null ? null : pRemark.trim();
+    }
+
+    public String getpModule() {
+        return pModule;
+    }
+
+    public void setpModule(String pModule) {
+        switch (pModule) {
+            case "1":
+                this.pModule = "文字";
+                return;
+            case "2":
+                this.pModule = "图片";
+                return;
+            case "3":
+                this.pModule = "PPT";
+                return;
+            case "4":
+                this.pModule = "视频";
+                return;
+            case "5":
+                this.pModule = "课程";
+                return;
+        }
     }
 }

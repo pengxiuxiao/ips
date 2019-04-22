@@ -18,6 +18,9 @@
         .modal-content{
             display: none;
         }
+        .monitor-content{
+            display: none;
+        }
         .layui-form-selected dl{
             margin-bottom: 15px;
         }
@@ -100,8 +103,8 @@
                 <table class="layui-hide" id="test" lay-filter="order-form"></table>
                 <!--</table>-->
                 <script type="text/html" id="barDemo">
-                    <!--<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
-                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">切换黑屏</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">切屏</a>
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">监控</a>
                 </script>
 
                 <script type="text/html" id="createTime">
@@ -147,6 +150,25 @@
     </form>
 </div>
 
+
+<div class="monitor-content">
+    <form class="layui-form" action="" id="monitor" onsubmit="return false">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">显示模块：</label>
+            <div class="layui-input-block ">
+                <input type="text" name="module" lay-verify="title" autocomplete="off" disabled  class="layui-input module">
+            </div>
+        </div>
+        <div class="layui-form-item">
+             <label class="layui-form-label">监控图片：</label>
+             <div class="layui-input-block">
+                 <img src="https://images.supadata.cn/avc/07_Jxiaojie.png">
+             </div>
+         </div>
+
+    </form>
+</div>
 <script src="js/dataApi.js"></script>
 <script src="assets/layui/layui.js"></script>
 <script src="js/pad.js"></script>

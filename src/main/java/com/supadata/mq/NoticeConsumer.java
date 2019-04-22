@@ -32,9 +32,9 @@ public class NoticeConsumer {
 //        System.out.println("收到的消息======" + text);
 //    }
 
-    @JmsListener(destination = "gy-test")
-    public void readActiveTopic(MqttMessage text) {
-        System.out.println("收到消息======" + text);
-    }
+//    @JmsListener(destination = "gy-test")
+//    public void readActiveTopic(MqttMessage text) {
+//        System.out.println("收到消息======" + text);
+//    }
 
 }

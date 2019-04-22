@@ -8,11 +8,12 @@
     <result column="capacity" property="capacity" jdbcType="INTEGER" />
     <result column="r_rank" property="rRank" jdbcType="VARCHAR" />
     <result column="r_ip" property="rIp" jdbcType="VARCHAR" />
+    <result column="r_module" property="rModule" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="r_remark" property="rRemark" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, r_name, r_location, capacity, r_rank, r_ip, update_time, r_remark
+    id, r_name, r_location, capacity, r_rank, r_ip, r_module, update_time, r_remark
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -73,6 +74,9 @@
       <if test="rIp != null" >
         r_ip,
       </if>
+      <if test="rModule != null" >
+        r_module,
+      </if>
       <if test="updateTime != null" >
         update_time,
       </if>
@@ -99,6 +103,9 @@
       <if test="rIp != null" >
         #{rIp,jdbcType=VARCHAR},
       </if>
+      <if test="rModule != null" >
+        #{rModule,jdbcType=VARCHAR},
+      </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
@@ -124,6 +131,9 @@
       </if>
       <if test="rIp != null" >
         r_ip = #{rIp,jdbcType=VARCHAR},
+      </if>
+      <if test="rModule != null" >
+        r_module = #{rModule,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},

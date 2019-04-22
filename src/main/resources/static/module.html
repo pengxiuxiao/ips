@@ -125,27 +125,27 @@
         <div class="layui-form-item">
             <label class="layui-form-label">显示模块：</label>
             <div class="layui-input-inline">
-                <select name="location" id="location" lay-verify="required" lay-filter="location" class="location" lay-search>
-                    <option value="0" selected>请选择显示内容</option>
-                    <option value="1" selected>文字</option>
-                    <option value="2">图片</option>
-                    <option value="3">视频</option>
-                    <option value="4">PPT</option>
-                    <option value="5">课堂</option>
+                <select name="module" id="module" lay-verify="required" lay-filter="module" class="layui-input module">
                 </select>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">教室名：</label>
+            <label class="layui-form-label"></label>
             <div class="layui-input-block">
-                <input type="text" name="name" lay-verify="name" autocomplete="off" placeholder="请输入教室名" class="layui-input name">
+                <input type="text" style="display:none"name="name" lay-verify="name" autocomplete="off" placeholder="请输入教室名" class="layui-input name">
                 <input type="text" style="display:none" name="nId" lay-verify="nId" autocomplete="off" class="layui-input nId">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">教室Code：</label>
+            <label class="layui-form-label"></label>
             <div class="layui-input-block">
-                <input type="text" name="ip" lay-verify="ip" autocomplete="off" placeholder="请输入教室code" class="layui-input ip">
+                <input type="text" style="display:none" name="ip" lay-verify="ip" autocomplete="off" placeholder="请输入教室code" class="layui-input ip">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="addbtn">立即提交</button>
+                <button class="layui-btn layui-btn-primary cancel-btn">取消</button>
             </div>
         </div>
         <div class="layui-form-item">

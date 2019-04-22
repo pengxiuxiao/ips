@@ -15,11 +15,13 @@ public class Room {
 
     private String rIp;
 
+    private String rModule;
+
+    private String rModuleMsg;
+
     private Date updateTime;
 
     private String rRemark;
-
-    private String rModule;
 
     public Integer getId() {
         return id;
@@ -69,6 +71,35 @@ public class Room {
         this.rIp = rIp == null ? null : rIp.trim();
     }
 
+    public String getrModule() {
+        return rModule;
+    }
+
+    public void setrModule(String rModule) {
+        this.rModule = rModule;
+        switch (rModule) {
+            case "1":
+                this.rModuleMsg = "文字";
+                return;
+            case "2":
+                this.rModuleMsg = "图片";
+                return;
+            case "3":
+                this.rModuleMsg = "PPT";
+                return;
+            case "4":
+                this.rModuleMsg = "视频";
+                return;
+            case "5":
+                this.rModuleMsg = "课程1";
+                return;
+        }
+    }
+
+    public String getrModuleMsg() {
+        return rModuleMsg;
+    }
+
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -85,11 +116,4 @@ public class Room {
         this.rRemark = rRemark == null ? null : rRemark.trim();
     }
 
-    public String getrModule() {
-        return rModule;
-    }
-
-    public void setrModule(String rModule) {
-        this.rModule = rModule;
-    }
 }

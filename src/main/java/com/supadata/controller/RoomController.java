@@ -230,7 +230,7 @@ public class RoomController {
             msg.setMsg("limit为空！");
             return msg;
         }
-        if (limit == page) {
+        if (page == null) {
             msg.setCode(1);
             msg.setMsg("page为空！");
             return msg;
@@ -279,4 +279,42 @@ public class RoomController {
         return MsgJson.fail("设置失败！");
     }
 
+    /**
+     * 功能描述:设置教室显示模块
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/4/19 15:33
+     */
+    @RequestMapping("/setone")
+    public @ResponseBody
+    MsgJson setOneRoomModule (HttpServletRequest request) {
+        String user_id = request.getParameter("user_id");
+        String s_module = request.getParameter("s_module");
+        String room_id = request.getParameter("room_id");
+
+        logger.info("全部设置显示="+ s_module );
+        if (StringUtils.isEmpty(user_id)) {
+            return MsgJson.fail("usre_id为空！");
+        }
+        if (StringUtils.isEmpty(room_id)) {
+            return MsgJson.fail("room_id！");
+        }
+        Setting setting = new Setting();
+        if (StringUtils.isNotEmpty(s_module)) {
+            setting.setsModule(s_module);
+        }
+        setting.setUpdateTime(DateUtil.getCurDate());
+        int res = settingService.add(setting);
+        if (res > 0) {
+            List<Room> rooms = roomService.slelectAllRoom();
+            for (Room room : rooms) {
+                res = roomsettingService.insertSelective(new RoomSetting(room.getId(), setting.getId(), setting.getUpdateTime()));
+                if (res > 0) {
+                }
+            }
+            return MsgJson.success("设置成功！");
+        }
+        return MsgJson.fail("设置失败！");
+    }
 }

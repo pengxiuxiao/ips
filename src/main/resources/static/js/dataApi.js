@@ -20,6 +20,8 @@ var deleteWord=global + '/notice/delete';
 var addRoom=global + '/room/add';
 //编辑教室
 var editRoom=global + '/room/edit';
+//编辑单个教室显示模块
+var setRoom=global + '/room/setone';
 //删除教室
 var deleteRoom=global + '/room/delete';
 //删除卡片

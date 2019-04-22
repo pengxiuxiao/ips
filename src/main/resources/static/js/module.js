@@ -22,7 +22,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             dataType:"json",
             success:function (data) {
                 var data = data.data;
-                setModuleSelect(data);
+                setModuleSelect(data, "1");
             }
         })
 
@@ -36,7 +36,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 {field:'id', title: 'id', width: 80}
                 ,{field:'rName', title: '教室名'}
                 ,{field:'rIp', title: '教室Code'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
-                ,{field:'rLocation', title: '显示模块'}
+                ,{field:'rModuleMsg', title: '显示模块'}
                 // ,{field:'updateTime', title: '操作时间', templet: '#createTime'}
                 ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 150}
             ]]
@@ -46,33 +46,10 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     var url = global + '/room/list' + '?user_id='+ user_id;
     getOrderList(url);
 
-    //搜索
-    $(".doSearch").click(function () {
-        var content = $(".keyWord").val();
-        url = global + '/room/list' + '?user_id='+ user_id + '&key=' + content;
-        getOrderList(url);
-    })
-
-
-    //点击添加
-    $(document).on('click', '.add-room-btn', function () {
-        //先清表单数据
-        $(".modal-content form input").each(function(){
-            $(this).val('');
-        });
-        layer.open({
-            type: 1,
-            title: false,
-            closeBtn: 0,
-            area: '516px',
-            shadeClose: true,
-            content: $('.modal-content')
-        });
-    })
-
     //点击编辑 (具体类名自己替换)
     table.on('tool(order-form)', function(obj){
         if(obj.event === 'edit'){//编辑
+            setModuleSelect(obj.data, "2");
             layer.open({
                 type: 1,
                 title: false,
@@ -85,27 +62,6 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             $(".layui-input.name").val(obj.data.rName);
             $(".layui-input.location").val(obj.data.rLocation);
             $(".layui-input.ip").val(obj.data.rIp);
-        }else if(obj.event === 'del'){//删除
-            layer.confirm('确认删除 ' + obj.data.rName + '？', function(index){
-                $.ajax({
-                    type:'post',
-                    url: deleteRoom,
-                    data:{room_id:obj.data.id, user_id:user_id},
-                    dataType:'json',
-                    success:function (res) {
-                        if(res.code == 0){//
-                            layer.msg('操作完成！');
-                            layer.closeAll();
-                            $(".layui-laypage-btn").click();
-                        }else {
-                            layer.msg('操作失败！');
-                        }
-                    },
-                    error:function (err) {
-                        $.toptip('操作失败，请稍后重试！', 'error');
-                    }
-                })
-            })
         }
     })
 
@@ -128,31 +84,6 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             }
         }
 
-    });
-
-    //批量删除
-    $('.bdroom-btn').on('click', function(){
-        var checkStatus = table.checkStatus('rooms')
-            ,data = checkStatus.data;
-        // layer.alert(JSON.stringify(data));
-        //ajax调用后台添加接口
-        $.ajax({
-            type:'post',
-            url: global + '/room/bdr',
-            data:{idList:JSON.stringify(data), user_id:user_id},
-            dataType:'json',
-            success:function (res) {
-                if(res.code == 0){//0
-                    layer.msg('操作成功');
-                    $(".layui-laypage-btn").click();
-                }else {
-                    layer.msg('操作失败');
-                }
-            },
-            error:function (err) {
-                layer.msg('操作失败');
-            }
-        })
     });
 
     //监听添加提交按钮
@@ -179,7 +110,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             postData = {name:indata.field.name, location:indata.field.location, ip:indata.field.ip,
                 user_id:user_id};
         }else{
-            postUrl = editRoom;
+            postUrl = setRoom;
             postData = {room_id:room_id, name:indata.field.name, location:indata.field.location, ip:indata.field.ip,
                 user_id:user_id};
         }
@@ -211,11 +142,12 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         var dataj = new FormData();
         dataj.append('user_id', user_id);
         dataj.append('s_module', $(".layui-input.modules").val());
+        dataj.append('room_id', $(".layui-input.nId").val());
 
         layer.confirm('确认修改？', function(index) {
             $.ajax({
                 type: 'post',
-                url: global + '/room/set',
+                url: global + '/room/setone',
                 data: dataj,
                 dataType: 'json',
                 processData: false,
@@ -238,7 +170,13 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
 
 
     //初始化显示下拉菜单
-    function setModuleSelect(data){
+    function setModuleSelect(data, flag){
+        var m;
+        if (flag == "1") {
+            m = data.sModule;
+        }else {
+            m = data.rModule;
+        }
         var roomhtml = '<option value="0" class="tdstyle texts">'+"请选择模块"+'</option>';
         var select;
         for (var i = 1; i < 6; i++){
@@ -254,14 +192,20 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             else  if (i == 5) {
                 var name = "课堂";
             }
-            if (data.sModule == i) {
+            if (m == i) {
                 select  = "selected class";
             }else{
                 select = " class";
             }
             roomhtml += '<option value="'+i+'" '+ select +'="tdstyle texts">'+name+'</option>';
         }
-        $("#modules").html(roomhtml);
+        if (flag == "1") {
+            $("#modules").html(roomhtml);
+        }else {
+            $("#module").html(roomhtml);
+        }
         form.render();
     };
+
+
 });

@@ -261,19 +261,14 @@ public class RoomController {
         if (StringUtils.isEmpty(user_id)) {
             return MsgJson.fail("usre_id为空！");
         }
-        Setting setting = new Setting();
-        if (StringUtils.isNotEmpty(s_module)) {
-            setting.setsModule(s_module);
+        int res = 0;
+        List<Room> rooms = roomService.slelectAllRoom();
+        for (Room room : rooms) {
+            room.setrModule(s_module);
+            roomService.updateRoom(room);
+            res ++;
         }
-        setting.setUpdateTime(DateUtil.getCurDate());
-        int res = settingService.add(setting);
         if (res > 0) {
-            List<Room> rooms = roomService.slelectAllRoom();
-            for (Room room : rooms) {
-                res = roomsettingService.insertSelective(new RoomSetting(room.getId(), setting.getId(), setting.getUpdateTime()));
-                if (res > 0) {
-                }
-            }
             return MsgJson.success("设置成功！");
         }
         return MsgJson.fail("设置失败！");
@@ -300,21 +295,11 @@ public class RoomController {
         if (StringUtils.isEmpty(room_id)) {
             return MsgJson.fail("room_id！");
         }
-        Setting setting = new Setting();
-        if (StringUtils.isNotEmpty(s_module)) {
-            setting.setsModule(s_module);
-        }
-        setting.setUpdateTime(DateUtil.getCurDate());
-        int res = settingService.add(setting);
-        if (res > 0) {
-            List<Room> rooms = roomService.slelectAllRoom();
-            for (Room room : rooms) {
-                res = roomsettingService.insertSelective(new RoomSetting(room.getId(), setting.getId(), setting.getUpdateTime()));
-                if (res > 0) {
-                }
-            }
-            return MsgJson.success("设置成功！");
-        }
-        return MsgJson.fail("设置失败！");
+        Room room = new Room();
+        room.setId(Integer.parseInt(room_id));
+        room.setrModule(s_module);
+        int res = roomService.updateRoom(room);
+        return res > 0 ? MsgJson.success("设置成功！") : MsgJson.fail("设置失败！");
+
     }
 }

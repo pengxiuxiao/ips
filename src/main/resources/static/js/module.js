@@ -103,22 +103,13 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     //添加、编辑学生信息post请求
     function postRoomEdit(indata) {
         var room_id = indata.field.nId;
-        var postData;
-        var postUrl;
-        if(room_id == ""){
-            postUrl = addRoom;
-            postData = {name:indata.field.name, location:indata.field.location, ip:indata.field.ip,
-                user_id:user_id};
-        }else{
-            postUrl = setRoom;
-            postData = {room_id:room_id, name:indata.field.name, location:indata.field.location, ip:indata.field.ip,
-                user_id:user_id};
-        }
+        var postData = {room_id:room_id, s_module:indata.field.module, user_id:user_id};
+
         //ajax调用后台添加接口
         $.ajax({
             type:'post',
             async: false,
-            url:postUrl,
+            url:setRoom,
             data:postData,
             dataType:'json',
             success:function (res) {
@@ -147,7 +138,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         layer.confirm('确认修改？', function(index) {
             $.ajax({
                 type: 'post',
-                url: global + '/room/setone',
+                url: global + '/room/set',
                 data: dataj,
                 dataType: 'json',
                 processData: false,
@@ -155,6 +146,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 success: function (res) {
                     if (res.code == 0) {//
                         layer.msg('推送成功');
+                        $(".layui-laypage-btn").click();
                     } else {
                         layer.msg('操作失败！');
                     }
@@ -190,7 +182,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 var name = "PPT";
             }
             else  if (i == 5) {
-                var name = "课堂";
+                var name = "课程";
             }
             if (m == i) {
                 select  = "selected class";

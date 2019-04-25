@@ -85,13 +85,13 @@ public class Room {
                 this.rModuleMsg = "图片";
                 return;
             case "3":
-                this.rModuleMsg = "PPT";
-                return;
-            case "4":
                 this.rModuleMsg = "视频";
                 return;
+            case "4":
+                this.rModuleMsg = "PPT";
+                return;
             case "5":
-                this.rModuleMsg = "课程1";
+                this.rModuleMsg = "课程";
                 return;
         }
     }

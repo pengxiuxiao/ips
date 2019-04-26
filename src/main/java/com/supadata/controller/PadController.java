@@ -8,6 +8,7 @@ import com.supadata.pojo.*;
 import com.supadata.service.*;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -410,5 +411,32 @@ public class PadController {
         msg.setData(pads);
         msg.setCount(pageInfo.getTotal());
         return msg;
+    }
+
+    /**
+     * 功能描述:获取pad监控画面
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/4/26 11:40
+     */
+    @RequestMapping("/monitor")
+    public @ResponseBody
+    MsgJson monitorPad(String user_id, String id) {
+        if (StringUtils.isEmpty(user_id)) {
+            return MsgJson.fail("usre_id为空！");
+        }
+        if (StringUtils.isEmpty(id)) {
+            return MsgJson.fail("id为空！");
+        }
+        Map<String,String> map = new HashedMap();
+        map.put("url", "https://images.supadata.cn/avc/07_Jxiaojie.png");
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return MsgJson.success(map, "请求成功！");
+
     }
 }

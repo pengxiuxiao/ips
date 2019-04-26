@@ -27,7 +27,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 {field:'id', title: 'id', width: 80}
                 ,{field:'code', title: 'code标识'}
                 ,{field:'roomName', title: '所属教室'}
-                ,{field:'pLocation', title: '安装位置'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
+                // ,{field:'pLocation', title: '安装位置'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                 ,{field:'pStatus', title: '在线状态'}
                 ,{field:'isBlack', title: '是否黑屏'}
                 ,{field:'updateTime', title: '请求时间', templet: '#createTime'}
@@ -55,18 +55,34 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     //点击编辑 (具体类名自己替换)
     table.on('tool(order-form)', function(obj){
         if(obj.event === 'edit'){//编辑
-            var student;
-            layer.open({
-                type: 1,
-                title: false,
-                closeBtn: 0,
-                area: '916px',
-                shadeClose: true,
-                content: $('.monitor-content')
-            });
-            $(".layui-input.nId").val(obj.data.id);
-            $(".layui-input.module").val(obj.data.pModule);
-            $(".layui-input.textareacontent").val(obj.data.nContent);
+            layer.load(2);
+            $.ajax({
+                type:'post',
+                url: monitorPad,
+                data:{id:obj.data.id, user_id:user_id},
+                dataType:'json',
+                success:function (res) {
+                    layer.closeAll('loading');
+                    if(res.code == 0){//
+                        layer.open({
+                            type: 1,
+                            title: false,
+                            closeBtn: 0,
+                            area: '916px',
+                            shadeClose: true,
+                            content: $('.monitor-content')
+                        });
+                        $(".layui-input.nId").val(obj.data.id);
+                        $(".layui-input.module").val(obj.data.pModule);
+                        $("#moImg").attr("src",res.data.url)
+                    }else {
+                        layer.msg('操作失败！');
+                    }
+                },
+                error:function (err) {
+                    layer.msg('操作失败！');
+                }
+            })
         }else if(obj.event === 'del'){//删除
             layer.confirm('确认切换黑屏 ' + obj.data.roomName + '？', function(index){
                 $.ajax({

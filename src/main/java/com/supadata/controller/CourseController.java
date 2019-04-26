@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -88,7 +89,10 @@ public class CourseController {
             // 创建Excel，读取文件内容
             Workbook workbook = WorkbookFactory.create(FileUtils.openInputStream(targetFile));
             Room room = roomService.queryRoomById(Integer.parseInt(room_id));
-            int res = courseService.handleCourseExcel(workbook, room);
+            MsgJson res = courseService.handleCourseExcel(workbook, room);
+            if (res.getCode() == 1) {
+                return res;
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -236,11 +240,11 @@ public class CourseController {
      * @date: 2018/6/20 23:31
      */
     @RequestMapping("/efd")
-    public ResponseEntity<byte[]> excelFileDownLoad(HttpServletRequest request){
+    public ResponseEntity<byte[]> excelFileDownLoad(HttpServletRequest request) throws FileNotFoundException {
         String fileName = "course_seat_cardNo.xlsx";
 
 
-        String path = request.getSession().getServletContext().getRealPath("/") + "resource"
+        String path = ResourceUtils.getURL("classpath:static").getPath()
                 + File.separator + "file"+ File.separator  + fileName;
 
 
@@ -287,7 +291,7 @@ public class CourseController {
             loacalPath = config.getLINUXDOCPATH();
         }
         String filePath =  "course" + File.separator;
-        File targetFile = new File(loacalPath + filePath, fileName);
+        File targetFile = new File(loacalPath + filePath);
         if (!targetFile.exists()) {
             targetFile.mkdirs();
         }
@@ -313,7 +317,7 @@ public class CourseController {
             e.printStackTrace();
 
         }
-        return targetFile;
+        return new File(loacalPath + filePath, fileName);
     }
 
 }

@@ -2,6 +2,7 @@ package com.supadata.service;
 
 import com.supadata.pojo.Course;
 import com.supadata.pojo.Room;
+import com.supadata.utils.MsgJson;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.List;
@@ -59,7 +60,7 @@ public interface ICourseService {
      * @return: 
      * @date: 2018/6/25 23:19
      */
-    int handleCourseExcel(Workbook workbook, Room room);
+    MsgJson handleCourseExcel(Workbook workbook, Room room);
 
     /**
      * 功能描述:查询课程

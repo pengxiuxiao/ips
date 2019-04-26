@@ -26,8 +26,8 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 {field:'id', title: 'id', width: 80}
                 ,{field:'cName', title: '课程名'}
                 ,{field:'cRoomName', title: '所在教室', width: 260}
-                ,{field:'cStartTime', title: '开始时间', templet: '#cStartTime', width: 180} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
-                ,{field:'cEndTime', title: '结束时间', templet: '#cEndTime', width: 180}
+                // ,{field:'cStartTime', title: '开始时间', templet: '#cStartTime', width: 180} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
+                // ,{field:'cEndTime', title: '结束时间', templet: '#cEndTime', width: 180}
                 // ,{field:'updateTime', title: '操作时间', templet: '#createTime', width: 180}
                 ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 150}
             ]]
@@ -80,7 +80,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                     layer.msg('推送成功');
                     $(".layui-laypage-btn").click();
                 }else {
-                    layer.msg('操作失败！');
+                    layer.msg(res.msg);
                 }
             },
             error:function (err) {

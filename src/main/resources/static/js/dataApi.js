@@ -47,6 +47,8 @@ var roomList=global + '/room/list';
 var setting=global + '/set/set';
 //锁屏
 var closePad=global + '/pad/closePad';
+//监控
+var monitorPad=global + '/pad/monitor';
 
 //app
 var uploadApp=global + '/app/upload';

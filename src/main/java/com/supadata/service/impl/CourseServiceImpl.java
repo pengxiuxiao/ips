@@ -8,11 +8,14 @@ import com.supadata.pojo.Room;
 import com.supadata.pojo.Seat;
 import com.supadata.pojo.StudentCard;
 import com.supadata.service.ICourseService;
+import com.supadata.utils.MsgJson;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -111,24 +114,25 @@ public class CourseServiceImpl implements ICourseService {
      */
 
     @Override
-    public int handleCourseExcel(Workbook workbook, Room room) {
+    public MsgJson handleCourseExcel(Workbook workbook, Room room) {
         // 读取第一个工作表sheet,获取课程信息
         Map<String, String> shaeetMap = readSheet1(workbook.getSheetAt(0));
         Course course = new Course();
         course.setcRoomId(room.getId());
         course.setcRoomName(room.getrName());
         course.setcName(shaeetMap.get("课程名称"));
-        course.setcStartTime(com.supadata.utils.DateUtil.changeDateByStr(shaeetMap.get("开始时间")));
-        course.setcEndTime(com.supadata.utils.DateUtil.changeDateByStr(shaeetMap.get("结束时间")));
         int res = courseMapper.insertSelective(course);
 
         //读取第三个工作表sheet，获取人员卡号信息
-        Map<String, String> map = readSheet3(workbook.getSheetAt(2));
-
+//        Map<String, String> map = readSheet3(workbook.getSheetAt(2));
+        Map<String, String> map = new HashedMap();
+        List<StudentCard> studentCards = studentCardMapper.selectAllList(map);
+        for (StudentCard studentCard : studentCards) {
+            map.put(studentCard.getStudentName(), studentCard.getCardNumber());
+        }
         //读取第二个工作表sheet，获取座次信息
-        readSheet2(workbook.getSheetAt(1), course, map);
-
-        return res;
+        Map<String, Object> reMap = readSheet2(workbook.getSheetAt(1), course, map);
+        return (MsgJson) reMap.get("result");
     }
 
     /**
@@ -173,7 +177,7 @@ public class CourseServiceImpl implements ICourseService {
      */
     private Map<String, String> readSheet1(Sheet sheet1) {
         Map<String, String> map = new HashMap<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 1; i++) {
             Row row = sheet1.getRow(i);
             Cell cell1 = row.getCell(0);
             Cell cell2 = row.getCell(1);
@@ -201,6 +205,7 @@ public class CourseServiceImpl implements ICourseService {
      */
     private Map<String,Object> readSheet2(Sheet sheet2, Course course, Map<String, String> map) {
         Map<String, Object> shaeetMap = new HashMap<>();
+        shaeetMap.put("result", MsgJson.success("添加完成"));
         int sheet2firstRowNum = 1;
         // 获取sheet中最后一行行号
         int lastRowNum = sheet2.getLastRowNum();
@@ -278,7 +283,13 @@ public class CourseServiceImpl implements ICourseService {
                 seat.setsLine(y - guodaoC);
                 seat.setsColumn(z - guodaoL);
                 seat.setStuName(value);
-                seat.setCardNo( map.get(value));
+                String cartNo =  map.get(value);
+                if (StringUtils.isEmpty(cartNo) && StringUtils.isNotEmpty(value) && !"过道".equals(value)) {
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    shaeetMap.put("result", MsgJson.fail(value + " 的卡信息未录入！"));
+                    return shaeetMap;
+                }
+                seat.setCardNo(cartNo);
                 seat.setrRank((String) shaeetMap.get("rank"));
                 seat.setLineRoadIndex(rowGdIndex);
                 seat.setColuRoadIndex(columGdIndex);

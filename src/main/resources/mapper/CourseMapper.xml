@@ -41,7 +41,7 @@
     from tb_course cs
     where cs.c_status = 0
     and cs.c_room_id = #{room_id}
-    and cs.c_end_time > #{currentDateTime}
+--     and cs.c_end_time > #{currentDateTime}
     and cs.id in (
     select se.course_id from tb_seat se
     where se.card_no = #{card_number}

@@ -6,7 +6,6 @@ import com.supadata.service.INoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.jnlp.IntegrationService;
 import java.util.List;
 
 /**

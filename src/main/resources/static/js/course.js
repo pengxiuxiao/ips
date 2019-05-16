@@ -25,6 +25,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             ,cols: [[
                 {field:'id', title: 'id', width: 80}
                 ,{field:'cName', title: '课程名'}
+                ,{field:'cWordSize', title: '文字大小', width: 120}
                 ,{field:'cRoomName', title: '所在教室', width: 260}
                 // ,{field:'cStartTime', title: '开始时间', templet: '#cStartTime', width: 180} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                 // ,{field:'cEndTime', title: '结束时间', templet: '#cEndTime', width: 180}
@@ -96,7 +97,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         //添加、编辑学生信息post请求
         var postData = {name:indata.field.name, course_id:indata.field.nId,
             start_time:indata.field.start_time, end_time:indata.field.end_time,
-            user_id:user_id};
+            user_id:user_id, word_size: indata.field.word_size};
         //ajax调用后台添加接口
         $.ajax({
             type:'post',
@@ -134,6 +135,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             $(".layui-input.name").val(obj.data.cName);
             $(".layui-input.start_time").val(obj.data.cStartTime);
             $(".layui-input.end_time").val(obj.data.cEndTime);
+            $(".layui-input.word_size").val(obj.data.cWordSize);
             //日期时间范围
             laydate.render({
                 elem: '#start_time'

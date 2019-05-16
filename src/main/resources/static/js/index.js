@@ -211,7 +211,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         layer.closeAll();
         return false;
     });//视频消息发送
-    $(".addVideoBtn").click(function(){
+    $(".edit").click(function(){
         //data.field是提交数据
         var dataj = new FormData($("#addVideoForm")[0]);
         dataj.append('room_list', classRooms);
@@ -359,6 +359,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             $(".layui-input.nId").val(obj.data.id);
             $(".layui-input.title").val(obj.data.nTitle);
             $(".layui-input.content").val(obj.data.nContent);
+            $(".layui-input.word_size").val(obj.data.nWordSize);
             if(messageType === '1'){
                 layer.open({
                     type: 1,

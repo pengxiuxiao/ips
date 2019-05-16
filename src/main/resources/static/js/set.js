@@ -21,7 +21,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 setModuleSelect(data);
                 setDateTime(data);
                 setCheckBox(data);
-                setdaojishi(data);
+                setvolume(data);
                 setRotationTime(data);
                 setFontSize(data);
                 setFontColor(data);
@@ -97,26 +97,18 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         form.render('checkbox');
     };
 
-    //初始化显示倒计时
-    function setdaojishi(data){
-        var roomhtml = '<option value="0" class="tdstyle texts">'+"请选择倒计时(min)"+'</option>';
+    // 初始化显示音量
+    function setvolume(data){
+        var roomhtml = '<option value="-1" class="tdstyle texts">'+"请选择"+'</option>';
         var select;
-        for (var i = 1; i < 5; i++){
-            if ((i * 5) == 5) {
-                var name = "5min";
-            }else  if ((i * 5) == 10) {
-                var name = "10min";
-            }else  if ((i * 5) == 15) {
-                var name = "15min";
-            }else  if ((i * 5) == 20) {
-                var name = "20min";
-            }
-            if ((i * 5) == data.daojishi) {
+        for (var i = 0; i <= 10; i++){
+
+            if (i == data.daojishi) {
                 select  = "selected class";
             }else{
                 select = " class";
             }
-            roomhtml += '<option value="' + (i * 5) + '" '+ select +'="tdstyle texts">'+name+'</option>';
+            roomhtml += '<option value="' + (i * 10) + '" '+ select +'="tdstyle texts">'+ (i * 10) +'</option>';
         }
         $("#daojishi").html(roomhtml);
         form.render();

@@ -198,6 +198,7 @@ public class CourseController {
         String name = request.getParameter("name");
         String start_time = request.getParameter("start_time");
         String end_time = request.getParameter("end_time");
+        String word_size = request.getParameter("word_size");
         if (StringUtils.isEmpty(user_id)) {
             msg.setCode(1);
             msg.setMsg("usre_id为空！");
@@ -212,10 +213,15 @@ public class CourseController {
         course.setId(Integer.parseInt(course_id));
         if (StringUtils.isNotEmpty(name)) {
             course.setcName(name);
-        } if (StringUtils.isNotEmpty(start_time)) {
+        }
+        if (StringUtils.isNotEmpty(start_time)) {
             course.setcStartTime(DateUtil.changeDateByStr(start_time));
-        } if (StringUtils.isNotEmpty(end_time)) {
+        }
+        if (StringUtils.isNotEmpty(end_time)) {
             course.setcEndTime(DateUtil.changeDateByStr(end_time));
+        }
+        if (StringUtils.isNotEmpty(word_size)) {
+            course.setcWordSize(Integer.parseInt(word_size));
         }
         int res = courseService.editById(course);
         if (res != 1) {

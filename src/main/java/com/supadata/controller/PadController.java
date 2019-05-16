@@ -75,10 +75,10 @@ public class PadController {
         if (StringUtils.isEmpty(code)) {
             return new MsgJson(1, "code为空！");
         }
+        Room room = roomService.queryRoomByIp(code);
         //通过code查找pad数据，有则返回，无则添加
         Pad pad = padService.queryByCode(code);
         if (pad == null) {
-            Room room = roomService.queryRoomByIp(code);
             if (room == null) {
                 return new MsgJson(1, "code有误或未录入教室数据！");
             }
@@ -95,7 +95,7 @@ public class PadController {
         //查询后台该pad的设置信息 返回其要执行的事件
         Setting setting = settingService.querySettingByRoomId(pad.getRoomId());
         SystemInfo si = new SystemInfo(System.currentTimeMillis(), pad.getCode(),
-                pad.getRoomId().toString(), pad.getRoomName(),EventType.getName(setting.getsModule()));
+                pad.getRoomId().toString(), pad.getRoomName(),EventType.getName(room.getrModule()));
 
         return new MsgJson(0, "登录成功！", si);
     }

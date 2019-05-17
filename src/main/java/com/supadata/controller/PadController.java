@@ -67,6 +67,9 @@ public class PadController {
     public ISeatService seatService;
 
     @Autowired
+    public IMImgService mImgService;
+
+    @Autowired
     private Config config;
     /**
      *构建内存缓存对象
@@ -324,12 +327,8 @@ public class PadController {
             msg.setMsg("code为空！");
             return msg;
         }
-        if (lruCache.get(code) == null) {
-            Pad pad = padService.queryByCode(code);
-            if(pad == null){
-                return new MsgJson(1,"code错误!");
-            }
-            lruCache.put(code,pad.getRoomId());
+        if (!getPadIdByCode(code)) {
+            return new MsgJson(1,"code错误!");
         }
         Course cources = courseService.queryCourseByRoomId(lruCache.get(code));
         msg.setData(cources);
@@ -472,7 +471,6 @@ public class PadController {
             msgJson.setMsg("code为空！");
             return msgJson;
         }
-
         String fileName = file.getOriginalFilename();//文件名
         logger.info("mimg:code=" + code + ",fileName=" + fileName);
         String suffix =  fileName.substring(fileName.lastIndexOf("."));//文件后缀名
@@ -516,8 +514,29 @@ public class PadController {
             msgJson.setMsg("文件上传失败！");
             return msgJson;
         }
-
+        if (!getPadIdByCode(code)) {
+            return new MsgJson(1,"code错误!");
+        }
+        MImg mImg = new MImg(lruCache.get(code), config.getSERVICEURL() + "ips/notice/fileDownLoad?name=" + fileName, DateUtil.getCurDate());
+        mImgService.insertSelective(mImg);
+        msgJson.setData(mImg);
         return msgJson;
 
+    }
+
+    /**
+     * 从 lruCache获取code 未存时添加进去
+     * @param code
+     * @return
+     */
+    public boolean getPadIdByCode(String code){
+        if (lruCache.get(code) == null) {
+            Pad pad = padService.queryByCode(code);
+            if(pad == null){
+                return false;
+            }
+            lruCache.put(code,pad.getRoomId());
+        }
+        return true;
     }
 }

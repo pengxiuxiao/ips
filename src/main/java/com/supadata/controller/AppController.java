@@ -175,11 +175,12 @@ public class AppController {
      */
     @RequestMapping("/down")
     public ResponseEntity<byte[]> downApp(HttpServletRequest request) throws Exception{
-        String type = request.getParameter("type");
-        if (StringUtils.isEmpty(type)) {
-           return null;
-        }
-        App app = appService.queryNewest(type);
+//        String code = request.getParameter("code");
+//        if (StringUtils.isEmpty(code)) {
+//           return null;
+//        }
+//        logger.info("App Down, code="+code);
+        App app = appService.queryNewest("1");
         // 本地文件路径
         String filePath = "";
         String fileName = app.getSeRemark();
@@ -201,4 +202,25 @@ public class AppController {
         return response;
     }
 
+    /**
+     * 功能描述: 查询最新版本
+     * @auther: pxx
+     * @param: [request]
+     * @return: com.supadata.utils.MsgJson
+     * @date: 2018/6/30 21:36
+     */
+    @RequestMapping("/check")
+    public @ResponseBody
+    MsgJson AppCheck(HttpServletRequest request){
+        MsgJson msg = new MsgJson(0,"请求成功!");
+        String code = request.getParameter("code");
+        if (StringUtils.isEmpty(code)) {
+           return null;
+        }
+        logger.info("App Down, code="+code);
+        App app = appService.queryNewest("1");
+        app.setaUrl(config.getSERVICEURL() + "ips/app/down");
+        msg.setData(app);
+        return msg;
+    }
 }

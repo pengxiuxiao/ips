@@ -2,20 +2,32 @@ package com.supadata.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.supadata.constant.Config;
 import com.supadata.constant.LRUCache;
 import com.supadata.utils.enums.EventType;
 import com.supadata.pojo.*;
 import com.supadata.service.*;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
+import com.supadata.utils.enums.FileType;
+import com.supadata.utils.enums.NoticeType;
+import com.supadata.utils.thread.ConverPPTFileToImageUtil;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +66,8 @@ public class PadController {
     @Autowired
     public ISeatService seatService;
 
+    @Autowired
+    private Config config;
     /**
      *构建内存缓存对象
      */
@@ -437,6 +451,73 @@ public class PadController {
             e.printStackTrace();
         }
         return MsgJson.success(map, "请求成功！");
+
+    }
+
+    /**
+     * 功能描述:上传监控图片
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/4/26 11:40
+     */
+    @RequestMapping("/mimg")
+    public @ResponseBody
+    MsgJson monitorImg(@RequestParam(value = "file", required = false) MultipartFile file,
+                       HttpServletRequest request) {
+        MsgJson msgJson = new MsgJson(0,"文件上传成功！");
+        String code = request.getParameter("code");
+        if (StringUtils.isEmpty(code)) {
+            msgJson.setCode(1);
+            msgJson.setMsg("code为空！");
+            return msgJson;
+        }
+
+        String fileName = file.getOriginalFilename();//文件名
+        logger.info("mimg:code=" + code + ",fileName=" + fileName);
+        String suffix =  fileName.substring(fileName.lastIndexOf("."));//文件后缀名
+
+        fileName = DateUtil.getOutTradeNo() + suffix;
+        String loacalPath = "";
+        if (System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") == 0) {//windows环境
+//            loacalPath = FileUtil.getProperValue("WINPATH");
+            loacalPath =  config.getWINPATH();
+
+        } else {
+//            loacalPath = FileUtil.getProperValue("LINUXDOCPATH");
+            loacalPath = config.getLINUXDOCPATH();
+        }
+        String filePath =  "monitor" + File.separator;
+        File targetFile = new File(loacalPath + filePath);
+        if (!targetFile.exists()) {
+            targetFile.mkdirs();
+        }
+        // 保存
+        try {
+            //输入流
+            InputStream in = file.getInputStream();
+            //输出流
+            FileOutputStream out = new FileOutputStream(loacalPath + filePath + fileName);
+            //创建缓冲区
+            byte buffer[] = new byte[1024];
+            int len = 0;
+            while ((len = in.read(buffer)) > 0){
+                out.write(buffer,0, len);
+            }
+            //关闭流
+            in.close();
+            out.close();
+            if (System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") != 0) {
+                Runtime.getRuntime().exec("chmod -R 777 " + loacalPath + filePath);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            msgJson.setCode(2);
+            msgJson.setMsg("文件上传失败！");
+            return msgJson;
+        }
+
+        return msgJson;
 
     }
 }

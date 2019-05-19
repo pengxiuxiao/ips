@@ -108,11 +108,18 @@ public class PadController {
         }
         lruCache.put(code, pad.getRoomId());
         System.out.println(lruCache);
-
+        if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("否")) {//未锁
+            pad.setIsBlack("open");
+        } else {//已锁
+            pad.setIsBlack("close");
+        }
         //查询后台该pad的设置信息 返回其要执行的事件
         Setting setting = settingService.querySettingByRoomId(pad.getRoomId());
         SystemInfo si = new SystemInfo(System.currentTimeMillis(), pad.getCode(),
-                pad.getRoomId().toString(), pad.getRoomName(),EventType.getName(room.getrModule()));
+                pad.getRoomId().toString(), pad.getRoomName(),EventType.getName(room.getrModule()),
+                "0".equals(setting.getWordFont()) ? "close" : "open",//锁屏
+                pad.getIsBlack(),//黑屏
+                setting.getDaojishi());//音量
 
         return new MsgJson(0, "登录成功！", si);
     }

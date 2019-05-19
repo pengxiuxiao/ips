@@ -18,6 +18,15 @@ public class SystemInfo {
 
     private String roomName;
 
+    //底部状态栏开关 即是否锁屏
+    private String navigation;
+
+    //是否设置黑屏
+    private String power;
+
+    //音量大小
+    private String audio;
+
     /**
      * 初始化后将要执行的事件
      * image
@@ -30,12 +39,15 @@ public class SystemInfo {
     public SystemInfo() {
     }
 
-    public SystemInfo(long updateTime, String code, String roomId, String roomName, String event) {
+    public SystemInfo(long updateTime, String code, String roomId, String roomName, String event, String navigation, String power, String audio) {
         this.updateTime = updateTime;
         this.code = code;
         this.roomId = roomId;
         this.roomName = roomName;
         this.event = event;
+        this.navigation = navigation;
+        this.power = power;
+        this.audio = audio;
     }
 
     public long getUpdateTime() {
@@ -76,5 +88,29 @@ public class SystemInfo {
 
     public void setEvent(String event) {
         this.event = event;
+    }
+
+    public String getNavigation() {
+        return navigation;
+    }
+
+    public void setNavigation(String navigation) {
+        this.navigation = navigation;
+    }
+
+    public String getPower() {
+        return power;
+    }
+
+    public void setPower(String power) {
+        this.power = power;
+    }
+
+    public String getAudio() {
+        return audio;
+    }
+
+    public void setAudio(String audio) {
+        this.audio = audio;
     }
 }

@@ -211,7 +211,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         layer.closeAll();
         return false;
     });//视频消息发送
-    $(".edit").click(function(){
+    $(".addVideoBtn").click(function(){
         //data.field是提交数据
         var dataj = new FormData($("#addVideoForm")[0]);
         dataj.append('room_list', classRooms);

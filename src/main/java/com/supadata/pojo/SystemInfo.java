@@ -27,6 +27,12 @@ public class SystemInfo {
     //音量大小
     private String audio;
 
+    //开机时间
+    private long wakeTime;
+
+    //关机时间
+    private long sleepTime;
+
     /**
      * 初始化后将要执行的事件
      * image
@@ -39,7 +45,8 @@ public class SystemInfo {
     public SystemInfo() {
     }
 
-    public SystemInfo(long updateTime, String code, String roomId, String roomName, String event, String navigation, String power, String audio) {
+    public SystemInfo(long updateTime, String code, String roomId, String roomName, String event,
+                      String navigation, String power, String audio, Long wakeTime, long sleepTime) {
         this.updateTime = updateTime;
         this.code = code;
         this.roomId = roomId;
@@ -48,6 +55,8 @@ public class SystemInfo {
         this.navigation = navigation;
         this.power = power;
         this.audio = audio;
+        this.wakeTime = wakeTime;
+        this.sleepTime = sleepTime;
     }
 
     public long getUpdateTime() {
@@ -112,5 +121,21 @@ public class SystemInfo {
 
     public void setAudio(String audio) {
         this.audio = audio;
+    }
+
+    public long getWakeTime() {
+        return wakeTime;
+    }
+
+    public void setWakeTime(long wakeTime) {
+        this.wakeTime = wakeTime;
+    }
+
+    public long getSleepTime() {
+        return sleepTime;
+    }
+
+    public void setSleepTime(long sleepTime) {
+        this.sleepTime = sleepTime;
     }
 }

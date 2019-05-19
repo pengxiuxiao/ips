@@ -391,13 +391,41 @@ public class DateUtil {
 		}
 		return time;
 	}
-	
+
+	public static long dateToLong(java.util.Date date) {
+		return date.getTime();
+	}
+
+	// string类型转换为date类型
+	// strTime要转换的string类型的时间，formatType要转换的格式yyyy-MM-dd HH:mm:ss//yyyy年MM月dd日
+	// HH时mm分ss秒，
+	// strTime的时间格式必须要与formatType的时间格式相同
+	public static java.util.Date stringToDate(String strTime, String formatType)
+			throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat(formatType);
+		java.util.Date date = null;
+		date = formatter.parse(strTime);
+		return date;
+	}
+
+	public static long stringToLong(String strTime, String formatType)
+			throws ParseException {
+		java.util.Date date = stringToDate(strTime, formatType); // String类型转成date类型
+		if (date == null) {
+			return 0;
+		} else {
+			long currentTime = dateToLong(date); // date类型转成long类型
+			return currentTime;
+		}
+	}
 	public static void main(String[] args) {
 		
 //		String time1="2016-10-21";
 //		String time2="2016-10-21 03:59:00";
-		System.out.println(getTimestamp());
-		System.out.println(getDistanceTimes("2018-07-02 03:59:00","2018-07-02 03:57:10"));
+//		System.out.println(getTimestamp());
+//		System.out.println(getDistanceTimes("2018-07-02 03:59:00","2018-07-02 03:57:10"));
 
+		System.out.println(dateToLong(new java.util.Date()));
+		System.out.println(System.currentTimeMillis());
 	}
 }

@@ -116,10 +116,20 @@ public class PadController {
         //查询后台该pad的设置信息 返回其要执行的事件
         Setting setting = settingService.querySettingByRoomId(pad.getRoomId());
         SystemInfo si = new SystemInfo(System.currentTimeMillis(), pad.getCode(),
-                pad.getRoomId().toString(), pad.getRoomName(),EventType.getName(room.getrModule()),
-                "0".equals(setting.getWordFont()) ? "close" : "open",//锁屏
-                pad.getIsBlack(),//黑屏
-                setting.getDaojishi());//音量
+                pad.getRoomId().toString(), pad.getRoomName(),
+                //显示模块
+                EventType.getName(room.getrModule()),
+                //锁屏
+                "0".equals(setting.getWordFont()) ? "close" : "open",
+                //黑屏
+                pad.getIsBlack(),
+                //音量
+                setting.getDaojishi(),
+                //开机时间
+                DateUtil.dateToLong(setting.getsStartTime()),
+                //关机shijain
+                DateUtil.dateToLong(setting.getsEndTime())
+        );
 
         return new MsgJson(0, "登录成功！", si);
     }

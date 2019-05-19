@@ -8,6 +8,7 @@ import com.supadata.pojo.Room;
 import com.supadata.pojo.Seat;
 import com.supadata.pojo.StudentCard;
 import com.supadata.service.ICourseService;
+import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
@@ -121,6 +122,7 @@ public class CourseServiceImpl implements ICourseService {
         course.setcRoomId(room.getId());
         course.setcRoomName(room.getrName());
         course.setcName(shaeetMap.get("课程名称"));
+        course.setUpdateTime(DateUtil.getCurDate());
         int res = courseMapper.insertSelective(course);
 
         //读取第三个工作表sheet，获取人员卡号信息
@@ -294,6 +296,7 @@ public class CourseServiceImpl implements ICourseService {
                 seat.setLineRoadIndex(rowGdIndex);
                 seat.setColuRoadIndex(columGdIndex);
                 seat.setCourseId(course.getId());
+                seat.setRoomId(course.getcRoomId());
                 seat.setRoomName(course.getcRoomName());
                 seat.setUpdateTime(com.supadata.utils.DateUtil.getCurDate());
                 seatMapper.insertSelective(seat);

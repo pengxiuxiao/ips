@@ -2,8 +2,10 @@ package com.supadata.controller;
 
 import com.supadata.constant.LRUCache;
 import com.supadata.pojo.Check;
+import com.supadata.pojo.RoomSetting;
 import com.supadata.pojo.Setting;
 import com.supadata.service.ICheckService;
+import com.supadata.service.IRoomsettingService;
 import com.supadata.service.ISettingService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
@@ -35,6 +37,9 @@ public class SetController {
 
     @Autowired
     public ICheckService checkService;
+
+    @Autowired
+    public IRoomsettingService roomsettingService;
 
     @Autowired
     private LRUCache lruCache;
@@ -122,11 +127,11 @@ public class SetController {
         setting.setUpdateTime(DateUtil.getCurDate());
         int res = settingService.add(setting);
 
-        //更新轮询表
-        Check check = new Check();
-        check.setChModule("6");
-        check.setUpdateTime(DateUtil.getCurDate());
-        checkService.add(check);
+        RoomSetting rs = new RoomSetting();
+        rs.setRoomId(Integer.parseInt(room_id));
+        rs.setSetId(setting.getId());
+        rs.setUpdateTime(DateUtil.getCurDate());
+        roomsettingService.insertSelective(rs);
         return msg;
     }
 

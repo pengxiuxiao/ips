@@ -314,15 +314,16 @@ public class PadController {
             return new MsgJson(1,"type为空！");
         }
 
-        if (lruCache.get(code) == null) {
-            Pad pad = padService.queryByCode(code);
-            if(pad == null){
-                return new MsgJson(1,"code错误。");
-            }
-            lruCache.put(code,pad.getRoomId());
+        if (!getPadIdByCode(code)) {
+            return new MsgJson(1,"code错误!");
         }
-        List<Notice> notices = noticeService.queryPushNoticeByRoomId("2", type, lruCache.get(code));
-        msg.setData(notices);
+        if ("5".equals(type)) {
+            Course cources = courseService.queryCourseByRoomId(lruCache.get(code));
+            msg.setData(cources);
+        } else {
+            List<Notice> notices = noticeService.queryPushNoticeByRoomId("2", type, lruCache.get(code));
+            msg.setData(notices);
+        }
         return msg;
     }
 
@@ -386,11 +387,15 @@ public class PadController {
         Course course = courseService.queryStudentComingCourse(card_number, room_id, DateUtil.getCurrentDateTime());
         //根据课程id查询座次表信息
         if (course == null) {
-            msg.setCode(2);
+            msg.setCode(1);
             msg.setMsg("暂未查到您的课程！");
             return msg;
         }
         Seat seat = seatService.queryByCNoAndRoomId(card_number, course.getId(), course.getcRoomId());
+        if (seat == null) {
+            msg.setCode(1);
+            msg.setMsg("暂未查到您的课程！");
+        }
         msg.setData(seat);
         return msg;
     }

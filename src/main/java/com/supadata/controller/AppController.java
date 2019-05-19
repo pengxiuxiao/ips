@@ -117,7 +117,7 @@ public class AppController {
             loacalPath = config.getLINUXDOCPATH();
         }
         String filePath =  "app" + File.separator;
-        File targetFile = new File(loacalPath + filePath, fileName);
+        File targetFile = new File(loacalPath + filePath);
         if (!targetFile.exists()) {
             targetFile.mkdirs();
         }

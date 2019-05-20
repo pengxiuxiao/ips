@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="p_ip" property="pIp" jdbcType="VARCHAR" />
     <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="client_id" property="clientId" jdbcType="VARCHAR" />
     <result column="room_name" property="roomName" jdbcType="VARCHAR" />
     <result column="room_id" property="roomId" jdbcType="INTEGER" />
     <result column="p_location" property="pLocation" jdbcType="VARCHAR" />
@@ -20,6 +21,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="p_ip" property="pIp" jdbcType="VARCHAR" />
     <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="client_id" property="clientId" jdbcType="VARCHAR" />
     <result column="room_name" property="roomName" jdbcType="VARCHAR" />
     <result column="room_id" property="roomId" jdbcType="INTEGER" />
     <result column="p_location" property="pLocation" jdbcType="VARCHAR" />
@@ -32,7 +34,7 @@
     <result column="r_module" property="pModule" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, p_ip, code, room_name, room_id, p_location, p_status, update_time, start_time, 
+    id, p_ip, code, client_id, room_name, room_id, p_location, p_status, update_time, start_time,
     end_time, is_black, p_remark, p_module
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -49,7 +51,7 @@
   </select>
   <select id="selectAll" resultMap="JoinResultMap" >
     select
-    p.id, p.p_ip, p.code, p.room_name, p.room_id, p.p_location, p.p_status, p.update_time,
+    p.id, p.p_ip, p.code, p.client_id, p.room_name, p.room_id, p.p_location, p.p_status, p.update_time,
     p.start_time, p.end_time, p.is_black, p.p_remark, r.r_module
     from tb_pad p left join tb_room r on p.room_id = r.id
     where 1 = 1
@@ -82,6 +84,9 @@
       </if>
       <if test="code != null" >
         code,
+      </if>
+      <if test="clientId != null" >
+        client_id,
       </if>
       <if test="roomName != null" >
         room_name,
@@ -121,6 +126,9 @@
       <if test="code != null" >
         #{code,jdbcType=VARCHAR},
       </if>
+      <if test="clientId != null" >
+        #{clientId,jdbcType=VARCHAR},
+      </if>
       <if test="roomName != null" >
         #{roomName,jdbcType=VARCHAR},
       </if>
@@ -158,6 +166,9 @@
       </if>
       <if test="code != null" >
         code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null" >
+        client_id = #{clientId,jdbcType=VARCHAR},
       </if>
       <if test="roomName != null" >
         room_name = #{roomName,jdbcType=VARCHAR},

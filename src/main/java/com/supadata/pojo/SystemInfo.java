@@ -33,6 +33,10 @@ public class SystemInfo {
     //关机时间
     private long sleepTime;
 
+    //是否显示刷卡提示
+    private boolean cardNotice;
+
+
     /**
      * 初始化后将要执行的事件
      * image
@@ -46,7 +50,8 @@ public class SystemInfo {
     }
 
     public SystemInfo(long updateTime, String code, String roomId, String roomName, String event,
-                      String navigation, String power, String audio, Long wakeTime, long sleepTime) {
+                      String navigation, String power, String audio, Long wakeTime, long sleepTime,
+                      boolean cardNotice) {
         this.updateTime = updateTime;
         this.code = code;
         this.roomId = roomId;
@@ -57,6 +62,7 @@ public class SystemInfo {
         this.audio = audio;
         this.wakeTime = wakeTime;
         this.sleepTime = sleepTime;
+        this.cardNotice = cardNotice;
     }
 
     public long getUpdateTime() {
@@ -138,4 +144,13 @@ public class SystemInfo {
     public void setSleepTime(long sleepTime) {
         this.sleepTime = sleepTime;
     }
+
+    public boolean getCardNotice() {
+        return cardNotice;
+    }
+
+    public void setCardNotice(boolean cardNotice) {
+        this.cardNotice = cardNotice;
+    }
+
 }

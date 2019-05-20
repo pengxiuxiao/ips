@@ -9,6 +9,8 @@ public class Pad {
 
     private String code;
 
+    private String clientId;
+
     private String roomName;
 
     private Integer roomId;
@@ -147,5 +149,13 @@ public class Pad {
                 this.pModule = "课程";
                 return;
         }
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 }

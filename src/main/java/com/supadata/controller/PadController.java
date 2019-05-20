@@ -87,10 +87,13 @@ public class PadController {
      */
     @RequestMapping("/login")
     public @ResponseBody
-    MsgJson login(String code) {
-        logger.info("App登录:code=" + code);
+    MsgJson login(String code, String clientId) {
+        logger.info("App登录:code=" + code + ",clientId = " + clientId);
         if (StringUtils.isEmpty(code)) {
             return new MsgJson(1, "code为空！");
+        }
+        if (StringUtils.isEmpty(clientId)) {
+            return new MsgJson(1, "clientId为空！");
         }
         Room room = roomService.queryRoomByIp(code);
         //通过code查找pad数据，有则返回，无则添加
@@ -104,7 +107,12 @@ public class PadController {
             pad.setpIp(code);
             pad.setRoomId(room.getId());
             pad.setRoomName(room.getrName());
+            pad.setClientId(clientId);
             int res = padService.add(pad);
+        }
+        if (StringUtils.isEmpty(pad.getClientId())) {
+            pad.setClientId(clientId);
+            int res = padService.update(pad);
         }
         lruCache.put(code, pad.getRoomId());
         System.out.println(lruCache);
@@ -128,7 +136,9 @@ public class PadController {
                 //开机时间
                 DateUtil.dateToLong(setting.getsStartTime()),
                 //关机shijain
-                DateUtil.dateToLong(setting.getsEndTime())
+                DateUtil.dateToLong(setting.getsEndTime()),
+                //是否显示打卡提示
+                "0" == setting.getDisplayCard() ? true : false
         );
 
         return new MsgJson(0, "登录成功！", si);

@@ -406,6 +406,7 @@ public class PadController {
             msg.setCode(1);
             msg.setMsg("暂未查到您的课程！");
         }
+        seat.setcTitle(course.getcName());
         msg.setData(seat);
         return msg;
     }

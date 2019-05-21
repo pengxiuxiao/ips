@@ -33,6 +33,8 @@ public class Seat {
 
     private String sRemark;
 
+    private String cTitle;
+
     public Integer getId() {
         return id;
     }
@@ -151,5 +153,13 @@ public class Seat {
 
     public void setColuRoadIndex(String coluRoadIndex) {
         this.coluRoadIndex = coluRoadIndex;
+    }
+
+    public String getcTitle() {
+        return cTitle;
+    }
+
+    public void setcTitle(String cTitle) {
+        this.cTitle = cTitle;
     }
 }

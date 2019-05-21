@@ -261,7 +261,7 @@ public class CourseServiceImpl implements ICourseService {
         lastCellNum = titleL.length - 1;
         shaeetMap.put("rGdIndex",rowGdIndex);
         shaeetMap.put("cGdIndex",columGdIndex);
-        shaeetMap.put("rank", (titleR.length - 1 - emptyRow) + "*" + lastCellNum);
+        shaeetMap.put("rank", lastCellNum + "*" + (titleR.length - 1 - emptyRow));
         shaeetMap.put("rRankLine", (titleR.length - 1 - emptyRow));
         shaeetMap.put("rRankColum", lastCellNum);
         // 遍历数据转为list
@@ -295,8 +295,8 @@ public class CourseServiceImpl implements ICourseService {
                 }
                 seat.setCardNo(cartNo);
                 seat.setrRank((String) shaeetMap.get("rank"));
-                seat.setrRankColum((Integer) shaeetMap.get("rRankColum"));
-                seat.setrRankLine((Integer) shaeetMap.get("rRankLine"));
+                seat.setrRankColum((Integer) shaeetMap.get("rRankLine"));
+                seat.setrRankLine((Integer) shaeetMap.get("rRankColum"));
                 seat.setLineRoadIndex(rowGdIndex);
                 seat.setColuRoadIndex(columGdIndex);
                 seat.setCourseId(course.getId());

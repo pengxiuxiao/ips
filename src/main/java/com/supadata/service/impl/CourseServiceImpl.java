@@ -125,7 +125,7 @@ public class CourseServiceImpl implements ICourseService {
         course.setUpdateTime(DateUtil.getCurDate());
         int res = courseMapper.insertSelective(course);
 
-        //读取第三个工作表sheet，获取人员卡号信息
+        //读取第二个工作表sheet，获取人员卡号信息
 //        Map<String, String> map = readSheet3(workbook.getSheetAt(2));
         Map<String, String> map = new HashedMap();
         List<StudentCard> studentCards = studentCardMapper.selectAllList(map);
@@ -262,6 +262,8 @@ public class CourseServiceImpl implements ICourseService {
         shaeetMap.put("rGdIndex",rowGdIndex);
         shaeetMap.put("cGdIndex",columGdIndex);
         shaeetMap.put("rank", (titleR.length - 1 - emptyRow) + "*" + lastCellNum);
+        shaeetMap.put("rRankLine", (titleR.length - 1 - emptyRow));
+        shaeetMap.put("rRankColum", lastCellNum);
         // 遍历数据转为list
         int guodaoC = 0;
         int guodaoL = 0;
@@ -293,6 +295,8 @@ public class CourseServiceImpl implements ICourseService {
                 }
                 seat.setCardNo(cartNo);
                 seat.setrRank((String) shaeetMap.get("rank"));
+                seat.setrRankColum((Integer) shaeetMap.get("rRankColum"));
+                seat.setrRankLine((Integer) shaeetMap.get("rRankLine"));
                 seat.setLineRoadIndex(rowGdIndex);
                 seat.setColuRoadIndex(columGdIndex);
                 seat.setCourseId(course.getId());

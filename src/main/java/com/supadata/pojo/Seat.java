@@ -35,6 +35,10 @@ public class Seat {
 
     private String cTitle;
 
+    private Integer rRankColum;
+
+    private Integer rRankLine;
+
     public Integer getId() {
         return id;
     }
@@ -161,5 +165,21 @@ public class Seat {
 
     public void setcTitle(String cTitle) {
         this.cTitle = cTitle;
+    }
+
+    public Integer getrRankColum() {
+        return rRankColum;
+    }
+
+    public void setrRankColum(Integer rRankColum) {
+        this.rRankColum = rRankColum;
+    }
+
+    public Integer getrRankLine() {
+        return rRankLine;
+    }
+
+    public void setrRankLine(Integer rRankLine) {
+        this.rRankLine = rRankLine;
     }
 }

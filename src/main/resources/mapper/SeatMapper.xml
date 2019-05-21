@@ -17,10 +17,12 @@
     <result column="c_desc" property="cDesc" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="s_remark" property="sRemark" jdbcType="VARCHAR" />
+    <result column="r_rank_line" property="rRankLine" jdbcType="INTEGER" />
+    <result column="r_rank_colum" property="rRankColum" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, course_id, s_name, stu_name, card_no, r_rank, line_road_index, colu_road_index, s_line, s_column, room_id, room_name,
-    c_desc, update_time, s_remark
+    c_desc, update_time, s_remark, r_rank_line, r_rank_colum
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -100,6 +102,12 @@
       <if test="sRemark != null" >
         s_remark,
       </if>
+      <if test="rRankLine != null" >
+        r_rank_line,
+      </if>
+      <if test="rRankColum != null" >
+        r_rank_colum,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -147,6 +155,12 @@
       <if test="sRemark != null" >
         #{sRemark,jdbcType=VARCHAR},
       </if>
+      <if test="rRankLine != null" >
+        #{rRankLine,jdbcType=INTEGER},
+      </if>
+      <if test="rRankColum != null" >
+        #{rRankColum,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.supadata.pojo.Seat" >
@@ -193,6 +207,12 @@
       </if>
       <if test="sRemark != null" >
         s_remark = #{sRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="rRankLine != null" >
+        r_rank_line = #{rRankLine,jdbcType=INTEGER},
+      </if>
+      <if test="rRankColum != null" >
+        r_rank_colum = #{rRankColum,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

@@ -53,4 +53,12 @@ public interface IPadService {
      */
     Pad queryById(Integer id);
 
+    /**
+     * 功能描述:根据教室id查询 pad
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/5/22 17:45
+     */
+    List<Pad> queryByRoomId(Integer parseInt);
 }

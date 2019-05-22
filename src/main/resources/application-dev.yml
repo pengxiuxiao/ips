@@ -90,7 +90,8 @@ config:
 #mqtt配置项
 mqtt:
   host: tcp://118.178.84.40:1883
-  topic: gy-test
+  subTopic: /messagesub/event
+  pubTopic: /messagepush/event
   clientId: server22
   userName: admin
   passWord: admin

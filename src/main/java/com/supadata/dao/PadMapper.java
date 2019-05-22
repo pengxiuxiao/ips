@@ -25,4 +25,6 @@ public interface PadMapper {
     List<Pad> selectAll(@Param("key") String key);
 
     int updateTimeByCode(@Param("code") String code, @Param("curDate") String curDate);
+
+    List<Pad> selectByRoomId(@Param("roomId") Integer roomId);
 }

@@ -38,7 +38,7 @@ public class TopicConsumer implements ApplicationRunner {
 
         Session session = conn.createSession(Boolean.FALSE, Session.AUTO_ACKNOWLEDGE);
         //与生产者的消息目的地相同
-        Destination dest = session.createTopic(mqtt.getTopic());
+        Destination dest = session.createTopic(mqtt.getSubTopic());
 
         MessageConsumer messConsumer = session.createConsumer(dest);
 

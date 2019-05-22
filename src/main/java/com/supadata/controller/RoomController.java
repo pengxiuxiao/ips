@@ -3,15 +3,16 @@ package com.supadata.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
-import com.supadata.pojo.Check;
-import com.supadata.pojo.Room;
-import com.supadata.pojo.RoomSetting;
-import com.supadata.pojo.Setting;
+import com.supadata.constant.Mqtt;
+import com.supadata.pojo.*;
+import com.supadata.service.IPadService;
 import com.supadata.service.IRoomService;
 import com.supadata.service.IRoomsettingService;
 import com.supadata.service.ISettingService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
+import com.supadata.utils.enums.EventType;
+import com.supadata.utils.mqtt.PadServerMQTT;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -22,7 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: RoomController
@@ -45,6 +48,15 @@ public class RoomController {
 
     @Autowired
     public IRoomsettingService roomsettingService;
+
+    @Autowired
+    public IPadService padService;
+
+    @Autowired
+    private Mqtt mqtt;
+
+    @Autowired
+    private PadServerMQTT padServerMQTT;
 
     /**
      * 功能描述:插入单条教室信息
@@ -269,8 +281,13 @@ public class RoomController {
             res ++;
         }
         if (res > 0) {
+            //发送消息 通知全部pad 修改显示模块
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("event", "ppt".equals(EventType.getName(s_module)) ? "image" : EventType.getName(s_module));
+            padServerMQTT.publishMessage(mqtt.getSubTopic(), map);
             return MsgJson.success("设置成功！");
         }
+
         return MsgJson.fail("设置失败！");
     }
 
@@ -299,6 +316,13 @@ public class RoomController {
         room.setId(Integer.parseInt(room_id));
         room.setrModule(s_module);
         int res = roomService.updateRoom(room);
+        List<Pad> pads = padService.queryByRoomId(Integer.parseInt(room_id));
+        for (Pad pad : pads) {
+            //发送消息 通知全部pad 修改显示模块
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("event", "ppt".equals(EventType.getName(s_module)) ? "image" : EventType.getName(s_module));
+            padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
+        }
         return res > 0 ? MsgJson.success("设置成功！") : MsgJson.fail("设置失败！");
 
     }

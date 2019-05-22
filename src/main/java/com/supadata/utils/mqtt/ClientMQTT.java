@@ -6,6 +6,9 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -16,9 +19,10 @@ import java.util.concurrent.ScheduledExecutorService;
  * @return: 
  * @date: 2019/4/2 16:58
  */
-public class ClientMQTT {
+@Component
+public class ClientMQTT implements ApplicationRunner {
     public static final String HOST = "tcp://118.178.84.40:1883";
-    public static final String TOPIC = "gy-test";
+    public static final String TOPIC = "/messagesub/event";
     private static final String clientid = "client11";
     private MqttClient client;
     private MqttConnectOptions options;
@@ -26,6 +30,12 @@ public class ClientMQTT {
     private String passWord = "admin";
 
     private ScheduledExecutorService scheduler;
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        ClientMQTT client = new ClientMQTT();
+        client.start();
+    }
 
     private void start() {
         try {
@@ -64,4 +74,5 @@ public class ClientMQTT {
         ClientMQTT client = new ClientMQTT();
         client.start();
     }
+
 }

@@ -59,18 +59,24 @@
       and CONCAT(IFNULL(`room_name`,''), IFNULL(`p_location`,'')) like CONCAT('%', #{key}, '%')
     </if>
   </select>
+  <select id="selectByRoomId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_pad
+    where room_id = #{roomId}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from tb_pad
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.supadata.pojo.Pad" >
-    insert into tb_pad (id, p_ip, code, 
-      room_name, room_id, p_location, 
-      p_status, update_time, start_time, 
+    insert into tb_pad (id, p_ip, code,
+      room_name, room_id, p_location,
+      p_status, update_time, start_time,
       end_time, p_remark)
-    values (#{id,jdbcType=INTEGER}, #{pIp,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
-      #{roomName,jdbcType=VARCHAR}, #{roomId,jdbcType=INTEGER}, #{pLocation,jdbcType=VARCHAR}, 
-      #{pStatus,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{pIp,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR},
+      #{roomName,jdbcType=VARCHAR}, #{roomId,jdbcType=INTEGER}, #{pLocation,jdbcType=VARCHAR},
+      #{pStatus,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=VARCHAR},
       #{endTime,jdbcType=VARCHAR}, #{pRemark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.supadata.pojo.Pad" >

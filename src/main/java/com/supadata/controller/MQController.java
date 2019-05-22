@@ -5,6 +5,7 @@ import com.supadata.constant.Mqtt;
 import com.supadata.mq.NoticeProducer;
 import com.supadata.mq.PushCallback;
 import com.supadata.utils.MsgJson;
+import com.supadata.utils.mqtt.PadServerMQTT;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.jms.Destination;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @ClassName: MQController
@@ -36,11 +39,18 @@ public class MQController {
     @Autowired
     private LRUCache lruCache;
 
+    @Autowired
+    private PadServerMQTT padServerMQTT;
+
     @RequestMapping("/login")
     public MsgJson ActionToMessage(String type, String content) {
 
         if ("1".equals(type)) {
-            System.out.println(lruCache);
+
+            Map<String,Object> map = new LinkedHashMap();
+            map.put("event","audio");
+            map.put("value","400");
+            padServerMQTT.publishMessage("/messagesub/event",map);
             return new MsgJson(0,"sucess");
         }
         return new MsgJson(1,"fail");
@@ -66,14 +76,14 @@ public class MQController {
             options.setKeepAliveInterval(20);
             // 设置回调
             client.setCallback(new PushCallback());
-            MqttTopic topic = client.getTopic(mqtt.getTopic());
+            MqttTopic topic = client.getTopic(mqtt.getSubTopic());
             //setWill方法，如果项目中需要知道客户端是否掉线可以调用该方法。设置最终端口的通知消息
             options.setWill(topic, "close".getBytes(), 2, true);
 
             client.connect(options);
             //订阅消息
             int[] Qos  = {1};
-            String[] topic1 = {mqtt.getTopic()};
+            String[] topic1 = {mqtt.getSubTopic()};
             client.subscribe(topic1, Qos);
 
         } catch (Exception e) {

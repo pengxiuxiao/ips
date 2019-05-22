@@ -3,6 +3,7 @@ package com.supadata.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.supadata.constant.Config;
+import com.supadata.constant.Mqtt;
 import com.supadata.pojo.App;
 import com.supadata.pojo.Check;
 import com.supadata.service.IAppService;
@@ -10,6 +11,7 @@ import com.supadata.service.ICheckService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.FileUtil;
 import com.supadata.utils.MsgJson;
+import com.supadata.utils.mqtt.PadServerMQTT;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: AppController
@@ -51,6 +55,13 @@ public class AppController {
 
     @Autowired
     private Config config;
+
+    @Autowired
+    private Mqtt mqtt;
+
+    @Autowired
+    private PadServerMQTT padServerMQTT;
+
 
     /**
      * 功能描述: 查询发版记录
@@ -156,12 +167,12 @@ public class AppController {
         app.setSeRemark(fileName);
         int res = appService.add(app);
 
-        //更新轮询表
-        Check check = new Check();
-        check.setChModule("8");
-//        check.setChUrl(FileUtil.getProperValue("SERVICEURL") + "ips/pad/notice");
-        check.setUpdateTime(DateUtil.getCurDate());
-        checkService.add(check);
+        if (res > 0) {
+            //发送黑屏切换消息
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("event", "update_apk");
+            padServerMQTT.publishMessage(mqtt.getSubTopic(), map);
+        }
         return msgJson;
     }
 

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.supadata.constant.Config;
 import com.supadata.constant.LRUCache;
+import com.supadata.constant.Mqtt;
 import com.supadata.utils.enums.EventType;
 import com.supadata.pojo.*;
 import com.supadata.service.*;
@@ -11,6 +12,7 @@ import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.enums.FileType;
 import com.supadata.utils.enums.NoticeType;
+import com.supadata.utils.mqtt.PadServerMQTT;
 import com.supadata.utils.thread.ConverPPTFileToImageUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -29,6 +31,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -76,6 +79,12 @@ public class PadController {
      */
     @Autowired
     private LRUCache lruCache;
+
+    @Autowired
+    private Mqtt mqtt;
+
+    @Autowired
+    private PadServerMQTT padServerMQTT;
 
     /**
      * 功能描述:
@@ -238,12 +247,9 @@ public class PadController {
     }
 
     /**
-     * 功能描述:锁屏接口
-     *
-     * @auther: pxx
-     * @param:
-     * @return:
-     * @date: 2018/6/12 19:24
+     * 置为黑屏接口
+     * @param id
+     * @return
      */
     @RequestMapping("/closePad")
     public @ResponseBody
@@ -261,17 +267,22 @@ public class PadController {
             msg.setMsg("请求失败！");
             return msg;
         }
-        if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("否")) {//未锁
-            pad.setIsBlack("是");
-        } else {//已锁
-            pad.setIsBlack("否");
+        String state = "close";
+        if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("1")) {//未黑屏
+            pad.setIsBlack("0");
+        } else {//已黑屏
+            pad.setIsBlack("1");
+            state = "open";
         }
         int res = padService.update(pad);
-        //更新轮询表
-        Check check = new Check();
-        check.setChModule("9");
-        check.setUpdateTime(DateUtil.getCurDate());
-        res = checkService.add(check);
+        if (res > 0) {
+            //发送黑屏切换消息
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("event", "power");
+            map.put("state", state);
+            padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
+        }
+
         return msg;
     }
 
@@ -447,10 +458,10 @@ public class PadController {
             if (pad.getUpdateTime() != null && "0".equals(DateUtil.getDistanceTimes(DateUtil.fromDateToStr(pad.getUpdateTime()), DateUtil.getCurrentDateTime()))) {
                 pad.setpStatus("在线");
             }
-            if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("否")) {
-                pad.setIsBlack("否");
-            } else {
+            if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("0")) {
                 pad.setIsBlack("是");
+            } else {
+                pad.setIsBlack("否");
             }
         }
         PageInfo<Pad> pageInfo = new PageInfo<>(pads);

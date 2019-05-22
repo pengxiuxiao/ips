@@ -1,8 +1,14 @@
 package com.supadata.utils.mqtt;
 
 import com.supadata.mq.PushCallback;
+import net.sf.json.JSON;
+import net.sf.json.JSONObject;
+import org.apache.commons.collections.map.HashedMap;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 功能描述:
@@ -16,9 +22,9 @@ public class ServerMQTT {
     //tcp://MQTT安装的服务器地址:MQTT定义的端口号
     public static final String HOST = "tcp://118.178.84.40:1883";
     //定义一个主题
-    public static final String TOPIC = "gy-test";
+    public static final String TOPIC = "/messagesub/event";
     //定义MQTT的ID，可以在MQTT服务配置中指定
-    private static final String clientid = "server22";
+    private static final String clientid = "server-admin";
 
     private MqttClient client;
     private MqttTopic topic11;
@@ -85,11 +91,19 @@ public class ServerMQTT {
         server.message = new MqttMessage();
         server.message.setQos(1);
         server.message.setRetained(true);
-        for (int i = 0; i < 100; i++) {
-            Thread.sleep(5000);
-            server.message.setPayload((i + "hello,pxx").getBytes());
-            server.publish(server.topic11 , server.message);
-            System.out.println(i + "hello,pxx");
-        }
+
+        Map<String,String> map = new LinkedHashMap();
+        map.put("event","audio");
+        map.put("value","50");
+        JSONObject json = JSONObject.fromObject(map);
+        server.message.setPayload((json.toString()).getBytes());
+        server.publish(server.topic11 , server.message);
+
+//        for (int i = 0; i < 100; i++) {
+//            Thread.sleep(5000);
+//            server.message.setPayload((i + "hello,pxx").getBytes());
+//            server.publish(server.topic11 , server.message);
+//            System.out.println(i + "hello,pxx");
+//        }
     }
 }

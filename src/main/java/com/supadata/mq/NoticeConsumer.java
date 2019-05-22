@@ -31,8 +31,8 @@ public class NoticeConsumer {
 //    public void consumerMessage(String text) {
 //        System.out.println("收到的消息======" + text);
 //    }
-
-//    @JmsListener(destination = "gy-test")
+//
+//    @JmsListener(destination = "/messagesub/event")
 //    public void readActiveTopic(MqttMessage text) {
 //        System.out.println("收到消息======" + text);
 //    }

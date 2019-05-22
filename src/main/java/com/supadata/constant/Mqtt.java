@@ -17,7 +17,11 @@ public class Mqtt {
 
     private String host;
 
-    private String topic;
+    //主机发送消息的主题
+    private String pubTopic;
+
+    //主机订阅消息的主题
+    private String subTopic;
 
     private String clientId;
 
@@ -28,9 +32,10 @@ public class Mqtt {
     public Mqtt() {
     }
 
-    public Mqtt(String host, String topic, String clientId, String userName, String passWord) {
+    public Mqtt(String host, String pubTopic, String subTopic, String clientId, String userName, String passWord) {
         this.host = host;
-        this.topic = topic;
+        this.pubTopic = pubTopic;
+        this.subTopic = subTopic;
         this.clientId = clientId;
         this.userName = userName;
         this.passWord = passWord;
@@ -44,12 +49,20 @@ public class Mqtt {
         this.host = host;
     }
 
-    public String getTopic() {
-        return topic;
+    public String getPubTopic() {
+        return pubTopic;
     }
 
-    public void setTopic(String topic) {
-        this.topic = topic;
+    public void setPubTopic(String pubTopic) {
+        this.pubTopic = pubTopic;
+    }
+
+    public String getSubTopic() {
+        return subTopic;
+    }
+
+    public void setSubTopic(String subTopic) {
+        this.subTopic = subTopic;
     }
 
     public String getClientId() {

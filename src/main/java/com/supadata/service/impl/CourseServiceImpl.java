@@ -297,8 +297,8 @@ public class CourseServiceImpl implements ICourseService {
                 seat.setrRank((String) shaeetMap.get("rank"));
                 seat.setrRankColum((Integer) shaeetMap.get("rRankLine"));
                 seat.setrRankLine((Integer) shaeetMap.get("rRankColum"));
-                seat.setLineRoadIndex(rowGdIndex);
-                seat.setColuRoadIndex(columGdIndex);
+                seat.setLineRoadIndex(columGdIndex);
+                seat.setColuRoadIndex(rowGdIndex);
                 seat.setCourseId(course.getId());
                 seat.setRoomId(course.getcRoomId());
                 seat.setRoomName(course.getcRoomName());

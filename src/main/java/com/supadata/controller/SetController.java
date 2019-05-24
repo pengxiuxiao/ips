@@ -99,6 +99,8 @@ public class SetController {
 //        }
         if (StringUtils.isNotEmpty(display_card) && "true".equals(display_card)) {//是否显示刷卡提示
             setting.setDisplayCard("0");
+        }else {
+            setting.setDisplayCard("1");
         }
 //        if (StringUtils.isNotEmpty(display_daojishi) && "true".equals(display_daojishi)) {//是否显示倒计时提示
 //            setting.setDisplayDaojishi("0");
@@ -141,6 +143,7 @@ public class SetController {
             newstSet.setsModule("1");
             newstSet.setDaojishi("5");
             newstSet.setWordFont("1");
+            newstSet.setDisplayCard("1");
         }
 
         setting.setsModule(newstSet.getsModule());

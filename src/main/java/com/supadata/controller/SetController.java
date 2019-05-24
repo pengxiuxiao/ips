@@ -78,11 +78,10 @@ public class SetController {
 //        String seRemark = request.getParameter("seRemark");
 //        String s_module = request.getParameter("s_module");
 //        String rotation_time = request.getParameter("rotation_time");
-        String room_id = request.getParameter("room_id");
+//        String room_id = request.getParameter("room_id");
 
         logger.info("upload:start_time=" + start_time + ",end_time="+ end_time
-                + ",word_font="+ word_font + ",display_daojishi="+  ",daojishi="+ daojishi
-               + ",room_id="+ room_id);
+                + ",word_font="+ word_font + ",display_daojishi="+  ",daojishi="+ daojishi);
         if (StringUtils.isEmpty(user_id)) {
             msg.setCode(1);
             msg.setMsg("usre_id为空！");
@@ -146,13 +145,7 @@ public class SetController {
 
         setting.setsModule(newstSet.getsModule());
         int res = settingService.add(setting);
-        if (res > 0) {
-            RoomSetting rs = new RoomSetting();
-            rs.setRoomId(Integer.parseInt(room_id));
-            rs.setSetId(setting.getId());
-            rs.setUpdateTime(DateUtil.getCurDate());
-            res = roomsettingService.insertSelective(rs);
-        }
+
         if (res > 0) {
 
             //发送消息 通知全部pad 修改显示模块
@@ -169,7 +162,7 @@ public class SetController {
             if (!newstSet.getDisplayCard().equals(setting.getDisplayCard())) {//打卡提示变更
                 map.clear();
                 map.put("event", "cardNotice");
-                map.put("isShow", "0".equals(setting.getWordFont()) ? true : false);
+                map.put("isShow", "0".equals(setting.getDisplayCard()) ? true : false);
             }
 
             padServerMQTT.publishMessage(mqtt.getSubTopic(), map);

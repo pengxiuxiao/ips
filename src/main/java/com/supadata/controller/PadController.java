@@ -119,7 +119,7 @@ public class PadController {
             pad.setClientId(clientId);
             int res = padService.add(pad);
         }
-        if (StringUtils.isEmpty(pad.getClientId())) {
+        if (StringUtils.isEmpty(pad.getClientId()) || !clientId.equals(pad.getClientId())) {
             pad.setClientId(clientId);
             int res = padService.update(pad);
         }

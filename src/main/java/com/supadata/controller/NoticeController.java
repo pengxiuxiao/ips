@@ -409,6 +409,7 @@ public class NoticeController {
                 for (String imgName : imgNames) {
                     System.out.println(imgName);
                     notice.setFilePath(loacalPath + filePath + imgName);
+                    notice.setnUrl(config.getSERVICEURL() + "ips/notice/fileDownLoad?name=" + imgName);
                     noticeService.addNotice(notice);
                     roomNoticeService.insertSelective(new RoomNotice(Integer.parseInt(id), notice.getId(),notice.getUpdateTime()));
                     notice.setId(null);

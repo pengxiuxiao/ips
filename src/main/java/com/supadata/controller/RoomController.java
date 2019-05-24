@@ -283,7 +283,7 @@ public class RoomController {
         if (res > 0) {
             //发送消息 通知全部pad 修改显示模块
             Map<String, Object> map = new LinkedHashMap<>();
-            map.put("event", "ppt".equals(EventType.getName(s_module)) ? "image" : EventType.getName(s_module));
+            map.put("event", EventType.getName(s_module));
             padServerMQTT.publishMessage(mqtt.getSubTopic(), map);
             return MsgJson.success("设置成功！");
         }
@@ -320,7 +320,7 @@ public class RoomController {
         for (Pad pad : pads) {
             //发送消息 通知全部pad 修改显示模块
             Map<String, Object> map = new LinkedHashMap<>();
-            map.put("event", "ppt".equals(EventType.getName(s_module)) ? "image" : EventType.getName(s_module));
+            map.put("event", EventType.getName(s_module));
             padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
         }
         return res > 0 ? MsgJson.success("设置成功！") : MsgJson.fail("设置失败！");

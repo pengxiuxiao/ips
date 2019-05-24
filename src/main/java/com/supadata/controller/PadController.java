@@ -480,6 +480,12 @@ public class PadController {
     @RequestMapping("/monitor")
     public @ResponseBody
     MsgJson monitorPad(String user_id, String id) {
+        //发送消息 通知全部pad 修改显示模块
+        Map<String, Object> lmap = new LinkedHashMap<>();
+        lmap.put("event", "remote_observe");
+        lmap.put("photoName", "123.png");
+        padServerMQTT.publishMessage(mqtt.getSubTopic(), lmap);
+
         if (StringUtils.isEmpty(user_id)) {
             return MsgJson.fail("usre_id为空！");
         }

@@ -70,8 +70,8 @@ public class PadServerMQTT {
         try {
             MqttTopic topic11 = this.client.getTopic(topic);
             MqttMessage message = new MqttMessage();
-            message.setQos(1);
-            message.setRetained(true);
+            message.setQos(0);
+//            message.setRetained(true);
             JSONObject json = JSONObject.fromObject(map);
             message.setPayload((json.toString()).getBytes());
 

@@ -3,14 +3,18 @@ package com.supadata.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.supadata.constant.Config;
+import com.supadata.constant.Mqtt;
 import com.supadata.pojo.Check;
 import com.supadata.pojo.Course;
+import com.supadata.pojo.Pad;
 import com.supadata.pojo.Room;
 import com.supadata.service.*;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.FileUtil;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.StringUtil;
+import com.supadata.utils.enums.EventType;
+import com.supadata.utils.mqtt.PadServerMQTT;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -30,7 +34,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: CourseController
@@ -62,6 +68,15 @@ public class CourseController {
 
     @Autowired
     private Config config;
+
+    @Autowired
+    private Mqtt mqtt;
+
+    @Autowired
+    private PadServerMQTT padServerMQTT;
+
+    @Autowired
+    public IPadService padService;
 
     @RequestMapping("/upload")
     public @ResponseBody
@@ -196,8 +211,6 @@ public class CourseController {
         String course_id = request.getParameter("course_id");
         String user_id = request.getParameter("user_id");
         String name = request.getParameter("name");
-        String start_time = request.getParameter("start_time");
-        String end_time = request.getParameter("end_time");
         String word_size = request.getParameter("word_size");
         if (StringUtils.isEmpty(user_id)) {
             msg.setCode(1);
@@ -209,32 +222,37 @@ public class CourseController {
             msg.setMsg("course_id为空！");
             return msg;
         }
+        Course oldCourse = courseService.queryById(Integer.parseInt(course_id));
         Course course = new Course();
         course.setId(Integer.parseInt(course_id));
-        if (StringUtils.isNotEmpty(name)) {
+        boolean isUpdate = false;
+        if (StringUtils.isNotEmpty(name) && !name.equals(oldCourse.getcName())) {
             course.setcName(name);
+            isUpdate = true;
         }
-        if (StringUtils.isNotEmpty(start_time)) {
-            course.setcStartTime(DateUtil.changeDateByStr(start_time));
-        }
-        if (StringUtils.isNotEmpty(end_time)) {
-            course.setcEndTime(DateUtil.changeDateByStr(end_time));
-        }
-        if (StringUtils.isNotEmpty(word_size)) {
+
+        if (StringUtils.isNotEmpty(word_size) && !word_size.equals(oldCourse.getcWordSize())) {
             course.setcWordSize(Integer.parseInt(word_size));
+            isUpdate = true;
         }
-        int res = courseService.editById(course);
-        if (res != 1) {
-            msg.setCode(1);
-            msg.setMsg("删除失败！");
-            return msg;
+        if (isUpdate) {
+            int res = courseService.editById(course);
+            if (res != 1) {
+                msg.setCode(1);
+                msg.setMsg("删除失败！");
+                return msg;
+            }else {
+                List<Pad> pads = padService.queryByRoomId(oldCourse.getcRoomId());
+                for (Pad pad : pads) {
+                    //发送消息 通知对应的pad 修改课程字体
+                    Map<String, Object> map = new LinkedHashMap<>();
+                    map.put("event", "textSize");
+                    map.put("size", course.getcWordSize());
+                    padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
+                }
+            }
         }
-        //更新轮询表
-        Check check = new Check();
-        check.setChModule("5");
-//        check.setChUrl(FileUtil.getProperValue("SERVICEURL") + "ips/pad/notice");
-        check.setUpdateTime(DateUtil.getCurDate());
-        checkService.add(check);
+
         return msg;
     }
 

@@ -2,20 +2,13 @@ package com.supadata.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.supadata.constant.Config;
-import com.supadata.constant.LRUCache;
-import com.supadata.constant.Mqtt;
+import com.supadata.constant.*;
 import com.supadata.utils.enums.EventType;
 import com.supadata.pojo.*;
 import com.supadata.service.*;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
-import com.supadata.utils.enums.FileType;
-import com.supadata.utils.enums.NoticeType;
 import com.supadata.utils.mqtt.PadServerMQTT;
-import com.supadata.utils.thread.ConverPPTFileToImageUtil;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -30,10 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @ClassName: PadController
@@ -79,6 +70,12 @@ public class PadController {
      */
     @Autowired
     private LRUCache lruCache;
+
+    @Autowired
+    private LRUDATACache lrudataCache;
+
+    @Autowired
+    private PadCache padCache;
 
     @Autowired
     private Mqtt mqtt;
@@ -131,7 +128,8 @@ public class PadController {
             pad.setIsBlack("close");
         }
         //查询后台该pad的设置信息 返回其要执行的事件
-        Setting setting = settingService.querySettingByRoomId(pad.getRoomId());
+        Setting setting = settingService.querySetting();
+        Map<String, Long> map = handleOpenClosePadTime(DateUtil.dateToLong(setting.getsStartTime()),DateUtil.dateToLong(setting.getsEndTime()));
         SystemInfo si = new SystemInfo(System.currentTimeMillis(), pad.getCode(),
                 pad.getRoomId().toString(), pad.getRoomName(),
                 //显示模块
@@ -143,15 +141,16 @@ public class PadController {
                 //音量
                 setting.getDaojishi(),
                 //开机时间
-                DateUtil.dateToLong(setting.getsStartTime()),
+                map.get("open"),
                 //关机shijain
-                DateUtil.dateToLong(setting.getsEndTime()),
+                map.get("close"),
                 //是否显示打卡提示
                 "0" == setting.getDisplayCard() ? true : false
         );
 
         return new MsgJson(0, "登录成功！", si);
     }
+
 
     /**
      * 功能描述:
@@ -452,9 +451,17 @@ public class PadController {
         if (StringUtils.isEmpty(key)) {
             key = "";
         }
+        /**发送消息 查询在线状态*/
         PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         List<Pad> pads = padService.queryAll(key);
         for (Pad pad : pads) {
+            padCache.put(pad.getCode(),"离线");
+
+            //发送消息 通知全部pad 修改显示模块
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("event", "onoffline");
+            padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
+
             if (pad.getUpdateTime() != null && "0".equals(DateUtil.getDistanceTimes(DateUtil.fromDateToStr(pad.getUpdateTime()), DateUtil.getCurrentDateTime()))) {
                 pad.setpStatus("在线");
             }
@@ -464,6 +471,8 @@ public class PadController {
                 pad.setIsBlack("否");
             }
         }
+        //休眠，重新取一下
+
         PageInfo<Pad> pageInfo = new PageInfo<>(pads);
         msg.setData(pads);
         msg.setCount(pageInfo.getTotal());
@@ -479,7 +488,7 @@ public class PadController {
      */
     @RequestMapping("/monitor")
     public @ResponseBody
-    MsgJson monitorPad(String user_id, String id) {
+    MsgJson monitorPad(String user_id, String code) {
         //发送消息 通知全部pad 修改显示模块
         Map<String, Object> lmap = new LinkedHashMap<>();
         lmap.put("event", "remote_observe");
@@ -489,17 +498,28 @@ public class PadController {
         if (StringUtils.isEmpty(user_id)) {
             return MsgJson.fail("usre_id为空！");
         }
-        if (StringUtils.isEmpty(id)) {
-            return MsgJson.fail("id为空！");
+        if (StringUtils.isEmpty(code)) {
+            return MsgJson.fail("code为空！");
         }
-        Map<String,String> map = new HashedMap();
-        map.put("url", "https://images.supadata.cn/avc/07_Jxiaojie.png");
+        Pad pad = padService.queryByCode(code);
+        /** 循环定时查询图片上传完成情况 */
         try {
-            Thread.sleep(5000);
+            for (int i = 0; i < 10; i++) {
+                Thread.sleep(1000);
+                MImg mImg = (MImg) lrudataCache.get("mimg-" + code);
+                if (mImg != null) {
+                    logger.info(i + "mimg-" + code + ",mImgId=" + mImg.getId());
+                    Map<String,String> map = new HashedMap();
+                    map.put("url", mImg.getmUrl());
+                    map.put("pModule", pad.getpModule());
+                    return MsgJson.success(map, "请求成功！");
+                }
+
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return MsgJson.success(map, "请求成功！");
+        return MsgJson.fail("请求失败！");
 
     }
 
@@ -567,8 +587,14 @@ public class PadController {
         if (!getPadIdByCode(code)) {
             return new MsgJson(1,"code错误!");
         }
-        MImg mImg = new MImg(lruCache.get(code), config.getSERVICEURL() + "ips/notice/fileDownLoad?name=" + fileName, DateUtil.getCurDate());
-        mImgService.insertSelective(mImg);
+        MImg mImg = new MImg(lruCache.get(code), config.getSERVICEURL() + "notice/fileDownLoad?name=" + fileName + "&type=1", DateUtil.getCurDate());
+        int res = mImgService.insertSelective(mImg);
+        if (res > 0) {
+            //存入图片信息
+            lrudataCache.put("mimg-" + code, mImg);
+            logger.info("mimg-" + code + ",mImgId=" + mImg.getId());
+        }
+
         msgJson.setData(mImg);
         return msgJson;
 
@@ -588,5 +614,63 @@ public class PadController {
             lruCache.put(code,pad.getRoomId());
         }
         return true;
+    }
+
+
+    /**
+     * 功能描述:
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/5/27 17:34
+     */
+    private static Map<String, Long> handleOpenClosePadTime(Long startTime, Long endTime) {
+        Map<String, Long> map = new HashedMap();
+
+        long currentTimeMillis = System.currentTimeMillis();
+//        long diff = endTime - startTime;
+//        long day = diff / (24 * 60 * 60 * 1000);
+//        long hour = (diff / (60 * 60 * 1000) - day * 24);
+//        long min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
+//        min=hour*60+min;
+//        System.out.println(min);
+
+        if (startTime < endTime || endTime < currentTimeMillis) {
+            map.put("close", 0L);
+            map.put("open", 0L);
+        } else if (endTime - currentTimeMillis > 1000){
+            map.put("close", endTime);
+            map.put("open", startTime);
+        }
+
+        return map;
+    }
+
+    public static void main(String[] args) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+
+        Date close  = null;
+        Date open  = null;
+        //这里会有一个异常，所以要用try catch捕获异常
+        try {
+            close  = sdf.parse("2019-05-26");
+            open  = sdf.parse("2019-05-27");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        Map map = handleOpenClosePadTime(DateUtil.dateToLong(open),DateUtil.dateToLong(close));
+        System.out.println(map);
+
+
+
+        Map<Integer, String> maps = new HashedMap();
+        maps.put(1,"A");
+        System.out.println(maps.get(1));
+        System.out.println(maps.get(Integer.valueOf(1)));
+        System.out.println(maps.get(1L));
+
     }
 }

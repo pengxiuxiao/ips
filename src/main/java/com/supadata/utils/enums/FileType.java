@@ -17,7 +17,8 @@ public enum FileType {
     TYPE14("video", ".AVI"),TYPE15("video", ".avi"),
     TYPE16("video", ".MOV"),TYPE17("video", ".mov"),
     TYPE8("ppt", ".ppt"),TYPE9("ppt", ".pptx"),
-    TYPE10("ppt", ".PPT"),TYPE11("ppt", ".PPTX");
+    TYPE10("ppt", ".PPT"),TYPE11("ppt", ".PPTX"),
+    TYPE18("monitor", ".monitor");
     // 成员变量
     private String name;
     private String value;

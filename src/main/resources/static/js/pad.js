@@ -59,9 +59,10 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             $.ajax({
                 type:'post',
                 url: monitorPad,
-                data:{id:obj.data.id, user_id:user_id},
+                data:{code:obj.data.code, user_id:user_id},
                 dataType:'json',
                 success:function (res) {
+                    $("#moImg").attr("src","")
                     layer.closeAll('loading');
                     if(res.code == 0){//
                         layer.open({

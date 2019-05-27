@@ -22,7 +22,8 @@ import java.util.concurrent.ScheduledExecutorService;
 @Component
 public class ClientMQTT implements ApplicationRunner {
     public static final String HOST = "tcp://118.178.84.40:1883";
-    public static final String TOPIC = "/messagesub/event";
+//    public static final String HOST = "tcp://localhost:1883";
+    public static final String TOPIC = "/messagepush/event";
     private static final String clientid = "client11";
     private MqttClient client;
     private MqttConnectOptions options;

@@ -400,7 +400,7 @@ public class NoticeController {
             //String nTitle, String nType, String publishRoom, String publishRoomId, Date updateTime
             Notice notice = new Notice(title, NoticeType.getNoticeIndex(FileType.getKey(suffix))+"",
                     name, id, DateUtil.getCurDate());
-            notice.setnUrl(config.getSERVICEURL() + "ips/notice/fileDownLoad?name=" + fileName);
+            notice.setnUrl(config.getSERVICEURL() + "notice/fileDownLoad?name=" + fileName);
             notice.setUpdateTime(DateUtil.getCurDate());
 
             //将ppt转换的图片信息插入数据库
@@ -409,7 +409,7 @@ public class NoticeController {
                 for (String imgName : imgNames) {
                     System.out.println(imgName);
                     notice.setFilePath(loacalPath + filePath + imgName);
-                    notice.setnUrl(config.getSERVICEURL() + "ips/notice/fileDownLoad?name=" + imgName);
+                    notice.setnUrl(config.getSERVICEURL() + "notice/fileDownLoad?name=" + imgName);
                     noticeService.addNotice(notice);
                     roomNoticeService.insertSelective(new RoomNotice(Integer.parseInt(id), notice.getId(),notice.getUpdateTime()));
                     notice.setId(null);
@@ -576,6 +576,8 @@ public class NoticeController {
 
         String fileName = request.getParameter("name");
 
+        String type = request.getParameter("type");
+
         logger.info("time1=" + DateUtil.getCurrentDateTime() + ",ip=" + ip + ",fileName=" + fileName);
 
         String suffix =  fileName.substring(fileName.lastIndexOf("."));//文件后缀名
@@ -590,6 +592,9 @@ public class NoticeController {
         if (fileName.startsWith("PPT")){
             filePath = filePath + "ppt" + File.separator + fileName;
         }else{
+            if (StringUtils.isNotEmpty(type)) {//添加一个监控目录的分支
+                suffix = ".monitor";
+            }
             filePath = filePath + FileType.getKey(suffix) + File.separator + fileName;
         }
 

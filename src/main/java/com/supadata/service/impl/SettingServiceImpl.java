@@ -50,4 +50,9 @@ public class SettingServiceImpl implements ISettingService {
     public Setting querySettingByRoomId(Integer roomId) {
         return settingMapper.selectSettingByRoomId(roomId);
     }
+
+    @Override
+    public int upadate(Setting setting) {
+        return settingMapper.updateByPrimaryKeySelective(setting);
+    }
 }

@@ -36,4 +36,13 @@ public interface ISettingService {
      * @date: 2019/4/16 18:10
      */
     Setting querySettingByRoomId(Integer roomId);
+
+    /**
+     * 功能描述:
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/5/27 14:04
+     */
+    int upadate(Setting setting);
 }

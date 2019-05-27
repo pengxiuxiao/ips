@@ -281,6 +281,9 @@ public class RoomController {
             res ++;
         }
         if (res > 0) {
+            Setting setting = settingService.querySetting();
+            setting.setsModule(s_module);
+            res = settingService.upadate(setting);
             //发送消息 通知全部pad 修改显示模块
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("event", EventType.getName(s_module));

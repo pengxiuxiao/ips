@@ -3,6 +3,7 @@ package com.supadata.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.supadata.constant.*;
+import com.supadata.utils.SessionMapUtil;
 import com.supadata.utils.enums.EventType;
 import com.supadata.pojo.*;
 import com.supadata.service.*;
@@ -73,9 +74,6 @@ public class PadController {
 
     @Autowired
     private LRUDATACache lrudataCache;
-
-    @Autowired
-    private PadCache padCache;
 
     @Autowired
     private Mqtt mqtt;
@@ -455,23 +453,30 @@ public class PadController {
         PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         List<Pad> pads = padService.queryAll(key);
         for (Pad pad : pads) {
-            padCache.put(pad.getCode(),"离线");
+            SessionMapUtil.SESSION_MAP.put(pad.getCode(),"离线");
 
             //发送消息 通知全部pad 修改显示模块
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("event", "onoffline");
             padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
 
-            if (pad.getUpdateTime() != null && "0".equals(DateUtil.getDistanceTimes(DateUtil.fromDateToStr(pad.getUpdateTime()), DateUtil.getCurrentDateTime()))) {
-                pad.setpStatus("在线");
-            }
-            if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("0")) {
-                pad.setIsBlack("是");
-            } else {
-                pad.setIsBlack("否");
-            }
         }
         //休眠，重新取一下
+        try {
+            Thread.sleep(1500);
+            for (Pad pad : pads) {
+                pad.setpStatus( SessionMapUtil.SESSION_MAP.get(pad.getCode()));
+                pad.setUpdateTime(DateUtil.getCurDate());
+                if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("0")) {
+                    pad.setIsBlack("已黑屏");
+                } else {
+                    pad.setIsBlack("亮屏");
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         PageInfo<Pad> pageInfo = new PageInfo<>(pads);
         msg.setData(pads);

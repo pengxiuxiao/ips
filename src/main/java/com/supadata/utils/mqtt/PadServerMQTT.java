@@ -50,7 +50,7 @@ public class PadServerMQTT {
             options.setConnectionTimeout(10);
             // 设置会话心跳时间
             options.setKeepAliveInterval(20);
-            client.setCallback(new PushCallback());
+//            client.setCallback(new PushCallback());
             client.connect(options);
 
 

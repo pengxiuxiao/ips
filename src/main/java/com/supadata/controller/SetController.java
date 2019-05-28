@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -137,6 +138,7 @@ public class SetController {
 
         setting.setUpdateTime(DateUtil.getCurDate());
 
+        Timestamp curDate = DateUtil.getCurDate();
         //查询上一条设置
         Setting newstSet = settingService.querySetting();
         if (newstSet == null) {
@@ -144,6 +146,8 @@ public class SetController {
             newstSet.setDaojishi("5");
             newstSet.setWordFont("1");
             newstSet.setDisplayCard("1");
+            newstSet.setsStartTime(curDate);
+            newstSet.setsEndTime(curDate);
         }
 
         setting.setsModule(newstSet.getsModule());
@@ -166,6 +170,14 @@ public class SetController {
                 map.clear();
                 map.put("event", "cardNotice");
                 map.put("isShow", "0".equals(setting.getDisplayCard()) ? true : false);
+            }
+            if (!newstSet.getsStartTime().equals(setting.getsStartTime())
+                    || !newstSet.getsEndTime().equals(setting.getsEndTime())) {//开关机时间变更
+                map.clear();
+                Map<String, Long> dateMap = DateUtil.handleOpenClosePadTime(DateUtil.dateToLong(setting.getsStartTime()),DateUtil.dateToLong(setting.getsEndTime()));
+                map.put("event", "onoff");
+                map.put("wakeTime", dateMap.get("open"));
+                map.put("sleepTime", dateMap.get("close"));
             }
 
             padServerMQTT.publishMessage(mqtt.getSubTopic(), map);

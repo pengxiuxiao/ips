@@ -127,7 +127,7 @@ public class PadController {
         }
         //查询后台该pad的设置信息 返回其要执行的事件
         Setting setting = settingService.querySetting();
-        Map<String, Long> map = handleOpenClosePadTime(DateUtil.dateToLong(setting.getsStartTime()),DateUtil.dateToLong(setting.getsEndTime()));
+        Map<String, Long> map = DateUtil.handleOpenClosePadTime(DateUtil.dateToLong(setting.getsStartTime()),DateUtil.dateToLong(setting.getsEndTime()));
         SystemInfo si = new SystemInfo(System.currentTimeMillis(), pad.getCode(),
                 pad.getRoomId().toString(), pad.getRoomName(),
                 //显示模块
@@ -622,34 +622,7 @@ public class PadController {
     }
 
 
-    /**
-     * 功能描述:
-     * @auther: pxx
-     * @param:
-     * @return:
-     * @date: 2019/5/27 17:34
-     */
-    private static Map<String, Long> handleOpenClosePadTime(Long startTime, Long endTime) {
-        Map<String, Long> map = new HashedMap();
 
-        long currentTimeMillis = System.currentTimeMillis();
-//        long diff = endTime - startTime;
-//        long day = diff / (24 * 60 * 60 * 1000);
-//        long hour = (diff / (60 * 60 * 1000) - day * 24);
-//        long min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
-//        min=hour*60+min;
-//        System.out.println(min);
-
-        if (startTime < endTime || endTime < currentTimeMillis) {
-            map.put("close", 0L);
-            map.put("open", 0L);
-        } else if (endTime - currentTimeMillis > 1000){
-            map.put("close", endTime);
-            map.put("open", startTime);
-        }
-
-        return map;
-    }
 
     public static void main(String[] args) {
 
@@ -666,7 +639,7 @@ public class PadController {
             e.printStackTrace();
         }
 
-        Map map = handleOpenClosePadTime(DateUtil.dateToLong(open),DateUtil.dateToLong(close));
+        Map map = DateUtil.handleOpenClosePadTime(DateUtil.dateToLong(open),DateUtil.dateToLong(close));
         System.out.println(map);
 
 

@@ -134,10 +134,10 @@ public class PadController {
                 EventType.getName(room.getrModule()),
                 //锁屏
                 "0".equals(setting.getWordFont()) ? "close" : "open",
-                //黑屏
-                pad.getIsBlack(),
+                //黑屏 0:黑， 1：不黑
+                "0".equals(pad.getIsBlack()) ? "close" : "open",
                 //音量
-                setting.getDaojishi(),
+                setting.getDaojishi()+"0",
                 //开机时间
                 map.get("open"),
                 //关机shijain

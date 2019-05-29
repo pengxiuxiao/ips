@@ -90,7 +90,27 @@ public class DateUtil {
 			return null;
 		}
 	}
-	
+
+
+	/**
+	 *
+	 * @Title: changeDate
+	 * @Description: TODO(字符串转换成sql中的date)
+	 * @param @param str
+	 * @param @return    设定文件
+	 * @return Date    返回类型
+	 * @throws
+	 */
+	public static java.util.Date changeToDate(String str, String format){
+		try {
+			java.util.Date date= new SimpleDateFormat(format).parse(str);
+			return date;
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
 	/**
 	* 
 	* @Title: changeDateByStr    
@@ -433,17 +453,17 @@ public class DateUtil {
 		Map<String, Long> map = new HashedMap();
 
 		long currentTimeMillis = System.currentTimeMillis();
-//        long diff = endTime - startTime;
-//        long day = diff / (24 * 60 * 60 * 1000);
-//        long hour = (diff / (60 * 60 * 1000) - day * 24);
-//        long min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
-//        min=hour*60+min;
-//        System.out.println(min);
+        long diff = endTime - currentTimeMillis;
+        long day = diff / (24 * 60 * 60 * 1000);
+        long hour = (diff / (60 * 60 * 1000) - day * 24);
+        long min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
+        min=hour*60+min;
+        System.out.println(min);
 
-		if (startTime < endTime || endTime < currentTimeMillis) {
+		if (startTime < endTime || endTime < currentTimeMillis || min < 2) {
 			map.put("close", 0L);
 			map.put("open", 0L);
-		} else if (endTime - currentTimeMillis > 1000){
+		} else{
 			map.put("close", endTime);
 			map.put("open", startTime);
 		}

@@ -59,8 +59,8 @@ public class SetController {
 
     @RequestMapping("/set")
     public @ResponseBody
-    MsgJson setting (HttpServletRequest request) {
-        MsgJson msg = new MsgJson(0,"设置成功！");
+    MsgJson setting(HttpServletRequest request) {
+        MsgJson msg = new MsgJson(0, "设置成功！");
         String user_id = request.getParameter("user_id");
         /**开机时间*/
         String start_time = request.getParameter("start_time");
@@ -81,8 +81,8 @@ public class SetController {
 //        String rotation_time = request.getParameter("rotation_time");
 //        String room_id = request.getParameter("room_id");
 
-        logger.info("upload:start_time=" + start_time + ",end_time="+ end_time
-                + ",word_font="+ word_font + ",display_daojishi="+  ",daojishi="+ daojishi);
+        logger.info("upload:start_time=" + start_time + ",end_time=" + end_time
+                + ",word_font=" + word_font + ",display_daojishi=" + ",daojishi=" + daojishi);
         if (StringUtils.isEmpty(user_id)) {
             msg.setCode(1);
             msg.setMsg("usre_id为空！");
@@ -90,17 +90,17 @@ public class SetController {
         }
         Setting setting = new Setting();
         if (StringUtils.isNotEmpty(start_time)) {//开机时间
-            setting.setsStartTime(DateUtil.changeDateByStr(start_time));
+            setting.setsStartTime(DateUtil.changeToDate(start_time, "yyyy-MM-dd HH:mm:ss"));
         }
         if (StringUtils.isNotEmpty(end_time)) {//关机时间
-            setting.setsEndTime(DateUtil.changeDateByStr(end_time));
+            setting.setsEndTime(DateUtil.changeToDate(end_time, "yyyy-MM-dd HH:mm:ss"));
         }
 //        if (StringUtils.isNotEmpty(display_date) && "true".equals(display_date)) {//是否显示日期，0显示，1不显示
 //            setting.setDisplayDate("0");
 //        }
         if (StringUtils.isNotEmpty(display_card) && "true".equals(display_card)) {//是否显示刷卡提示
             setting.setDisplayCard("0");
-        }else {
+        } else {
             setting.setDisplayCard("1");
         }
 //        if (StringUtils.isNotEmpty(display_daojishi) && "true".equals(display_daojishi)) {//是否显示倒计时提示
@@ -112,16 +112,16 @@ public class SetController {
 //            setting.setSeRemark("1");
 //        }
         if (StringUtils.isNotEmpty(daojishi)) {//倒计时时长
-            setting.setDaojishi((Integer.parseInt(daojishi)/10) + "");
+            setting.setDaojishi((Integer.parseInt(daojishi) / 10) + "");
         }
 
 //        if (StringUtils.isNotEmpty(word_size)) {//字体大小
 //            setting.setWordSize(word_size);
 //        }
         if (StringUtils.isNotEmpty(word_font)) {//字体---改为锁屏用
-            if ("true".equals(word_font)){
+            if ("true".equals(word_font)) {
                 setting.setWordFont("0");//锁
-            }else{
+            } else {
                 setting.setWordFont("1");//开
             }
         }
@@ -138,7 +138,7 @@ public class SetController {
 
         setting.setUpdateTime(DateUtil.getCurDate());
 
-        Timestamp curDate = DateUtil.getCurDate();
+        Date curDate = new Date();
         //查询上一条设置
         Setting newstSet = settingService.querySetting();
         if (newstSet == null) {
@@ -159,7 +159,7 @@ public class SetController {
             Map<String, Object> map = new LinkedHashMap<>();
             if (!newstSet.getDaojishi().equals(setting.getDaojishi())) {//音量变更
                 map.put("event", "audio");
-                map.put("value", setting.getDaojishi()+"0");
+                map.put("value", setting.getDaojishi() + "0");
             }
             if (!newstSet.getWordFont().equals(setting.getWordFont())) {//锁屏变更
                 map.clear();
@@ -174,13 +174,17 @@ public class SetController {
             if (!newstSet.getsStartTime().equals(setting.getsStartTime())
                     || !newstSet.getsEndTime().equals(setting.getsEndTime())) {//开关机时间变更
                 map.clear();
-                Map<String, Long> dateMap = DateUtil.handleOpenClosePadTime(DateUtil.dateToLong(setting.getsStartTime()),DateUtil.dateToLong(setting.getsEndTime()));
+                Map<String, Long> dateMap = DateUtil.handleOpenClosePadTime(
+                        DateUtil.dateToLong(setting.getsStartTime()),
+                        DateUtil.dateToLong(setting.getsEndTime()));
                 map.put("event", "onoff");
                 map.put("wakeTime", dateMap.get("open"));
                 map.put("sleepTime", dateMap.get("close"));
+                logger.info("set: sleepTime=" + end_time + ", wakeTime " + start_time);
             }
-
-            padServerMQTT.publishMessage(mqtt.getSubTopic(), map);
+            if (map.size() > 0) {
+                padServerMQTT.publishMessage(mqtt.getSubTopic(), map);
+            }
         }
         return msg;
     }

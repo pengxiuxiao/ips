@@ -1,16 +1,11 @@
 package com.supadata.mq;
 
-import com.supadata.constant.PadCache;
-import com.supadata.service.IPadService;
 import com.supadata.utils.SessionMapUtil;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RestController;
 
 
 /**

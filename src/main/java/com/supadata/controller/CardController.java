@@ -49,6 +49,9 @@ public class CardController {
         if (StringUtils.isEmpty(user_id) || StringUtils.isEmpty(cardNo) || StringUtils.isEmpty(name)) {
             return MsgJson.fail("参数包含空值！");
         }
+        long longNo = Long.parseLong(cardNo);
+        cardNo = Long.toHexString(longNo);
+        cardNo = com.supadata.utils.StringUtil.HexToLongString(com.supadata.utils.StringUtil.overturnHexString(cardNo));
         StudentCard card = studentCardService.selectByNumber(cardNo);
         if (card == null) {
             StudentCard sc = new StudentCard(name, cardNo, DateUtil.getCurDate());

@@ -160,16 +160,19 @@ public class SetController {
             if (!newstSet.getDaojishi().equals(setting.getDaojishi())) {//音量变更
                 map.put("event", "audio");
                 map.put("value", setting.getDaojishi() + "0");
+                padServerMQTT.publishMessage(mqtt.getSubTopic(), map);
             }
             if (!newstSet.getWordFont().equals(setting.getWordFont())) {//锁屏变更
                 map.clear();
                 map.put("event", "navigation");
                 map.put("state", "0".equals(setting.getWordFont()) ? "close" : "open");
+                padServerMQTT.publishMessage(mqtt.getSubTopic(), map);
             }
             if (!newstSet.getDisplayCard().equals(setting.getDisplayCard())) {//打卡提示变更
                 map.clear();
                 map.put("event", "cardNotice");
                 map.put("isShow", "0".equals(setting.getDisplayCard()) ? true : false);
+                padServerMQTT.publishMessage(mqtt.getSubTopic(), map);
             }
             if (!newstSet.getsStartTime().equals(setting.getsStartTime())
                     || !newstSet.getsEndTime().equals(setting.getsEndTime())) {//开关机时间变更
@@ -181,8 +184,6 @@ public class SetController {
                 map.put("wakeTime", dateMap.get("open"));
                 map.put("sleepTime", dateMap.get("close"));
                 logger.info("set: sleepTime=" + end_time + ", wakeTime " + start_time);
-            }
-            if (map.size() > 0) {
                 padServerMQTT.publishMessage(mqtt.getSubTopic(), map);
             }
         }

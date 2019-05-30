@@ -120,11 +120,7 @@ public class PadController {
         }
         lruCache.put(code, pad.getRoomId());
         System.out.println(lruCache);
-        if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("否")) {//未锁
-            pad.setIsBlack("open");
-        } else {//已锁
-            pad.setIsBlack("close");
-        }
+
         //查询后台该pad的设置信息 返回其要执行的事件
         Setting setting = settingService.querySetting();
         Map<String, Long> map = DateUtil.handleOpenClosePadTime(DateUtil.dateToLong(setting.getsStartTime()),DateUtil.dateToLong(setting.getsEndTime()));
@@ -143,7 +139,7 @@ public class PadController {
                 //关机shijain
                 map.get("close"),
                 //是否显示打卡提示
-                "0" == setting.getDisplayCard() ? true : false
+                "0".equals(setting.getDisplayCard()) ? true : false
         );
 
         return new MsgJson(0, "登录成功！", si);

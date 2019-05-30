@@ -133,26 +133,28 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
 
     //批量删除
     $('.bdroom-btn').on('click', function(){
-        var checkStatus = table.checkStatus('rooms')
-            ,data = checkStatus.data;
-        // layer.alert(JSON.stringify(data));
-        //ajax调用后台添加接口
-        $.ajax({
-            type:'post',
-            url: global + '/room/bdr',
-            data:{idList:JSON.stringify(data), user_id:user_id},
-            dataType:'json',
-            success:function (res) {
-                if(res.code == 0){//0
-                    layer.msg('操作成功');
-                    $(".layui-laypage-btn").click();
-                }else {
+        layer.confirm('确认批量删除教室? ', function(index){
+            var checkStatus = table.checkStatus('rooms')
+                ,data = checkStatus.data;
+            // layer.alert(JSON.stringify(data));
+            //ajax调用后台添加接口
+            $.ajax({
+                type:'post',
+                url: global + '/room/bdr',
+                data:{idList:JSON.stringify(data), user_id:user_id},
+                dataType:'json',
+                success:function (res) {
+                    if(res.code == 0){//0
+                        layer.msg('操作成功');
+                        $(".layui-laypage-btn").click();
+                    }else {
+                        layer.msg('操作失败');
+                    }
+                },
+                error:function (err) {
                     layer.msg('操作失败');
                 }
-            },
-            error:function (err) {
-                layer.msg('操作失败');
-            }
+            })
         })
     });
 

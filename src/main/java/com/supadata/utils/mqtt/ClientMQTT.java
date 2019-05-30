@@ -38,7 +38,7 @@ public class ClientMQTT implements ApplicationRunner {
         client.start();
     }
 
-    private void start() {
+    public void start() {
         try {
             // host为主机名，clientid即连接MQTT的客户端ID，一般以唯一标识符表示，MemoryPersistence设置clientid的保存形式，默认为以内存保存
             client = new MqttClient(HOST, clientid, new MemoryPersistence());

@@ -69,7 +69,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                             type: 1,
                             title: false,
                             closeBtn: 0,
-                            area: '916px',
+                            area: '1080px',
                             shadeClose: true,
                             content: $('.monitor-content')
                         });

@@ -440,10 +440,33 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             if(value == '' || value == null){
                 return '请选择教室列表';
             }
+        },
+        word_size: function(value){
+            if(value == '' || value == null){
+                return '请输入字体大小！';
+            }
+            if (!isNumber(value)) {
+                return '字体大小必须是大于0的数字！';
+            }
         }
 
     });
 
+    //判读值是否是数字
+    function isNumber(val){
+
+        var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+        var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+        if(regPos.test(val) || regNeg.test(val)){
+            if (val <= 0) {//小于0也不行
+                return false;
+            }
+            return true;
+        }else{
+            return false;
+        }
+
+    }
     //取消按钮
     $(".cancel-btn").click(function () {
         layer.closeAll();
@@ -451,26 +474,28 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
 
     //批量删除
     $('.bdnotice-btn').on('click', function(){
-        var checkStatus = table.checkStatus('test')
-            ,data = checkStatus.data;
-        // layer.alert(JSON.stringify(data));
-        //ajax调用后台添加接口
-        $.ajax({
-            type:'post',
-            url: global + '/notice/bdn',
-            data:{idList:JSON.stringify(data), user_id:user_id},
-            dataType:'json',
-            success:function (res) {
-                if(res.code == 0){//0
-                    layer.msg('操作成功');
-                    $(".layui-laypage-btn").click();
-                }else {
+        layer.confirm('确认批量删除? ', function(){
+            var checkStatus = table.checkStatus('test')
+                ,data = checkStatus.data;
+            // layer.alert(JSON.stringify(data));
+            //ajax调用后台添加接口
+            $.ajax({
+                type:'post',
+                url: global + '/notice/bdn',
+                data:{idList:JSON.stringify(data), user_id:user_id},
+                dataType:'json',
+                success:function (res) {
+                    if(res.code == 0){//0
+                        layer.msg('操作成功');
+                        $(".layui-laypage-btn").click();
+                    }else {
+                        layer.msg('操作失败');
+                    }
+                },
+                error:function (err) {
                     layer.msg('操作失败');
                 }
-            },
-            error:function (err) {
-                layer.msg('操作失败');
-            }
+            })
         })
     });
 

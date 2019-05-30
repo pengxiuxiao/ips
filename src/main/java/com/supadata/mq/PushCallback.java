@@ -1,6 +1,7 @@
 package com.supadata.mq;
 
 import com.supadata.utils.SessionMapUtil;
+import com.supadata.utils.mqtt.ClientMQTT;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -23,6 +24,14 @@ public class PushCallback implements MqttCallback {
     public void connectionLost(Throwable cause) {
         // 连接丢失后，一般在这里面进行重连
         System.out.println("连接断开，可以做重连");
+        try {
+            Thread.sleep(10000);
+            ClientMQTT client = new ClientMQTT();
+            client.start();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void deliveryComplete(IMqttDeliveryToken token) {

@@ -24,7 +24,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             ,cols: [[
                 {field:'id', title: 'id', width: 80}
                 ,{field:'aVersion', title: '版本号', width: 150}
-                ,{field:'aType', title: '版本类型', width: 150}
+                // ,{field:'aType', title: '版本类型', width: 150}
                 ,{field:'aDesc', title: '版本描述'}
                 ,{field:'updateTime', title: '更新时间', templet: '#createTime', width: 180}
                 ,{field:'aUrl', title: '下载链接'}

@@ -80,9 +80,60 @@ public class StringUtil {
 	       } 
 	       return ip.split(",")[0]; 
 	   }
-	
 
-	
+
+
+	/**
+	 * 功能描述:16进制转为十进制 补齐空位
+	 * @auther: pxx
+	 * @param:
+	 * @return:
+	 * @date: 2019/5/29 19:15
+	 */
+	public static String HexToLongString(String data) {
+		//读到卡的数据0047E325
+		// TODO: 2018/1/29 其中有一个卡号是0047E325，这个卡号十进制值是4711205
+		Long card = Long.parseLong(data.trim(), 16);          //16转10进制
+		String cardTemp=String.valueOf(card);
+		StringBuilder sb =new StringBuilder(cardTemp);
+		int tempLength=sb.toString().length();
+		if(tempLength!=10){
+			switch (tempLength){
+				case 6:
+					sb.insert(0,"0000");
+					break;
+				case 7:
+					sb.insert(0,"000");
+					break;
+				case 8:
+					sb.insert(0,"00");
+					break;
+				case 9:
+					sb.insert(0,"0");
+					break;
+			}
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 功能描述: 翻转字符顺序
+	 * @auther: pxx
+	 * @param:
+	 * @return:
+	 * @date: 2019/5/29 19:14
+	 */
+	public static String overturnHexString(String data) {
+		System.out.println(data.length());
+		//01234567
+		//12345678
+		StringBuffer sb = new StringBuffer(data.substring(data.length()-2));
+		sb = sb.append(new StringBuffer(data.substring(data.length()-4, data.length()-2)));
+		sb = sb.append(new StringBuffer(data.substring(data.length()-6, data.length()-4)));
+		sb = sb.append(new StringBuffer(data.substring(data.length()-8, data.length()-6)));
+
+		return sb.toString();
+	}
 	
 	
 	public static void main(String[] args) {

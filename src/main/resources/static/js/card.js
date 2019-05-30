@@ -108,17 +108,12 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
 
         name: function(value){
             if(value == '' || value == null){
-                return '请输入教室名';
+                return '请输入姓名';
             }
         },
-        location: function(value){
+        number: function(value){
             if(value == '' || value == null){
-                return '请输入教室位置';
-            }
-        },
-        ip: function(value){
-            if(value == '' || value == null){
-                return '请输入教室ip';
+                return '请通过读卡器读入卡号！';
             }
         }
 
@@ -126,27 +121,30 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
 
     //批量删除
     $('.bdcard-btn').on('click', function(){
-        var checkStatus = table.checkStatus('cards')
-            ,data = checkStatus.data;
-        // layer.alert(JSON.stringify(data));
-        //ajax调用后台添加接口
-        $.ajax({
-            type:'post',
-            url: global + '/card/bdc',
-            data:{idList:JSON.stringify(data), user_id:user_id},
-            dataType:'json',
-            success:function (res) {
-                if(res.code == 0){//0
-                    layer.msg('操作成功');
-                    $(".layui-laypage-btn").click();
-                }else {
+        layer.confirm('确认批量删除?', function(){
+            var checkStatus = table.checkStatus('cards')
+                ,data = checkStatus.data;
+            // layer.alert(JSON.stringify(data));
+            //ajax调用后台添加接口
+            $.ajax({
+                type:'post',
+                url: global + '/card/bdc',
+                data:{idList:JSON.stringify(data), user_id:user_id},
+                dataType:'json',
+                success:function (res) {
+                    if(res.code == 0){//0
+                        layer.msg('操作成功');
+                        $(".layui-laypage-btn").click();
+                    }else {
+                        layer.msg('操作失败');
+                    }
+                },
+                error:function (err) {
                     layer.msg('操作失败');
                 }
-            },
-            error:function (err) {
-                layer.msg('操作失败');
-            }
+            })
         })
+
     });
 
     //监听添加提交按钮

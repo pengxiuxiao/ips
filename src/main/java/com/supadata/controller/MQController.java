@@ -6,7 +6,6 @@ import com.supadata.mq.NoticeProducer;
 import com.supadata.mq.PushCallback;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.mqtt.PadServerMQTT;
-import org.apache.activemq.command.ActiveMQQueue;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.jms.Destination;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

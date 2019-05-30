@@ -2,26 +2,21 @@ package com.supadata.controller;
 
 import com.supadata.constant.LRUCache;
 import com.supadata.constant.Mqtt;
-import com.supadata.pojo.Check;
-import com.supadata.pojo.RoomSetting;
 import com.supadata.pojo.Setting;
 import com.supadata.service.ICheckService;
 import com.supadata.service.IRoomsettingService;
 import com.supadata.service.ISettingService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
-import com.supadata.utils.enums.EventType;
 import com.supadata.utils.mqtt.PadServerMQTT;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;

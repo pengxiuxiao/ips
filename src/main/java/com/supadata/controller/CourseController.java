@@ -112,12 +112,6 @@ public class CourseController {
         } catch (InvalidFormatException e) {
             e.printStackTrace();
         }
-
-        //更新轮询表
-        Check check = new Check();
-        check.setChModule("5");
-        check.setUpdateTime(DateUtil.getCurDate());
-        checkService.add(check);
         return msgJson;
     }
 

@@ -493,11 +493,6 @@ public class PadController {
     @RequestMapping("/monitor")
     public @ResponseBody
     MsgJson monitorPad(String user_id, String code) {
-        //发送消息 通知全部pad 修改显示模块
-        Map<String, Object> lmap = new LinkedHashMap<>();
-        lmap.put("event", "remote_observe");
-        lmap.put("photoName", "123.png");
-        padServerMQTT.publishMessage(mqtt.getSubTopic(), lmap);
 
         if (StringUtils.isEmpty(user_id)) {
             return MsgJson.fail("usre_id为空！");
@@ -506,13 +501,24 @@ public class PadController {
             return MsgJson.fail("code为空！");
         }
         Pad pad = padService.queryByCode(code);
+        String appendTopic = "";
+        if (pad != null) {
+            appendTopic = "/" + pad.getClientId();
+        }
+        //发送消息到指定pad 通知上传图片消息
+        Map<String, Object> lmap = new LinkedHashMap<>();
+        lmap.put("event", "remote_observe");
+        lmap.put("photoName", code + ".png");
+        padServerMQTT.publishMessage(mqtt.getSubTopic() + appendTopic, lmap);
         /** 循环定时查询图片上传完成情况 */
         try {
             for (int i = 0; i < 10; i++) {
                 Thread.sleep(1000);
                 MImg mImg = (MImg) lrudataCache.get("mimg-" + code);
                 if (mImg != null) {
-                    logger.info(i + "mimg-" + code + ",mImgId=" + mImg.getId());
+                    /** 用完就移除掉，避免下次有重复 */
+                    lrudataCache.remove("mimg-" + code);
+                    logger.info(i + "s请求到, mimg-" + code + ",mImgId=" + mImg.getId());
                     Map<String,String> map = new HashedMap();
                     map.put("url", mImg.getmUrl());
                     map.put("pModule", pad.getpModule());
@@ -546,10 +552,10 @@ public class PadController {
             return msgJson;
         }
         String fileName = file.getOriginalFilename();//文件名
-        logger.info("mimg:code=" + code + ",fileName=" + fileName);
         String suffix =  fileName.substring(fileName.lastIndexOf("."));//文件后缀名
 
-        fileName = DateUtil.getOutTradeNo() + suffix;
+        fileName = code + suffix;
+        logger.info("mimg:code=" + code + ",fileName=" + fileName);
         String loacalPath = "";
         if (System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") == 0) {//windows环境
 //            loacalPath = FileUtil.getProperValue("WINPATH");

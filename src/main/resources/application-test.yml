@@ -50,8 +50,8 @@ spring:
 
   #activemq
     activemq:
-#        broker-url: tcp://118.178.84.40:61616
-        broker-url: tcp://localhost:61616
+        broker-url: tcp://118.178.84.40:61616
+#        broker-url: tcp://localhost:61616
         user: admin
         password: admin
         pool:
@@ -84,15 +84,15 @@ swagger:
 config:
     WINPATH: D:\\data\\ips\\
     LINUXDOCPATH: /data/ips/
-#    SERVICEURL: http://pad.supadata.cn/ips/
-    SERVICEURL: http://localhost:8080/
+    SERVICEURL: http://pad.supadata.cn/ips/
+#    SERVICEURL: http://localhost:8080/
     #SERVICEURL: http://10.69.3.200:8080/ips/
     DESKEY: pengxiuxiaosupadata_test
 
 #mqtt配置项
 mqtt:
-#  host: tcp://118.178.84.40:1883
-  host: tcp://localhost:1883
+  host: tcp://118.178.84.40:1883
+#  host: tcp://localhost:1883
   subTopic: /messagesub/event
   pubTopic: /messagepush/event/
   clientId: server22

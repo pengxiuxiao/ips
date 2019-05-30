@@ -10,8 +10,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ScheduledExecutorService;
-
 /**
  * 功能描述:
  * @auther: pxx
@@ -30,7 +28,6 @@ public class ClientMQTT implements ApplicationRunner {
     private String userName = "admin";
     private String passWord = "admin";
 
-    private ScheduledExecutorService scheduler;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {

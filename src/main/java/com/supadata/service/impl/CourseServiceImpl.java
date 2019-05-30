@@ -125,8 +125,6 @@ public class CourseServiceImpl implements ICourseService {
         course.setUpdateTime(DateUtil.getCurDate());
         int res = courseMapper.insertSelective(course);
 
-        //读取第二个工作表sheet，获取人员卡号信息
-//        Map<String, String> map = readSheet3(workbook.getSheetAt(2));
         Map<String, String> map = new HashedMap();
         List<StudentCard> studentCards = studentCardMapper.selectAllList(map);
         for (StudentCard studentCard : studentCards) {
@@ -210,7 +208,9 @@ public class CourseServiceImpl implements ICourseService {
         shaeetMap.put("result", MsgJson.success("添加完成"));
         int sheet2firstRowNum = 1;
         // 获取sheet中最后一行行号
-        int lastRowNum = sheet2.getLastRowNum();
+        int lastRowNum = sheet2.getLastRowNum()+1;
+        int firstRowNum = sheet2.getFirstRowNum();
+        System.out.println(firstRowNum);
         int lastCellNum = 0;
         // 取第一行标题
         Row firstRow = sheet2.getRow(0);
@@ -241,7 +241,7 @@ public class CourseServiceImpl implements ICourseService {
                 e.printStackTrace();
             }
         }
-        for (int j = 0; j < lastRowNum; j++){//列
+        for (int j = 0; j < titleL.length; j++){//列
             Row row = sheet2.getRow(j);
             Cell cell = row.getCell(0);
             if (j > 0 && StringUtils.isEmpty(cell.getStringCellValue().trim())){
@@ -258,9 +258,9 @@ public class CourseServiceImpl implements ICourseService {
             }
         }
         lastRowNum = lastRowNum- emptyRow;
-        lastCellNum = titleL.length - 1;
-        shaeetMap.put("rGdIndex",rowGdIndex);
-        shaeetMap.put("cGdIndex",columGdIndex);
+        lastCellNum = titleR.length - 1;
+        shaeetMap.put("rGdIndex",rowGdIndex);//过道的列坐标
+        shaeetMap.put("cGdIndex",columGdIndex);//过道的行坐标
         shaeetMap.put("rank", lastCellNum + "*" + (titleR.length - 1 - emptyRow));
         shaeetMap.put("rRankLine", (titleR.length - 1 - emptyRow));
         shaeetMap.put("rRankColum", lastCellNum);

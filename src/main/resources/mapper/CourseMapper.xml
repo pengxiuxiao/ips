@@ -76,6 +76,7 @@
     <include refid="Base_Column_List" />
     from tb_course
     where  c_room_id = #{roomId}
+    and c_status = 0
     order by update_time desc
     limit 1
   </select>

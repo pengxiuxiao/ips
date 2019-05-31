@@ -50,9 +50,6 @@ public class PadController {
     public IRoomService roomService;
 
     @Autowired
-    public ICheckService checkService;
-
-    @Autowired
     public ISettingService settingService;
 
     @Autowired
@@ -181,42 +178,6 @@ public class PadController {
         map.put("user_id", 1007);
         msgJson.setData(map);
         return msgJson;
-    }
-
-    /**
-     * 功能描述:所有信息变更，通过此接口比较，有变更则请求相应的接口更新数据
-     * @auther: pxx
-     * @param:
-     * @return:
-     * @date: 2018/6/12 18:23
-     */
-    @RequestMapping("/check")
-    public @ResponseBody
-    MsgJson check(String code, String check_time) {
-        MsgJson msg = new MsgJson(0, "查询成功！");
-        if (StringUtils.isEmpty(code)) {
-            msg.setCode(1);
-            msg.setMsg("code为空！");
-            return msg;
-        }
-        if (StringUtils.isEmpty(check_time)) {
-            msg.setCode(1);
-            msg.setMsg("check_time为空！");
-            return msg;
-        }
-        List<Check> checks = checkService.queryModifyCheck(check_time);
-        Check check = new Check();
-        for (int i = 0; i < checks.size(); i++) {
-            if (i == 0) {
-                check.setChModule(checks.get(i).getChModule());
-            } else {
-                check.setChModule(check.getChModule() + "," + checks.get(i).getChModule());
-            }
-        }
-        check.setUpdateTime(DateUtil.getCurDate());
-        int res = padService.updateTimeByCode(code, DateUtil.getCurrentDateTime());
-        msg.setData(check);
-        return msg;
     }
 
     /**

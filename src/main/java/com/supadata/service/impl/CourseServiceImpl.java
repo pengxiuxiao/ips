@@ -257,13 +257,13 @@ public class CourseServiceImpl implements ICourseService {
                 }
             }
         }
-        lastRowNum = lastRowNum- emptyRow;
-        lastCellNum = titleR.length - 1;
+        lastRowNum = lastRowNum- emptyRow;//行
+        lastCellNum = titleR.length - 1;//列
         shaeetMap.put("rGdIndex",rowGdIndex);//过道的列坐标
         shaeetMap.put("cGdIndex",columGdIndex);//过道的行坐标
-        shaeetMap.put("rank", lastCellNum + "*" + (titleR.length - 1 - emptyRow));
+        shaeetMap.put("rank", lastRowNum-1 + "*" + (titleR.length - 1 - emptyRow));
         shaeetMap.put("rRankLine", (titleR.length - 1 - emptyRow));
-        shaeetMap.put("rRankColum", lastCellNum);
+        shaeetMap.put("rRankColum", lastRowNum-1);
         // 遍历数据转为list
         int guodaoC = 0;
         int guodaoL = 0;

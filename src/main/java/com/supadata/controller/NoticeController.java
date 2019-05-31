@@ -6,7 +6,6 @@ import com.github.pagehelper.util.StringUtil;
 import com.supadata.constant.Config;
 import com.supadata.pojo.Notice;
 import com.supadata.pojo.RoomNotice;
-import com.supadata.service.ICheckService;
 import com.supadata.service.INoticeService;
 import com.supadata.service.IRoomNoticeService;
 import com.supadata.utils.DateUtil;
@@ -51,9 +50,6 @@ public class NoticeController {
 
     @Autowired
     public INoticeService noticeService;
-
-    @Autowired
-    public ICheckService checkService;
 
     @Autowired
     public IRoomNoticeService roomNoticeService;

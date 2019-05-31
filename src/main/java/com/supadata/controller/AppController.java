@@ -6,7 +6,6 @@ import com.supadata.constant.Config;
 import com.supadata.constant.Mqtt;
 import com.supadata.pojo.App;
 import com.supadata.service.IAppService;
-import com.supadata.service.ICheckService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.mqtt.PadServerMQTT;
@@ -46,9 +45,6 @@ public class AppController {
 
     @Autowired
     public IAppService appService;
-
-    @Autowired
-    public ICheckService checkService;
 
     @Autowired
     private Config config;

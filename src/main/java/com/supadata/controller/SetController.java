@@ -1,9 +1,7 @@
 package com.supadata.controller;
 
-import com.supadata.constant.LRUCache;
 import com.supadata.constant.Mqtt;
 import com.supadata.pojo.Setting;
-import com.supadata.service.ICheckService;
 import com.supadata.service.IRoomsettingService;
 import com.supadata.service.ISettingService;
 import com.supadata.utils.DateUtil;
@@ -38,13 +36,7 @@ public class SetController {
     public ISettingService settingService;
 
     @Autowired
-    public ICheckService checkService;
-
-    @Autowired
     public IRoomsettingService roomsettingService;
-
-    @Autowired
-    private LRUCache lruCache;
 
     @Autowired
     private Mqtt mqtt;

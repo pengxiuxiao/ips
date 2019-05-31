@@ -4,12 +4,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.supadata.constant.Config;
 import com.supadata.constant.Mqtt;
-import com.supadata.pojo.Check;
 import com.supadata.pojo.Course;
 import com.supadata.pojo.Pad;
 import com.supadata.pojo.Room;
 import com.supadata.service.*;
-import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.StringUtil;
 import com.supadata.utils.mqtt.PadServerMQTT;
@@ -60,9 +58,6 @@ public class CourseController {
 
     @Autowired
     public IRoomService roomService;
-
-    @Autowired
-    public ICheckService checkService;
 
     @Autowired
     private Config config;
@@ -180,12 +175,7 @@ public class CourseController {
             msg.setMsg("删除失败！");
             return msg;
         }
-        //更新轮询表
-        Check check = new Check();
-        check.setChModule("5");
-//        check.setChUrl(FileUtil.getProperValue("SERVICEURL") + "ips/pad/notice");
-        check.setUpdateTime(DateUtil.getCurDate());
-        checkService.add(check);
+
         return msg;
     }
 

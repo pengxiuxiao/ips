@@ -11,6 +11,8 @@ import com.supadata.service.*;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.StringUtil;
 import com.supadata.utils.mqtt.PadServerMQTT;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -178,6 +180,37 @@ public class CourseController {
 
         return msg;
     }
+
+
+
+    /**
+     * 功能描述:批量删除教室列表数据
+     *
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2018/12/11 16:39
+     */
+    @RequestMapping(value = "/bdc")
+    public MsgJson batchDeleteCourse(String idList, String user_id) {
+        if (StringUtils.isEmpty(user_id) || com.github.pagehelper.util.StringUtil.isEmpty(idList) || "[]".equals(idList)) {
+            return MsgJson.fail("参数包含空值！");
+        }
+        JSONArray idArry = JSONArray.fromObject(idList);
+        int res = 0;
+        for (Object idData : idArry) {
+            JSONObject idObj = JSONObject.fromObject(idData);
+            Integer id = Integer.valueOf(idObj.getString("id"));
+            System.out.println(id);
+            res = courseService.deleteCourse(id);
+        }
+
+        if (res > 0) {
+            return MsgJson.success( "培训删除成功");
+        }
+        return MsgJson.success( "培训删除失败");
+    }
+
 
     /**
      * 功能描述: 编辑课程

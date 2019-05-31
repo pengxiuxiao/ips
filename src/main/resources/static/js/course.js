@@ -23,7 +23,8 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             ,limit: 10
             ,cols: [[
-                {field:'id', title: 'id', width: 80}
+                {type:'checkbox', fixed: 'left'}
+                ,{field:'id', title: 'id', width: 80}
                 ,{field:'cName', title: '培训名'}
                 ,{field:'cWordSize', title: '文字大小', width: 120}
                 ,{field:'cRoomName', title: '所在教室', width: 260}
@@ -227,6 +228,32 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     })
 
 
+    //批量删除
+    $('.bdcourse-btn').on('click', function(){
+        layer.confirm('确认批量删除培训? ', function(index){
+            var checkStatus = table.checkStatus('test')
+                ,data = checkStatus.data;
+            // layer.alert(JSON.stringify(data));
+            //ajax调用后台添加接口
+            $.ajax({
+                type:'post',
+                url: global + '/course/bdc',
+                data:{idList:JSON.stringify(data), user_id:user_id},
+                dataType:'json',
+                success:function (res) {
+                    if(res.code == 0){//0
+                        layer.msg('操作成功');
+                        $(".layui-laypage-btn").click();
+                    }else {
+                        layer.msg('操作失败');
+                    }
+                },
+                error:function (err) {
+                    layer.msg('操作失败');
+                }
+            })
+        })
+    });
 
 
     //查询学校所有班级

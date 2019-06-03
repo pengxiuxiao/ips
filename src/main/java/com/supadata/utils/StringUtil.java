@@ -125,6 +125,8 @@ public class StringUtil {
 	 */
 	public static String overturnHexString(String data) {
 		System.out.println(data.length());
+		long longNo = Long.parseLong(data);
+		data = Long.toHexString(longNo);
 		//01234567
 		//12345678
 		StringBuffer sb = new StringBuffer(data.substring(data.length()-2));

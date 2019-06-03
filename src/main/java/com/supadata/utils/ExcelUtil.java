@@ -136,6 +136,9 @@ public class ExcelUtil {
 					case 1://卡号
 						datacell.setCellValue(dataList.get(i).getCardNumber());
 						break;
+					case 2://暗码
+						datacell.setCellValue(dataList.get(i).getSecretNumber());
+						break;
 					default:
 						break;
 					}

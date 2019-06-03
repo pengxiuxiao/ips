@@ -7,7 +7,9 @@ public class StudentCard {
 
     private String studentName;
 
-    private String cardNumber;
+    private String cardNumber;//明码
+
+    private String secretNumber;//暗码
 
     private Date updateTime;
 
@@ -16,9 +18,10 @@ public class StudentCard {
     public StudentCard() {
     }
 
-    public StudentCard(String studentName, String cardNumber, Date updateTime) {
+    public StudentCard(String studentName, String cardNumber, String secretNumber, Date updateTime) {
         this.studentName = studentName;
         this.cardNumber = cardNumber;
+        this.secretNumber = secretNumber;
         this.updateTime = updateTime;
     }
 
@@ -60,5 +63,13 @@ public class StudentCard {
 
     public void setScRemark(String scRemark) {
         this.scRemark = scRemark == null ? null : scRemark.trim();
+    }
+
+    public String getSecretNumber() {
+        return secretNumber;
+    }
+
+    public void setSecretNumber(String secretNumber) {
+        this.secretNumber = secretNumber;
     }
 }

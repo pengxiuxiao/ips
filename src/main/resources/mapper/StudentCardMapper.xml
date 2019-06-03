@@ -5,11 +5,12 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="student_name" property="studentName" jdbcType="VARCHAR" />
     <result column="card_number" property="cardNumber" jdbcType="VARCHAR" />
+    <result column="secret_number" property="secretNumber" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="sc_remark" property="scRemark" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, student_name, card_number, update_time, sc_remark
+    id, student_name, card_number, secret_number, update_time, sc_remark
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -54,6 +55,9 @@
       <if test="cardNumber != null" >
         card_number,
       </if>
+      <if test="secretNumber != null" >
+        secret_number,
+      </if>
       <if test="updateTime != null" >
         update_time,
       </if>
@@ -71,6 +75,9 @@
       <if test="cardNumber != null" >
         #{cardNumber,jdbcType=VARCHAR},
       </if>
+      <if test="secretNumber != null" >
+        #{secretNumber,jdbcType=VARCHAR},
+      </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
@@ -87,6 +94,9 @@
       </if>
       <if test="cardNumber != null" >
         card_number = #{cardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="secretNumber != null" >
+        secret_number = #{secretNumber,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},

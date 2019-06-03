@@ -128,7 +128,7 @@ public class CourseServiceImpl implements ICourseService {
         Map<String, String> map = new HashedMap();
         List<StudentCard> studentCards = studentCardMapper.selectAllList(map);
         for (StudentCard studentCard : studentCards) {
-            map.put(studentCard.getStudentName(), studentCard.getCardNumber());
+            map.put(studentCard.getStudentName(), studentCard.getSecretNumber());
         }
         //读取第二个工作表sheet，获取座次信息
         Map<String, Object> reMap = readSheet2(workbook.getSheetAt(1), course, map);

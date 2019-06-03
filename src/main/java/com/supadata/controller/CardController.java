@@ -49,17 +49,23 @@ public class CardController {
         if (StringUtils.isEmpty(user_id) || StringUtils.isEmpty(cardNo) || StringUtils.isEmpty(name)) {
             return MsgJson.fail("参数包含空值！");
         }
-        long longNo = Long.parseLong(cardNo);
-        cardNo = Long.toHexString(longNo);
-        cardNo = com.supadata.utils.StringUtil.HexToLongString(com.supadata.utils.StringUtil.overturnHexString(cardNo));
+
+        String secretNo = com.supadata.utils.StringUtil.HexToLongString(com.supadata.utils.StringUtil.overturnHexString(cardNo));
         StudentCard card = studentCardService.selectByNumber(cardNo);
         if (card == null) {
-            StudentCard sc = new StudentCard(name, cardNo, DateUtil.getCurDate());
-            int res = studentCardService.insertSelective(sc);
-            if (res > 0) {
-                logger.info("添加卡片：id=" + sc.getId() + ",name=" + name + ",number=" + cardNo);
-                return MsgJson.success( "卡片添加成功！");
+            StudentCard sc = new StudentCard(name, cardNo, secretNo, DateUtil.getCurDate());
+            int res = 0;
+            try {
+                res = studentCardService.insertSelective(sc);
+                if (res > 0) {
+                    logger.info("添加卡片：id=" + sc.getId() + ",name=" + name + ",number=" + cardNo);
+                    return MsgJson.success( "卡片添加成功！");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return MsgJson.fail("姓名重复!");
             }
+
         }
         return MsgJson.fail("卡号重复!");
     }
@@ -178,10 +184,10 @@ public class CardController {
         List<StudentCard> cards = studentCardService.selectAllList(new HashedMap());
         String sheetName = "付费用户";
         String fileName = "卡片信息表-" + DateUtil.getTimestamp();
-        int columnNumber = 2;
+        int columnNumber = 3;
 
-        int[] columnWidth = {20, 20};
-        String[] columnName = {"姓名", "卡号"};
+        int[] columnWidth = {20, 20, 20};
+        String[] columnName = {"姓名", "卡号", "暗码"};
 
         try {
             ExcelUtil.ExportWithResponse(sheetName, fileName, columnNumber, columnWidth, columnName, cards, response);

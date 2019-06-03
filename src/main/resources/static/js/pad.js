@@ -65,7 +65,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 data:{code:obj.data.code, user_id:user_id},
                 dataType:'json',
                 success:function (res) {
-                    $("#moImg").attr("src","")
+                    $(bigimg).attr("src", "");//设置#bigimg元素的src属性
                     layer.closeAll('loading');
                     if(res.code == 0){
                         imgShow("#outerdiv", "#innerdiv", "#bigimg", res.data.url);
@@ -220,7 +220,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
 
     //展示弹出图 自动缩放
     function imgShow(outerdiv, innerdiv, bigimg, imgsrc){
-        $(bigimg).attr("src", imgsrc);//设置#bigimg元素的src属性
+        $(bigimg).attr("src", imgsrc + "?r="+Math.random());//设置#bigimg元素的src属性
         /*获取当前点击图片的真实大小，并显示弹出层及大图*/
         $("<img/>").attr("src", imgsrc).load(function(){
             var windowW = $(window).width();//获取当前窗口宽度

@@ -58,25 +58,29 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         // layer.load(2);
         // layer.closeAll('loading');
         if(obj.event === 'edit'){//编辑
-            layer.load(2);
-            $.ajax({
-                type:'post',
-                url: monitorPad,
-                data:{code:obj.data.code, user_id:user_id},
-                dataType:'json',
-                success:function (res) {
-                    $(bigimg).attr("src", "");//设置#bigimg元素的src属性
-                    layer.closeAll('loading');
-                    if(res.code == 0){
-                        imgShow("#outerdiv", "#innerdiv", "#bigimg", res.data.url);
-                    }else {
+            if (obj.data.pStatus == '离线') {
+                layer.msg('设备不在线！');
+            }else{
+                layer.load(2);
+                $.ajax({
+                    type:'post',
+                    url: monitorPad,
+                    data:{code:obj.data.code, user_id:user_id},
+                    dataType:'json',
+                    success:function (res) {
+                        $(bigimg).attr("src", "");//设置#bigimg元素的src属性
+                        layer.closeAll('loading');
+                        if(res.code == 0){
+                            imgShow("#outerdiv", "#innerdiv", "#bigimg", res.data.url);
+                        }else {
+                            layer.msg('操作失败！');
+                        }
+                    },
+                    error:function (err) {
                         layer.msg('操作失败！');
                     }
-                },
-                error:function (err) {
-                    layer.msg('操作失败！');
-                }
-            })
+                })
+            }
         }else if(obj.event === 'del'){//删除
             layer.confirm('确认切换黑屏 ' + obj.data.roomName + '？', function(index){
                 $.ajax({

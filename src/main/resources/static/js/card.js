@@ -26,8 +26,8 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 {type:'checkbox', fixed: 'left'}
                 ,{field:'id', title: 'id', width: 80}
                 ,{field:'studentName', title: '持卡人'}
-                ,{field:'cardNumber', title: '卡号'}
-                ,{field:'secretNumber', title: '暗码'}
+                ,{field:'cardNumber', title: '卡号1'}
+                // ,{field:'secretNumber', title: '卡号'}
                 ,{field:'updateTime', title: '操作时间', templet: '#createTime'}
                 ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 150}
             ]]

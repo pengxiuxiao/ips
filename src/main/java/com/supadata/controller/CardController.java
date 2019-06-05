@@ -184,10 +184,13 @@ public class CardController {
         List<StudentCard> cards = studentCardService.selectAllList(new HashedMap());
         String sheetName = "付费用户";
         String fileName = "卡片信息表-" + DateUtil.getTimestamp();
-        int columnNumber = 3;
+//        int columnNumber = 3;
+//        int[] columnWidth = {20, 20, 20};
+//        String[] columnName = {"姓名", "卡号", "暗码"};
 
-        int[] columnWidth = {20, 20, 20};
-        String[] columnName = {"姓名", "卡号", "暗码"};
+        int columnNumber = 2;
+        int[] columnWidth = {20, 20};
+        String[] columnName = {"姓名", "卡号"};
 
         try {
             ExcelUtil.ExportWithResponse(sheetName, fileName, columnNumber, columnWidth, columnName, cards, response);

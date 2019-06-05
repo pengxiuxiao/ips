@@ -11,6 +11,7 @@ import com.supadata.service.*;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.SessionMapUtil;
+import com.supadata.utils.StringUtil;
 import com.supadata.utils.enums.EventType;
 import com.supadata.utils.mqtt.PadServerMQTT;
 import org.apache.commons.collections.map.HashedMap;
@@ -366,13 +367,13 @@ public class PadController {
         //根据课程id查询座次表信息
         if (course == null) {
             msg.setCode(1);
-            msg.setMsg("暂未查到您的课程！");
+            msg.setMsg("暂未查到您的培训课！");
             return msg;
         }
         Seat seat = seatService.queryByCNoAndRoomId(card_number, course.getId(), course.getcRoomId());
         if (seat == null) {
             msg.setCode(1);
-            msg.setMsg("暂未查到您的课程！");
+            msg.setMsg("暂未查到您的培训课！");
         }
         seat.setcTitle(course.getcName());
         msg.setData(seat);

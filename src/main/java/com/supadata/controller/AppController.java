@@ -183,7 +183,13 @@ public class AppController {
 //        if (StringUtils.isEmpty(code)) {
 //           return null;
 //        }
-//        logger.info("App Down, code="+code);
+        String ip = "";
+        try {
+            ip = request.getHeader("X-Real-Ip");
+            logger.info("App Down, ip=" + ip);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         App app = appService.queryNewest("1");
         // 本地文件路径
         String filePath = "";
@@ -221,7 +227,7 @@ public class AppController {
         if (StringUtils.isEmpty(code)) {
            return null;
         }
-        logger.info("App Down, code="+code);
+        logger.info("App check, code="+code);
         App app = appService.queryNewest("1");
         app.setaUrl(config.getSERVICEURL() + "ips/app/down");
         msg.setData(app);

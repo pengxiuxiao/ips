@@ -416,7 +416,7 @@ public class PadController {
         for (Pad pad : pads) {
             SessionMapUtil.SESSION_MAP.put(pad.getCode(),"离线");
 
-            //发送消息 通知全部pad 修改显示模块
+            //发送消息 询问是否在线
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("event", "onoffline");
             padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);

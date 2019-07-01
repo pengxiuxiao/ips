@@ -86,7 +86,7 @@ config:
 
 #mqtt配置项
 mqtt:
-  host: tcp://118.178.84.40:1883
+  host: tcp://10.69.3.200:1883
 #  host: tcp://localhost:1883
   subTopic: /messagesub/event
   pubTopic: /messagepush/event/

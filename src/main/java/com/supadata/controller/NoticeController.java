@@ -111,13 +111,6 @@ public class NoticeController {
             RoomNotice rn = new RoomNotice(Integer.parseInt(id), notice.getId(),notice.getUpdateTime());
             roomNoticeService.insertSelective(rn);
         }
-
-        /** 更新消息表 */
-//        Check check = new Check();
-//        check.setChModule("1");
-//        check.setChUrl(config.getSERVICEURL() + "ips/pad/notice");
-//        check.setUpdateTime(DateUtil.getCurDate());
-//        res = checkService.add(check);
         return msgJson;
     }
     /**
@@ -170,13 +163,6 @@ public class NoticeController {
             msgJson.setMsg("编辑失败！");
             return msgJson;
         }
-        /** 更新消息*/
-//        //更新轮询表
-//        Check check = new Check();
-//        check.setChModule("1");
-//        check.setChUrl(config.getSERVICEURL() + "ips/pad/notice");
-//        check.setUpdateTime(DateUtil.getCurDate());
-//        res = checkService.add(check);
         return msgJson;
     }
     /**
@@ -215,13 +201,7 @@ public class NoticeController {
             msgJson.setMsg("删除失败！");
             return msgJson;
         }
-        /** 更新消息*/
-        //更新轮询表
-//        Check check = new Check();
-//        check.setChModule(notice.getnType());
-//        check.setChUrl(config.getSERVICEURL() + "ips/pad/notice");
-//        check.setUpdateTime(DateUtil.getCurDate());
-//        res = checkService.add(check);
+
         return msgJson;
     }
 
@@ -416,15 +396,6 @@ public class NoticeController {
                 roomNoticeService.insertSelective(new RoomNotice(Integer.parseInt(id), notice.getId(),notice.getUpdateTime()));
             }
         }
-
-
-
-        //更新轮询表
-//        Check check = new Check();
-//        check.setChModule(notice.getnType());
-//        check.setChUrl(config.getSERVICEURL() + "ips/pad/notice");
-//        check.setUpdateTime(DateUtil.getCurDate());
-//        res = checkService.add(check);
         return msgJson;
     }
 

@@ -98,3 +98,4 @@ mqtt:
   clientId: server22
   userName: admin
   passWord: admin
+  region: 8

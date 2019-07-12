@@ -29,16 +29,20 @@ public class Mqtt {
 
     private String passWord;
 
+    //设置文件下载,同时通知的pad数量
+    private String region;
+
     public Mqtt() {
     }
 
-    public Mqtt(String host, String pubTopic, String subTopic, String clientId, String userName, String passWord) {
+    public Mqtt(String host, String pubTopic, String subTopic, String clientId, String userName, String passWord, String region) {
         this.host = host;
         this.pubTopic = pubTopic;
         this.subTopic = subTopic;
         this.clientId = clientId;
         this.userName = userName;
         this.passWord = passWord;
+        this.region = region;
     }
 
     public String getHost() {
@@ -87,5 +91,13 @@ public class Mqtt {
 
     public void setPassWord(String passWord) {
         this.passWord = passWord;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 }

@@ -15,6 +15,7 @@ import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.enums.EventType;
 import com.supadata.utils.mqtt.PadServerMQTT;
+import com.supadata.utils.thread.MQSendThread;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -259,7 +260,7 @@ public class RoomController {
 
 
     /**
-     * 功能描述:设置教室显示模块
+     * 功能描述:设置全部教室显示模块
      * @auther: pxx
      * @param:
      * @return:
@@ -282,7 +283,12 @@ public class RoomController {
             roomService.updateRoom(room);
             res ++;
         }
-        if (res > 0) {
+
+        if (res > 0 && "3".equals(s_module)) {
+            MQSendThread mqThread = new MQSendThread(mqtt, padServerMQTT, padService);
+            mqThread.start();
+            return MsgJson.success("设置成功！");
+        }else {
             Setting setting = settingService.querySetting();
             setting.setsModule(s_module);
             res = settingService.upadate(setting);
@@ -293,11 +299,10 @@ public class RoomController {
             return MsgJson.success("设置成功！");
         }
 
-        return MsgJson.fail("设置失败！");
     }
 
     /**
-     * 功能描述:设置教室显示模块
+     * 功能描述:设置一个教室显示模块
      * @auther: pxx
      * @param:
      * @return:

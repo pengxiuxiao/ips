@@ -229,7 +229,7 @@ public class AppController {
         }
         logger.info("App check, code="+code);
         App app = appService.queryNewest("1");
-        app.setaUrl(config.getSERVICEURL() + "ips/app/down");
+        app.setaUrl(config.getSERVICEURL() + "app/down");
         msg.setData(app);
         return msg;
     }

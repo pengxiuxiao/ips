@@ -54,7 +54,7 @@ public class MQSendThread extends Thread {
             }
             index = index + region;
             try {
-                Thread.sleep(20000);
+                Thread.sleep(60000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

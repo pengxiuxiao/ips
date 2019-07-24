@@ -49,6 +49,7 @@
     where rn.room_id = #{roomId}
     and n.n_status = #{status}
     and n.n_type  = #{type}
+    order by n.update_time desc
   </select>
   <select id="selectByTypeContainsKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select

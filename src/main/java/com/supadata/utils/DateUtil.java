@@ -143,7 +143,7 @@ public class DateUtil {
 	public static Timestamp getCurDate(){
 		java.util.Date date=new java.util.Date();
 		String str= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-		System.out.println(str);
+//		System.out.println(str);
 		return Timestamp.valueOf(str);
 	}
 	

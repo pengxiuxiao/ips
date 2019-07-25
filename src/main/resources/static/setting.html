@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>信息发布系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="assets/layui/css/layui.css"  media="all">
+
+    <style>
+        .layui-form{
+            padding: 20px 20px 10px;
+        }
+        .set-card{
+            display: none;
+        }
+        .set-state{
+            display: none;
+        }
+        .set-audio{
+            display: none;
+        }
+        .set-close{
+            display: none;
+        }
+        .layui-form-selected dl{
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layui-layout layui-layout-admin">
+    <!--header-->
+    <div class="layui-header header header-demo" spring="">
+        <div class="layui-main">
+            <a class="logo" href="index.html" style="position: absolute;top: -15px; left: 40px">
+                <img src="img/logo.png" alt="layui" width="251" height="90">
+            </a>
+            <a class="logo" href="login.html" style="position: absolute; top: 16px; right: 40px">
+                <img src="img/out.png" alt="layui" width="94" height="32">
+            </a>
+        </div>
+    </div>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree site-demo-nav">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="javascript:;" href="javascript:;">
+                        后台管理
+                        <span class="layui-nav-more"></span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd>
+                            <a href="index.html">信息发布</a>
+                        </dd>
+                        <dd>
+                            <a href="course.html">培训管理</a>
+                        </dd>
+                        <dd>
+                            <a href="room.html">教室管理</a>
+                        </dd>
+                        <dd>
+                            <a href="set.html">设置管理</a>
+                        </dd>
+                        <dd class="layui-this">
+                            <a href="setting.html">设置管理</a>
+                        </dd>
+                        <dd>
+                            <a href="module.html">显示模块</a>
+                        </dd>
+                        <dd>
+                            <a href="pad.html">pad状态</a>
+                        </dd>
+                        <dd>
+                            <a href="card.html">卡片管理</a>
+                        </dd>
+                        <dd>
+                            <a href="app.html">版本管理</a>
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+
+    <!--main-->
+    <div class="layui-body layui-tab-content">
+        <div class="layui-tab-item">
+            <div class="layui-main">
+                <div id="LAY_preview">
+                    <blockquote class="layui-elem-quote">
+                        信息详情
+                    </blockquote>
+                </div>
+                    <!--table-->
+                    <div class="layui-form layui-clear">
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="margin-left: -20px">
+                                <input type="text" name="username" lay-verify="required" placeholder="关键字" autocomplete="off" class="layui-input keyWord">
+                            </div>
+                        </div>
+                        <button class="layui-btn doSearch" style="margin-top: 0px;">搜索</button>
+                        <button class="layui-btn add-refresh-btn" style="float: right; margin-right: 50px">刷新</button>
+                    </div>
+                    <!--操作全选-->
+                    <div class="layui-btn-group edit-table">
+                        <button class="layui-btn bdpad-close" data-type="getCheckData">开关机</button>
+                        <button class="layui-btn bdpad-sk" data-type="getCheckData">刷卡提示</button>
+                        <button class="layui-btn bdpad-state" data-type="getCheckData">锁屏设置</button>
+                        <button class="layui-btn bdpad-audio" data-type="getCheckData">音量设置</button>
+                    </div>
+            </div>
+
+                <table class="layui-hide" id="pads" lay-filter="order-form"></table>
+                <!--</table>-->
+                <script type="text/html" id="barDemo">
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">切屏</a>
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">监控</a>
+                </script>
+
+                <script type="text/html" id="createTime">
+                    {{new Date(d.updateTime).format("yyyy-MM-dd hh:mm:ss")}}
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="set-card">
+    <form class="layui-form" action="" id="cardForm" onsubmit="return false">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">刷卡提示：</label>
+            <div class="layui-input-inline">
+                <select name="card" id="card" lay-verify="required" lay-filter="card" class="layui-input card">
+                    <option value="0" selected>显示</option>
+                    <option value="1">关闭</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-input-block">
+            <input type="text" style="display:none">
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="addCardbtn">立即提交</button>
+                <button class="layui-btn layui-btn-primary cancel-btn">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="set-state">
+    <form class="layui-form" action="" id="stateForm" onsubmit="return false">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">锁屏设置：</label>
+            <div class="layui-input-inline">
+                <select name="state" id="state" lay-verify="required" lay-filter="state" class="layui-input state">
+                    <option value="0" selected>打开</option>
+                    <option value="1">关闭</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-input-block">
+            <input type="text" style="display:none">
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="addStatebtn">立即提交</button>
+                <button class="layui-btn layui-btn-primary cancel-btn">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="set-audio">
+    <form class="layui-form" action="" id="audioForm" onsubmit="return false">
+        <div class="layui-form-item">
+            <label class="layui-form-label">锁屏设置：</label>
+            <div class="layui-input-inline">
+                <select name="audio" id="audio" lay-verify="required" lay-filter="audio" class="layui-input audio">
+                    <option value="0" selected>0</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                    <option value="60">60</option>
+                    <option value="70">70</option>
+                    <option value="80">80</option>
+                    <option value="90">90</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-input-block">
+            <input type="text" style="display:none">
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="addAudiobtn">立即提交</button>
+                <button class="layui-btn layui-btn-primary cancel-btn">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="set-close">
+    <form class="layui-form" action="" id="closeForm" onsubmit="return false">
+
+        <div class="layui-form-item">
+            <div class="layui-inline time">
+                <label class="layui-form-label">关机时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input end_time" id="end_time" placeholder="yyyy-MM-dd HH:mm:ss">
+                </div>
+            </div>
+            <div class="layui-inline time">
+                <label class="layui-form-label">开机时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input start_time" id="start_time" placeholder="yyyy-MM-dd HH:mm:ss">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-input-block">
+            <input type="text" style="display:none">
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="addClosebtn">立即提交</button>
+                <button class="layui-btn layui-btn-primary cancel-btn">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="outerdiv" style="position:fixed;top:0;left:0;background:rgba(0,0,0,0.7);z-index:99999999999;width:100%;height:100%;display:none;">
+    <div id="innerdiv" style="position:absolute;">
+        <img id="bigimg" style="border:5px solid #fff;" src="" />
+    </div>
+</div>
+<script src="js/dataApi.js"></script>
+<script src="assets/layui/layui.js"></script>
+<script src="js/setting.js"></script>
+</body>
+</html>

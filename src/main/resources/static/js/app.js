@@ -20,7 +20,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             ,url: url
             // ,url: 'js/data.json'
             ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-            ,limit: 10
+            ,limit: 90
             ,cols: [[
                 {field:'id', title: 'id', width: 80}
                 ,{field:'aVersion', title: '版本号', width: 150}

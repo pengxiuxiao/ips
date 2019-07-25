@@ -71,3 +71,8 @@ bdroom-btn.swiper-container {
     background-color: yellowgreen;
     transition: all .3s ease;
 }
+
+.add-album{
+    padding-top: 10px;
+    padding-right: 12px;
+}

@@ -2,6 +2,7 @@ package com.supadata.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.util.StringUtil;
 import com.supadata.constant.Config;
 import com.supadata.constant.LRUCache;
 import com.supadata.constant.LRUDATACache;
@@ -11,9 +12,10 @@ import com.supadata.service.*;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.SessionMapUtil;
-import com.supadata.utils.StringUtil;
 import com.supadata.utils.enums.EventType;
 import com.supadata.utils.mqtt.PadServerMQTT;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -244,6 +246,50 @@ public class PadController {
         return msg;
     }
 
+    /**
+     * 置为黑屏接口
+     * @param idList
+     * @return
+     */
+    @RequestMapping("/bclosePad")
+    public @ResponseBody
+    MsgJson batchclosePad(String idList, String user_id) {
+        if (StringUtils.isEmpty(user_id) || StringUtil.isEmpty(idList) || "[]".equals(idList)) {
+            return MsgJson.fail("参数包含空值！");
+        }
+        logger.info("batchclosePad:idList=" + idList);
+        JSONArray idArry = JSONArray.fromObject(idList);
+        int res = 0;
+        for (Object idData : idArry) {
+            JSONObject idObj = JSONObject.fromObject(idData);
+            Integer id = Integer.valueOf(idObj.getString("id"));
+
+            Pad pad = padService.queryById(id);
+            if (pad == null) {
+                return MsgJson.fail("请求失败.");
+            }
+            String state = "close";
+            Integer audio = 0;
+            if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("1")) {//未黑屏
+                pad.setIsBlack("0");
+                audio = 0;
+            } else {//已黑屏
+                pad.setIsBlack("1");
+                state = "open";
+                audio = pad.getpAudio();
+            }
+            res = padService.update(pad);
+            if (res > 0) {
+                //发送黑屏切换消息
+                Map<String, Object> map = new LinkedHashMap<>();
+                map.put("event", "power");
+                map.put("state", state);
+                map.put("audio", audio);
+                padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
+            }
+        }
+        return MsgJson.success("请求成功.");
+    }
 
     /**
      * 功能描述:查看是否锁屏
@@ -380,8 +426,9 @@ public class PadController {
         return msg;
     }
 
+
     /**
-     * 功能描述: 获取pad列表
+     * 功能描述: 获取pad列表,并且判断在线状态
      *
      * @auther: pxx
      * @param:
@@ -390,7 +437,7 @@ public class PadController {
      */
     @RequestMapping("/list")
     public @ResponseBody
-    MsgJson listPad(String user_id, String key, String page, String limit) {
+    MsgJson listPad(String user_id, String key, String page, String limit, String status) {
         MsgJson msg = new MsgJson(0, "查询成功！");
         if (StringUtils.isEmpty(user_id)) {
             msg.setCode(1);
@@ -410,33 +457,38 @@ public class PadController {
         if (StringUtils.isEmpty(key)) {
             key = "";
         }
-        /**发送消息 查询在线状态*/
+
         PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         List<Pad> pads = padService.queryAll(key);
-        for (Pad pad : pads) {
-            SessionMapUtil.SESSION_MAP.put(pad.getCode(),"离线");
 
-            //发送消息 询问是否在线
-            Map<String, Object> map = new LinkedHashMap<>();
-            map.put("event", "onoffline");
-            padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
-
-        }
-        //休眠，重新取一下
-        try {
-            Thread.sleep(1500);
+        /**status不传时 判断在线状态*/
+        if (StringUtils.isEmpty(status)) {
             for (Pad pad : pads) {
-                pad.setpStatus( SessionMapUtil.SESSION_MAP.get(pad.getCode()));
-                pad.setUpdateTime(DateUtil.getCurDate());
-                if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("0")) {
-                    pad.setIsBlack("已黑屏");
-                } else {
-                    pad.setIsBlack("亮屏");
+                SessionMapUtil.SESSION_MAP.put(pad.getCode(),"离线");
+
+                //发送消息 询问是否在线
+                Map<String, Object> map = new LinkedHashMap<>();
+                map.put("event", "onoffline");
+                padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
+
+            }
+            //休眠，重新取一下
+            try {
+                Thread.sleep(1500);
+                for (Pad pad : pads) {
+                    pad.setpStatus( SessionMapUtil.SESSION_MAP.get(pad.getCode()));
+                    pad.setUpdateTime(DateUtil.getCurDate());
+                    if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("0")) {
+                        pad.setIsBlack("已黑屏");
+                    } else {
+                        pad.setIsBlack("亮屏");
+                    }
                 }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         PageInfo<Pad> pageInfo = new PageInfo<>(pads);

@@ -14,9 +14,9 @@ spring:
 #          url: jdbc:mysql://localhost:3306/ips_new?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
 #          username: root
 #          password: root
-          url: jdbc:mysql://118.178.84.40:3306/ips_new?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          url: jdbc:mysql://localhost:3306/ips_new?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
           username: root
-          password: MageNB9527
+          password: 123456
           #配置初始化大小/最小/最大
           initial-size: 1
           min-idle: 1

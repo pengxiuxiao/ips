@@ -1,12 +1,17 @@
 package com.supadata.controller;
 
+import com.github.pagehelper.util.StringUtil;
 import com.supadata.constant.Mqtt;
+import com.supadata.pojo.Pad;
 import com.supadata.pojo.Setting;
+import com.supadata.service.IPadService;
 import com.supadata.service.IRoomsettingService;
 import com.supadata.service.ISettingService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.mqtt.PadServerMQTT;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +48,9 @@ public class SetController {
 
     @Autowired
     private PadServerMQTT padServerMQTT;
+
+    @Autowired
+    public IPadService padService;
 
     @RequestMapping("/set")
     public @ResponseBody
@@ -176,6 +184,97 @@ public class SetController {
         }
         return msg;
     }
+
+    /**
+     * 功能描述:批量设置是否显示打卡提示
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/7/24 16:24
+     */
+    @RequestMapping("/bscard")
+    public @ResponseBody
+    MsgJson batchSetCard(HttpServletRequest request) {
+        String user_id = request.getParameter("user_id");
+        String idList = request.getParameter("idList");
+        String status = request.getParameter("status");//1：不显示，0显示
+        String state = request.getParameter("state");
+        String audio = request.getParameter("audio");
+        String end_time = request.getParameter("end_time");
+        String start_time = request.getParameter("start_time");
+        if (StringUtils.isEmpty(user_id) || StringUtil.isEmpty(idList) || "[]".equals(idList)) {
+            return MsgJson.fail("参数包含空值！");
+        }
+
+        logger.info("批量设置显示打卡提示:idList=" + idList);
+
+        JSONArray idArry = JSONArray.fromObject(idList);
+        int res = 0;
+        for (Object idData : idArry) {
+            JSONObject idObj = JSONObject.fromObject(idData);
+            Integer id = Integer.valueOf(idObj.getString("id"));
+
+            Pad pad = padService.queryById(id);
+            if (pad == null) {
+                return MsgJson.fail("请求失败");
+            }
+            Map<String, Object> map = new LinkedHashMap<>();
+            Pad tmpPad = new Pad();
+            tmpPad.setId(id);
+            if (StringUtils.isNotEmpty(status)) {
+                tmpPad.setpClickCard("0".equals(status) ? "显示" : "关闭");
+                res = padService.update(tmpPad);
+                if (res > 0) {
+                    //发送打卡提示切换消息
+                    map.clear();
+                    map.put("event", "cardNotice");
+                    map.put("isShow", "0".equals(status) ? true : false);
+                    padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
+                }
+            } else if (StringUtils.isNotEmpty(state)) {
+                tmpPad.setpState("0".equals(state) ? "打开" : "关闭");
+                res = padService.update(tmpPad);
+                if (res > 0) {
+                    //发送锁屏消息
+                    map.clear();
+                    map.put("event", "navigation");
+                    map.put("state", "1".equals(state) ? "close" : "open");
+                    padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
+                }
+            }else if (StringUtils.isNotEmpty(audio)) {
+                tmpPad.setpAudio(Integer.parseInt(audio));
+                res = padService.update(tmpPad);
+                if (res > 0) {
+                    //发送锁屏消息
+                    map.clear();
+                    map.put("event", "audio");
+                    map.put("value", audio);
+                    padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
+                }
+            }else if (StringUtils.isNotEmpty(start_time) && StringUtils.isNotEmpty(end_time) ) {
+                Date sDate = DateUtil.changeToDate(start_time, "yyyy-MM-dd HH:mm:ss");
+                Date eDate = DateUtil.changeToDate(end_time, "yyyy-MM-dd HH:mm:ss");
+                tmpPad.setEndTime(end_time);
+                tmpPad.setStartTime(start_time);
+                res = padService.update(tmpPad);
+                if (res > 0) {
+                    //发送关机消息
+                    map.clear();
+                    Map<String, Long> dateMap = DateUtil.handleOpenClosePadTime(
+                            DateUtil.dateToLong(sDate),
+                            DateUtil.dateToLong(eDate));
+                    map.put("event", "onoff");
+                    map.put("wakeTime", dateMap.get("open"));
+                    map.put("sleepTime", dateMap.get("close"));
+                    logger.info("开关机=code：" + pad.getCode() + "，set: sleepTime=" + end_time + ", wakeTime " + start_time);
+                    padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
+                }
+            }
+        }
+        return MsgJson.success("请求成功.");
+
+    }
+
 
 
 }

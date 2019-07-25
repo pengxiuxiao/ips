@@ -31,14 +31,14 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             ,url: url
             // ,url: 'js/data.json'
             ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-            ,limit: 20
+            ,limit: 90
             ,cols: [[
                 {field:'id', title: 'id', width: 80}
                 ,{field:'rName', title: '教室名'}
                 ,{field:'rIp', title: '教室Code'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                 ,{field:'rModuleMsg', title: '显示模块'}
                 // ,{field:'updateTime', title: '操作时间', templet: '#createTime'}
-                ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 150}
+                ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 180}
             ]]
         ,page: true
         });

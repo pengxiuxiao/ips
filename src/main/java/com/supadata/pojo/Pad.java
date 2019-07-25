@@ -31,6 +31,12 @@ public class Pad {
 
     private String pModule;
 
+    private String pState;
+
+    private String pClickCard;
+
+    private Integer pAudio;
+
     public Integer getId() {
         return id;
     }
@@ -151,11 +157,35 @@ public class Pad {
         }
     }
 
+    public String getpClickCard() {
+        return pClickCard;
+    }
+
+    public void setpClickCard(String pClickCard) {
+        this.pClickCard = pClickCard;
+    }
+
     public String getClientId() {
         return clientId;
     }
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+
+    public String getpState() {
+        return pState;
+    }
+
+    public void setpState(String pState) {
+        this.pState = pState;
+    }
+
+    public Integer getpAudio() {
+        return pAudio;
+    }
+
+    public void setpAudio(Integer pAudio) {
+        this.pAudio = pAudio;
     }
 }

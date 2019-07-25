@@ -16,6 +16,9 @@
     <result column="is_black" property="isBlack" jdbcType="VARCHAR" />
     <result column="p_remark" property="pRemark" jdbcType="VARCHAR" />
     <result column="p_module" property="pModule" jdbcType="VARCHAR" />
+    <result column="p_state" property="pState" jdbcType="VARCHAR" />
+    <result column="p_click_card" property="pClickCard" jdbcType="VARCHAR" />
+    <result column="p_audio" property="pAudio" jdbcType="INTEGER" />
   </resultMap>
   <resultMap id="JoinResultMap" type="com.supadata.pojo.Pad" >
     <id column="id" property="id" jdbcType="INTEGER" />
@@ -32,10 +35,13 @@
     <result column="is_black" property="isBlack" jdbcType="VARCHAR" />
     <result column="p_remark" property="pRemark" jdbcType="VARCHAR" />
     <result column="r_module" property="pModule" jdbcType="VARCHAR" />
+    <result column="p_state" property="pState" jdbcType="VARCHAR" />
+    <result column="p_click_card" property="pClickCard" jdbcType="VARCHAR" />
+    <result column="p_audio" property="pAudio" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, p_ip, code, client_id, room_name, room_id, p_location, p_status, update_time, start_time,
-    end_time, is_black, p_remark, p_module
+    end_time, is_black, p_remark, p_module, p_state, p_click_card, p_audio
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -52,7 +58,7 @@
   <select id="selectAll" resultMap="JoinResultMap" >
     select
     p.id, p.p_ip, p.code, p.client_id, p.room_name, p.room_id, p.p_location, p.p_status, p.update_time,
-    p.start_time, p.end_time, p.is_black, p.p_remark, r.r_module
+    p.start_time, p.end_time, p.is_black, p.p_remark, r.r_module, p.p_state, p.p_click_card, p.p_audio
     from tb_pad p left join tb_room r on p.room_id = r.id
     where 1 = 1
     <if test="key != null" >
@@ -115,11 +121,23 @@
       <if test="endTime != null" >
         end_time,
       </if>
+      <if test="isBlack != null" >
+        is_black,
+      </if>
       <if test="pRemark != null" >
         p_remark,
       </if>
-      <if test="isBlack != null" >
-        is_black,
+      <if test="pModule != null" >
+        p_module,
+      </if>
+      <if test="pState != null" >
+        p_state,
+      </if>
+      <if test="pClickCard != null" >
+        p_click_card,
+      </if>
+      <if test="pAudio != null" >
+        p_audio,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -162,6 +180,18 @@
       <if test="pRemark != null" >
         #{pRemark,jdbcType=VARCHAR},
       </if>
+      <if test="pModule != null" >
+        #{pModule,jdbcType=VARCHAR},
+      </if>
+      <if test="pState != null" >
+        #{pState,jdbcType=VARCHAR},
+      </if>
+      <if test="pClickCard != null" >
+        #{pClickCard,jdbcType=VARCHAR},
+      </if>
+      <if test="pAudio != null" >
+        #{pAudio,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.supadata.pojo.Pad" >
@@ -202,6 +232,18 @@
       </if>
       <if test="pRemark != null" >
         p_remark = #{pRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="pModule != null" >
+        p_module = #{pModule,jdbcType=VARCHAR},
+      </if>
+      <if test="pState != null" >
+        p_state = #{pState,jdbcType=VARCHAR},
+      </if>
+      <if test="pClickCard != null" >
+        p_click_card = #{pClickCard,jdbcType=VARCHAR},
+      </if>
+      <if test="pAudio != null" >
+        p_audio = #{pAudio,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

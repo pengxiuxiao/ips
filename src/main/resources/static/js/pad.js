@@ -18,20 +18,21 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     var getOrderList = function (url) {
     	
         table.render({
-            elem: '#test'
+            elem: '#pads'
             ,url: url
             // ,url: 'js/data.json'
             ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-            ,limit: 10
+            ,limit: 90
             ,cols: [[
-                {field:'id', title: 'id', width: 80}
+                {type:'checkbox', fixed: 'left'}
+                ,{field:'id', title: 'id', width: 80}
                 ,{field:'code', title: 'code标识'}
                 ,{field:'roomName', title: '所属教室'}
                 // ,{field:'pLocation', title: '安装位置'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                 ,{field:'pStatus', title: '在线状态'}
                 ,{field:'isBlack', title: '是否黑屏'}
                 ,{field:'updateTime', title: '请求时间', templet: '#createTime'}
-                ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 150}
+                ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 180}
             ]]
         ,page: true
         });
@@ -57,7 +58,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
 
         // layer.load(2);
         // layer.closeAll('loading');
-        if(obj.event === 'edit'){//编辑
+        if(obj.event === 'edit'){//监控
             if (obj.data.pStatus == '离线') {
                 layer.msg('设备不在线！');
             }else{
@@ -81,7 +82,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                     }
                 })
             }
-        }else if(obj.event === 'del'){//删除
+        }else if(obj.event === 'del'){//切屏
             layer.confirm('确认切换黑屏 ' + obj.data.roomName + '？', function(index){
                 $.ajax({
                     type:'post',
@@ -260,4 +261,35 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         });
 
     }
+
+    //批量切屏
+    $('.bdpad-btn').on('click', function(){
+        var checkStatus = table.checkStatus('pads');
+        var data = JSON.stringify(checkStatus.data);
+        if (data == "" || data == "[]") {
+            layer.msg('请先选择Pad！');
+            return;
+        }
+        layer.confirm('确认批量切屏? ', function(index){
+            // layer.alert(JSON.stringify(data));
+            //ajax调用后台添加接口
+            $.ajax({
+                type:'post',
+                url: global + '/pad/bclosePad',
+                data:{idList:data, user_id:user_id},
+                dataType:'json',
+                success:function (res) {
+                    if(res.code == 0){//0
+                        layer.msg('操作成功');
+                        $(".layui-laypage-btn").click();
+                    }else {
+                        layer.msg('操作失败');
+                    }
+                },
+                error:function (err) {
+                    layer.msg('操作失败');
+                }
+            })
+        })
+    });
 });

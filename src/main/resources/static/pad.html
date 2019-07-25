@@ -93,15 +93,18 @@
                 <div class="layui-form layui-clear">
                         <div class="layui-inline">
                             <div class="layui-input-inline">
-
-                                <input type="text" name="username" lay-verify="required" placeholder="关键字" autocomplete="off" class="layui-input keyWord">
+                                <input type="text" name="username" lay-verify="required" style="margin-left: -20px" placeholder="关键字" autocomplete="off" class="layui-input keyWord">
                             </div>
                         </div>
-                        <button class="layui-btn doSearch" style="margin-top: -4px;">搜索</button>
+                        <button class="layui-btn doSearch" style="margin-top: 0px;">搜索</button>
                         <button class="layui-btn add-refresh-btn" style="float: right; margin-right: 50px">刷新</button>
+                    </div><!--操作全选-->
+                    <div class="layui-btn-group edit-table">
+                        <button class="layui-btn bdpad-btn" data-type="getCheckData">批量切屏</button>
                     </div>
                 </div>
-                <table class="layui-hide" id="test" lay-filter="order-form"></table>
+
+                <table class="layui-hide" id="pads" lay-filter="order-form"></table>
                 <!--</table>-->
                 <script type="text/html" id="barDemo">
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">切屏</a>

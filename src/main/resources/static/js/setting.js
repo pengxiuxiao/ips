@@ -33,6 +33,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 ,{field:'pClickCard', title: '刷卡提示'}
                 ,{field:'pState', title: '是否锁屏'}
                 ,{field:'pAudio', title: '音量大小'}
+                ,{field:'pModule', title: '显示模块'}
                 // ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 180}
             ]]
         ,page: true
@@ -254,6 +255,62 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             url: global + '/set/bscard',
             data:{idList:localStorage.getItem("close_idList"), user_id:user_id,
                 start_time:$(".layui-input.start_time").val(), end_time:$(".layui-input.end_time").val()},
+            dataType:'json',
+            success:function (res) {
+                if(res.code == 0){//0
+                    layer.msg('操作成功');
+                    layer.closeAll();
+                    $(".layui-laypage-btn").click();
+                }else {
+                    layer.msg(res.msg);
+                }
+            },
+            error:function (err) {
+                layer.msg('操作失败');
+            }
+        })
+        return false;
+    });
+
+    //批量设置显示模块
+    $('.bdpad-module').on('click', function(){
+        var checkStatus = table.checkStatus('pads');
+        var data = JSON.stringify(checkStatus.data);
+        if (data == "" || data == "[]") {
+            layer.msg('请先选择Pad！');
+            return;
+        }
+        //日期时间选择器
+        laydate.render({
+            elem: '#end_time'
+            ,value: null
+            ,type: 'datetime'
+        });
+        //日期时间选择器
+        laydate.render({
+            elem: '#start_time'
+            ,type: 'datetime'
+        });
+        localStorage.setItem('close_idList',data);
+        //打开显示下拉框
+        layer.open({
+            type: 1,
+            title: false,
+            closeBtn: 0,
+            area: '516px',
+            shadeClose: true,
+            content: $('.set-module')
+        });
+
+    });
+
+    //监听开关机提交按钮
+    form.on('submit(addModulebtn)', function(indata){
+        //ajax调用后台添加接口
+        $.ajax({
+            type:'post',
+            url: global + '/set/bscard',
+            data:{idList:localStorage.getItem("close_idList"), user_id:user_id, modules:indata.field.modules},
             dataType:'json',
             success:function (res) {
                 if(res.code == 0){//0

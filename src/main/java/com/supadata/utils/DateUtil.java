@@ -457,10 +457,16 @@ public class DateUtil {
         long day = diff / (24 * 60 * 60 * 1000);
         long hour = (diff / (60 * 60 * 1000) - day * 24);
         long min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
-        min=hour*60+min;
-        System.out.println(min);
+        min = hour * 60 + min;
 
-		if (startTime < endTime || endTime < currentTimeMillis || min < 2) {
+        long diff1 = endTime - startTime;
+        long day1 = diff1 / (24 * 60 * 60 * 1000);
+        long hour1 = (diff1 / (60 * 60 * 1000) - day1 * 24);
+        long min1 = ((diff1 / (60 * 1000)) - day1 * 24 * 60 - hour1 * 60);
+        min1 = hour1 * 60 + min1;
+
+
+		if (startTime < endTime || endTime < currentTimeMillis || min < 2 || min1 < 2 ) {
 			map.put("close", 0L);
 			map.put("open", 0L);
 		} else{

@@ -55,11 +55,10 @@
     from tb_pad
     where code = #{code}
   </select>
-  <select id="selectAll" resultMap="JoinResultMap" >
+  <select id="selectAll" resultMap="BaseResultMap" >
     select
-    p.id, p.p_ip, p.code, p.client_id, p.room_name, p.room_id, p.p_location, p.p_status, p.update_time,
-    p.start_time, p.end_time, p.is_black, p.p_remark, r.r_module, p.p_state, p.p_click_card, p.p_audio
-    from tb_pad p left join tb_room r on p.room_id = r.id
+    <include refid="Base_Column_List" />
+    from tb_pad
     where 1 = 1
     <if test="key != null" >
       and CONCAT(IFNULL(`room_name`,''), IFNULL(`p_location`,'')) like CONCAT('%', #{key}, '%')

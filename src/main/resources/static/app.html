@@ -12,9 +12,6 @@
     <link rel="stylesheet" href="assets/layui/css/layui.css"  media="all">
     <link rel="stylesheet" href="css/ips.css"  media="all">
     <style>
-        .layui-form{
-            padding: 20px 20px 10px;
-        }
         .app-content{
             display: none;
         }
@@ -49,16 +46,13 @@
                             <a href="index.html">信息发布</a>
                         </dd>
                         <dd>
-                            <a href="course.html">培训管理</a>
+                            <a href="course.html">培训发布</a>
                         </dd>
                         <dd>
                             <a href="room.html">教室管理</a>
                         </dd>
                         <dd>
-                            <a href="set.html">设置管理</a>
-                        </dd>
-                        <dd>
-                            <a href="module.html">显示模块</a>
+                            <a href="setting.html">设置管理</a>
                         </dd>
                         <dd>
                             <a href="pad.html">pad状态</a>
@@ -78,43 +72,29 @@
 
     <!--main-->
     <div class="layui-body">
-        <div class="layui-tab-item">
-            <div class="layui-main">
-                <div id="LAY_preview">
-                    <blockquote class="layui-elem-quote">
-                        信息详情
-                    </blockquote>
-                </div>
-                <!--table-->
-                <div class="layui-form layui-clear-fix" style="width: 100%">
-                    <div class="layui-form-item">
-                        <div class="layui-pull-left">
-
+        <div class="layui-main">
+            <div id="LAY_preview">
+                <blockquote class="layui-elem-quote">
+                    版本详情
+                </blockquote>
+            </div>
+            <!--table-->
+            <div class="layui-form layui-clear-fix" style="width: 100%">
+                <div class="layui-form-item">
+                    <div class="layui-pull-left">
                         <button class="layui-btn add-app-btn" style="float: right; margin-right: 40px">发版更新</button>
-                        <!--<a class="layui-btn down-course-btn"  href="../course/efd" style="float: right; margin-right: 10px">下载模板</a>-->
                     </div>
 
                 </div>
+                <table class="layui-hide" id="cards" lay-filter="order-table"></table>
+                <!--</table>-->
+                <script type="text/html" id="barDemo">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                </script>
             </div>
-            <table class="layui-hide" id="test" lay-filter="order-table"></table>
-            <!--</table>-->
-            <script type="text/html" id="barDemo">
-                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-            </script>
-
-            <script type="text/html" id="createTime">
-                {{new Date(d.updateTime).format("yyyy-MM-dd hh:mm:ss")}}
-            </script>
-            <script type="text/html" id="cStartTime">
-                {{new Date(d.cStartTime).format("yyyy-MM-dd hh:mm:ss")}}
-            </script>
-            <script type="text/html" id="cEndTime">
-                {{new Date(d.cEndTime).format("yyyy-MM-dd hh:mm:ss")}}
-            </script>
         </div>
     </div>
-</div>
 
 
 <!--添加课程信息-->

@@ -72,7 +72,11 @@ bdroom-btn.swiper-container {
     transition: all .3s ease;
 }
 
-.add-album{
+.edit-course-content,
+.add-room,
+.set-card,.set-state,.set-audio,.set-close,.set-module,
+.add-card
+{
     padding-top: 10px;
     padding-right: 12px;
 }

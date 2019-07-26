@@ -16,7 +16,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     //获取列表接口
     var getOrderList = function (url) {
         table.render({
-            elem: '#test'
+            elem: '#cards'
             ,url: url
             // ,url: 'js/data.json'
             ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增

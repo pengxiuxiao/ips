@@ -12,9 +12,6 @@
     <link rel="stylesheet" href="assets/layui/css/layui.css"  media="all">
     <link rel="stylesheet" href="css/ips.css"  media="all">
     <style>
-        .layui-form{
-            padding: 20px 20px 10px;
-        }
         .course-content{
             display: none;
         }
@@ -52,16 +49,13 @@
                             <a href="index.html">信息发布</a>
                         </dd>
                         <dd class="layui-this">
-                            <a href="course.html">培训管理</a>
+                            <a href="course.html">培训发布</a>
                         </dd>
                         <dd>
                             <a href="room.html">教室管理</a>
                         </dd>
                         <dd>
-                            <a href="set.html">设置管理</a>
-                        </dd>
-                        <dd>
-                            <a href="module.html">显示模块</a>
+                            <a href="setting.html">设置管理</a>
                         </dd>
                         <dd>
                             <a href="pad.html">pad状态</a>
@@ -85,7 +79,7 @@
             <div class="layui-main">
                 <div id="LAY_preview">
                     <blockquote class="layui-elem-quote">
-                        信息详情
+                        培训详情
                     </blockquote>
                 </div>
                 <!--table-->
@@ -106,45 +100,27 @@
                     <div class="layui-btn-group edit-table">
                         <button class="layui-btn bdcourse-btn" data-type="getCheckData">批量删除</button>
                     </div>
+                    <table class="layui-hide" id="course" lay-filter="order-table"></table>
+                    <!--</table>-->
+                    <script type="text/html" id="barDemo">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                    </script>
+
+                    <script type="text/html" id="createTime">
+                        {{new Date(d.updateTime).format("yyyy-MM-dd hh:mm:ss")}}
+                    </script>
+                    <script type="text/html" id="cStartTime">
+                        {{new Date(d.cStartTime).format("yyyy-MM-dd hh:mm:ss")}}
+                    </script>
+                    <script type="text/html" id="cEndTime">
+                        {{new Date(d.cEndTime).format("yyyy-MM-dd hh:mm:ss")}}
+                    </script>
                 </div>
             </div>
-            <table class="layui-hide" id="test" lay-filter="order-table"></table>
-            <!--</table>-->
-            <script type="text/html" id="barDemo">
-                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-            </script>
-
-            <script type="text/html" id="createTime">
-                {{new Date(d.updateTime).format("yyyy-MM-dd hh:mm:ss")}}
-            </script>
-            <script type="text/html" id="cStartTime">
-                {{new Date(d.cStartTime).format("yyyy-MM-dd hh:mm:ss")}}
-            </script>
-            <script type="text/html" id="cEndTime">
-                {{new Date(d.cEndTime).format("yyyy-MM-dd hh:mm:ss")}}
-            </script>
         </div>
     </div>
 </div>
-<!--&lt;!&ndash;选择教室&ndash;&gt;-->
-<!--<div class="selectRooms">-->
-    <!--<form class="layui-form" onsubmit="return false" style="padding: 20px">-->
-        <!--<h3 class="text-center">请选择教室</h3>-->
-        <!--<div class="layui-form-item" pane="">-->
-            <!--<div> <input type="checkbox" lay-skin="primary" title="全选" id="checkAll" lay-filter="checkAll"></div>-->
-            <!--<div class="layui-input-block classRooms-check-box" style="margin: 0;padding-left: 28px">-->
-
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="layui-form-item">-->
-            <!--<div class="text-center" style="margin-top: 40px">-->
-                <!--<button class="layui-btn selectRooms-btn" lay-submit="" lay-filter="selectRooms">下一步</button>-->
-                <!--<button class="layui-btn layui-btn-primary cancel-btn">取消</button>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</form>-->
-<!--</div>-->
 
 <!--添加课程信息-->
 <div class="course-content">

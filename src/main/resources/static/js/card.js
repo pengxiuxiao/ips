@@ -53,7 +53,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     //点击添加
     $(document).on('click', '.add-card-btn', function () {
         //先清表单数据
-        $(".modal-content form input").each(function(){
+        $(".add-card form input").each(function(){
             $(this).val('');
         });
         layer.open({
@@ -62,7 +62,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             closeBtn: 0,
             area: '516px',
             shadeClose: true,
-            content: $('.modal-content')
+            content: $('.add-card')
         });
     })
 
@@ -75,7 +75,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 closeBtn: 0,
                 area: '516px',
                 shadeClose: true,
-                content: $('.modal-content')
+                content: $('.add-card')
             });
             $(".layui-input.cId").val(obj.data.id);
             $(".layui-input.name").val(obj.data.studentName);

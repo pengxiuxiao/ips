@@ -13,10 +13,7 @@
     <link rel="stylesheet" href="css/ips.css"  media="all">
 
     <style>
-        .layui-form{
-            padding: 20px 20px 10px;
-        }
-        .modal-content{
+        .add-card{
             display: none;
         }
         .layui-form-selected dl{
@@ -50,16 +47,13 @@
                             <a href="index.html">信息发布</a>
                         </dd>
 						<dd>
-							<a href="course.html">培训管理</a>
+							<a href="course.html">培训发布</a>
 						</dd>
                         <dd>
                             <a href="room.html">教室管理</a>
                         </dd>
                         <dd>
-                            <a href="set.html">设置管理</a>
-                        </dd>
-                        <dd>
-                            <a href="module.html">显示模块</a>
+                            <a href="setting.html">设置管理</a>
                         </dd>
                         <dd>
                             <a href="pad.html">pad状态</a>
@@ -78,33 +72,33 @@
     </div>
 
     <!--main-->
-    <div class="layui-body layui-tab-content">
-        <div class="layui-tab-item">
-            <div class="layui-main">
-                <div id="LAY_preview">
-                    <blockquote class="layui-elem-quote">
-                        教室详情
-                    </blockquote>
-                </div>
-                <!--table-->
-                <div class="layui-form layui-clear">
+    <div class="layui-body">
+        <div class="layui-main">
+            <div id="LAY_preview">
+                <blockquote class="layui-elem-quote">
+                    卡片详情
+                </blockquote>
+            </div>
+            <!--table-->
+            <div class="layui-form layui-clear-fix" style="width: 100%">
+                <div class="layui-form-item">
+                    <div class="layui-pull-left">
                         <div class="layui-inline">
                             <div class="layui-input-inline">
                                 <input type="text" name="username" lay-verify="required" placeholder="卡号" autocomplete="off" class="layui-input keyWord">
                             </div>
+                            <button class="layui-btn doSearch">搜索</button>
                         </div>
-                    <button class="layui-btn doSearch" style="margin-top: -4px;">搜索</button>
-                    <button class="layui-btn add-card-btn" style="float: right; margin-right: 50px">添加卡片</button>
-                    <button class="layui-btn out-card-btn" style="float: right; margin-right: 50px">导出卡片</button>
+                    </div>
                 </div>
-                </div>
-
                 <!--操作全选-->
                 <div class="layui-btn-group edit-table">
                     <button class="layui-btn bdcard-btn" data-type="getCheckData">批量删除</button>
+                    <button class="layui-btn add-card-btn" style="margin-right: 300px">添加卡片</button>
+                    <button class="layui-btn out-card-btn" style="margin-right: 300px">导出卡片</button>
                 </div>
-                <table class="layui-hide" id="cards" lay-filter="order-form"></table>
                 <!--</table>-->
+                <table class="layui-hide" id="cards" lay-filter="order-form"></table>
                 <script type="text/html" id="barDemo">
                     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
@@ -117,7 +111,8 @@
         </div>
     </div>
 </div>
-<div class="modal-content">
+
+<div class="add-card">
     <form class="layui-form" action="" id="cardForm" onsubmit="return false">
         <div class="layui-form-item">
             <label class="layui-form-label">持卡人：</label>

@@ -58,7 +58,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     //点击添加
     $(document).on('click', '.add-room-btn', function () {
         //先清表单数据
-        $(".modal-content form input").each(function(){
+        $(".add-room form input").each(function(){
             $(this).val('');
         });
         layer.open({
@@ -67,7 +67,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             closeBtn: 0,
             area: '516px',
             shadeClose: true,
-            content: $('.modal-content')
+            content: $('.add-room')
         });
     })
 
@@ -80,7 +80,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 closeBtn: 0,
                 area: '516px',
                 shadeClose: true,
-                content: $('.modal-content')
+                content: $('.add-room')
             });
             $(".layui-input.nId").val(obj.data.id);
             $(".layui-input.name").val(obj.data.rName);
@@ -133,15 +133,18 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
 
     //批量删除
     $('.bdroom-btn').on('click', function(){
+        var checkStatus = table.checkStatus('rooms');
+        var data = JSON.stringify(checkStatus.data);
+        if (data == "" || data == "[]") {
+            layer.msg('请先选择Pad！');
+            return;
+        }
         layer.confirm('确认批量删除教室? ', function(index){
-            var checkStatus = table.checkStatus('rooms')
-                ,data = checkStatus.data;
-            // layer.alert(JSON.stringify(data));
             //ajax调用后台添加接口
             $.ajax({
                 type:'post',
                 url: global + '/room/bdr',
-                data:{idList:JSON.stringify(data), user_id:user_id},
+                data:{idList:data, user_id:user_id},
                 dataType:'json',
                 success:function (res) {
                     if(res.code == 0){//0

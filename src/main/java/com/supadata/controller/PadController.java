@@ -125,24 +125,24 @@ public class PadController {
         System.out.println(lruCache);
 
         //查询后台该pad的设置信息 返回其要执行的事件
-        Setting setting = settingService.querySetting();
-        Map<String, Long> map = DateUtil.handleOpenClosePadTime(DateUtil.dateToLong(setting.getsStartTime()),DateUtil.dateToLong(setting.getsEndTime()));
+        Map<String, Long> map = DateUtil.handleOpenClosePadTime(DateUtil.dateToLong(DateUtil.changeToDate(pad.getStartTime(), "yyyy-MM-dd HH:mm:ss")),
+                DateUtil.dateToLong(DateUtil.changeToDate(pad.getEndTime(), "yyyy-MM-dd HH:mm:ss")));
         SystemInfo si = new SystemInfo(System.currentTimeMillis(), pad.getCode(),
                 pad.getRoomId().toString(), pad.getRoomName(),
                 //显示模块
                 EventType.getName(room.getrModule()),
                 //锁屏
-                "0".equals(setting.getWordFont()) ? "close" : "open",
+                "关闭".equals(pad.getpState()) ? "close" : "open",
                 //黑屏 0:黑， 1：不黑
                 "0".equals(pad.getIsBlack()) ? "close" : "open",
                 //音量
-                setting.getDaojishi()+"0",
+                (pad.getpAudio() * 10) + "",
                 //开机时间
                 map.get("open"),
                 //关机shijain
                 map.get("close"),
                 //是否显示打卡提示
-                "0".equals(setting.getDisplayCard()) ? true : false
+                "显示".equals(pad.getpClickCard()) ? true : false
         );
 
         return new MsgJson(0, "登录成功！", si);

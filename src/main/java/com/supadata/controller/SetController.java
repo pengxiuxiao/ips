@@ -214,7 +214,6 @@ public class SetController {
         Setting setting = settingService.querySetting();
         JSONArray idArry = JSONArray.fromObject(idList);
         int res = 0;
-        int padNum = 0;
         for (Object idData : idArry) {
             Map<String, Object> map = new LinkedHashMap<>();
             if (idArry.size() == pads.size()) {
@@ -236,12 +235,6 @@ public class SetController {
                     map.put("event", "cardNotice");
                     map.put("isShow", "0".equals(status) ? true : false);
                     padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
-                    padNum ++;
-                }
-                //设置一下全部的打卡提示
-                if (pads.size() == padNum) {
-                    setting.setDisplayCard(status);
-                    res = settingService.upadate(setting);
                 }
             } else if (StringUtils.isNotEmpty(state)) {
                 tmpPad.setpState("0".equals(state) ? "打开" : "关闭");
@@ -251,12 +244,6 @@ public class SetController {
                     map.put("event", "navigation");
                     map.put("state", "1".equals(state) ? "close" : "open");
                     padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
-                    padNum ++;
-                }
-                //设置一下全部的锁屏
-                if (pads.size() == padNum) {
-                    setting.setWordFont(state);//字体改为锁屏用
-                    res = settingService.upadate(setting);
                 }
             }else if (StringUtils.isNotEmpty(audio)) {
                 tmpPad.setpAudio(Integer.parseInt(audio));
@@ -266,12 +253,6 @@ public class SetController {
                     map.put("event", "audio");
                     map.put("value", audio);
                     padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
-                    padNum ++;
-                }
-                //设置一下全部的静音
-                if (pads.size() == padNum) {
-                    setting.setDaojishi((Integer.parseInt(audio) / 10) + "");
-                    res = settingService.upadate(setting);
                 }
             }else if (StringUtils.isNotEmpty(start_time) && StringUtils.isNotEmpty(end_time) ) {
                 Date sDate = DateUtil.changeToDate(start_time, "yyyy-MM-dd HH:mm:ss");
@@ -292,14 +273,8 @@ public class SetController {
                     map.put("sleepTime", dateMap.get("close"));
                     logger.info("开关机=code：" + pad.getCode() + "，set: sleepTime=" + end_time + ", wakeTime " + start_time);
                     padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
-                    padNum ++;
                 }
-                //设置一下全部的开关机时间
-                if (pads.size() == padNum) {
-                    setting.setsEndTime(eDate);
-                    setting.setsStartTime(sDate);
-                    res = settingService.upadate(setting);
-                }
+
             }else if (StringUtils.isNotEmpty(modules)) {
                 tmpPad.setpModuleFront(modules);
                 res = padService.update(tmpPad);
@@ -307,12 +282,6 @@ public class SetController {
                     //发送消息 通知pad 修改显示模块
                     map.put("event", EventType.getName(modules));
                     padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
-                    padNum ++;
-                }
-                //设置一下全部的设置显示状态
-                if (pads.size() == padNum) {
-                    setting.setsModule(modules);
-                    res = settingService.upadate(setting);
                 }
             }
         }

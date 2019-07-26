@@ -15,7 +15,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     //获取列表接口
     var getOrderList = function (url) {
         table.render({
-            elem: '#test'
+            elem: '#notice'
             ,url: url
             // ,url: 'js/data.json'
             ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
@@ -491,15 +491,18 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
 
     //批量删除
     $('.bdnotice-btn').on('click', function(){
+        var checkStatus = table.checkStatus('notice');
+        var data = JSON.stringify(checkStatus.data);
+        if (data == "" || data == "[]") {
+            layer.msg('请先选择Pad！');
+            return;
+        }
         layer.confirm('确认批量删除? ', function(){
-            var checkStatus = table.checkStatus('test')
-                ,data = checkStatus.data;
-            // layer.alert(JSON.stringify(data));
             //ajax调用后台添加接口
             $.ajax({
                 type:'post',
                 url: global + '/notice/bdn',
-                data:{idList:JSON.stringify(data), user_id:user_id},
+                data:{idList:data, user_id:user_id},
                 dataType:'json',
                 success:function (res) {
                     if(res.code == 0){//0

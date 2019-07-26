@@ -76,7 +76,6 @@ public class SetController {
         String audio = request.getParameter("audio");
         String end_time = request.getParameter("end_time");
         String start_time = request.getParameter("start_time");
-        String modules = request.getParameter("modules");
         if (StringUtils.isEmpty(user_id) || StringUtil.isEmpty(idList) || "[]".equals(idList)) {
             return MsgJson.fail("参数包含空值！");
         }
@@ -143,14 +142,6 @@ public class SetController {
                     padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
                 }
 
-            }else if (StringUtils.isNotEmpty(modules)) {
-                tmpPad.setpModuleFront(modules);
-                res = padService.update(tmpPad);
-                if (res > 0) {
-                    //发送消息 通知pad 修改显示模块
-                    map.put("event", EventType.getName(modules));
-                    padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
-                }
             }
         }
         return MsgJson.success("请求成功.");

@@ -247,7 +247,7 @@ public class PadController {
     }
 
     /**
-     * 置为黑屏接口
+     * 批量置为黑屏接口
      * @param idList
      * @return
      */
@@ -269,14 +269,11 @@ public class PadController {
                 return MsgJson.fail("请求失败.");
             }
             String state = "close";
-            Integer audio = 0;
             if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("1")) {//未黑屏
                 pad.setIsBlack("0");
-                audio = 0;
             } else {//已黑屏
                 pad.setIsBlack("1");
                 state = "open";
-                audio = pad.getpAudio();
             }
             res = padService.update(pad);
             if (res > 0) {
@@ -284,7 +281,6 @@ public class PadController {
                 Map<String, Object> map = new LinkedHashMap<>();
                 map.put("event", "power");
                 map.put("state", state);
-                map.put("audio", audio);
                 padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
             }
         }

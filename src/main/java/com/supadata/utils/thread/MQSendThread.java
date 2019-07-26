@@ -4,6 +4,8 @@ import com.supadata.constant.Mqtt;
 import com.supadata.pojo.Pad;
 import com.supadata.service.IPadService;
 import com.supadata.utils.mqtt.PadServerMQTT;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,23 +25,25 @@ public class MQSendThread extends Thread {
 
     private PadServerMQTT padServerMQTT;
 
-    public IPadService padService;
+    private IPadService padService;
 
-    public MQSendThread(Mqtt mqtt, PadServerMQTT padServerMQTT, IPadService padService) {
+    private JSONArray idList;
+
+    public MQSendThread(Mqtt mqtt, PadServerMQTT padServerMQTT, IPadService padService, JSONArray idList) {
         this.mqtt = mqtt;
         this.padServerMQTT = padServerMQTT;
         this.padService = padService;
+        this.idList = idList;
     }
 
     @Override
     public void run() {
 
-        //查询所有的pad
-        List<Pad> pads = padService.queryAll(null);
+        //针对选中的所有的pad
         int index = 0;
         int region = Integer.parseInt(mqtt.getRegion());
-        int loop = pads.size() / region;
-        int remainder = (pads.size() % region) > 0 ? 1: 0;
+        int loop = idList.size() / region;
+        int remainder = (idList.size() % region) > 0 ? 1: 0;
         loop = loop + remainder;
 
         //发送消息 通知全部pad 修改显示模块
@@ -48,13 +52,20 @@ public class MQSendThread extends Thread {
 
         for (int i = 0; i < loop; i++) {
             for (int j = 0; j < region; j++) {
-                if (j + index < pads.size()) {
-                    padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pads.get(j + index).getClientId(), map);
+                if (j + index < idList.size()) {
+                    JSONObject oPad = idList.getJSONObject(j + index);
+                    String clientId = oPad.getString("clientId");
+                    Integer id = oPad.getInt("id");
+                    Pad tmpPad = new Pad();
+                    tmpPad.setId(id);
+                    tmpPad.setpModuleFront("3");
+                    int res = padService.update(tmpPad);
+                    padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + clientId, map);
                 }
             }
             index = index + region;
             try {
-                Thread.sleep(60000);
+                Thread.sleep(15000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -4,6 +4,7 @@ import com.github.pagehelper.util.StringUtil;
 import com.supadata.constant.Mqtt;
 import com.supadata.pojo.Pad;
 import com.supadata.pojo.Setting;
+import com.supadata.service.INoticeService;
 import com.supadata.service.IPadService;
 import com.supadata.service.IRoomsettingService;
 import com.supadata.service.ISettingService;
@@ -11,6 +12,7 @@ import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.enums.EventType;
 import com.supadata.utils.mqtt.PadServerMQTT;
+import com.supadata.utils.thread.MQSendThread;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -54,6 +56,9 @@ public class SetController {
     @Autowired
     public IPadService padService;
 
+    @Autowired
+    public INoticeService noticeService;
+
     /**
      * 功能描述:批量设置
      * @auther: pxx
@@ -78,14 +83,10 @@ public class SetController {
 
         logger.info("批量设置显示打卡提示:idList=" + idList);
         List<Pad> pads = padService.queryAll(null);
-        Setting setting = settingService.querySetting();
         JSONArray idArry = JSONArray.fromObject(idList);
         int res = 0;
         for (Object idData : idArry) {
             Map<String, Object> map = new LinkedHashMap<>();
-            if (idArry.size() == pads.size()) {
-                padServerMQTT.publishMessage(mqtt.getSubTopic(), map);
-            }
             JSONObject idObj = JSONObject.fromObject(idData);
             Integer id = Integer.valueOf(idObj.getString("id"));
             Pad pad = padService.queryById(id);
@@ -153,6 +154,50 @@ public class SetController {
             }
         }
         return MsgJson.success("请求成功.");
+    }
+
+
+ /**
+     * 功能描述:批量设置视频显示
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/7/24 16:24
+     */
+    @RequestMapping("/bsv")
+    public @ResponseBody
+    MsgJson batchSetVideo(HttpServletRequest request) {
+        String user_id = request.getParameter("user_id");
+        String idList = request.getParameter("idList");
+        String module = request.getParameter("modules");
+        if (StringUtils.isEmpty(user_id) || StringUtil.isEmpty(idList) || "[]".equals(idList)) {
+            return MsgJson.fail("参数包含空值。");
+        }
+
+        logger.info("批量设置显示视频:idList=" + idList);
+        JSONArray idArry = JSONArray.fromObject(idList);
+        if ("3".equals(module)) {
+            MQSendThread mqThread = new MQSendThread(mqtt, padServerMQTT, padService, idArry);
+            mqThread.start();
+        } else {
+            int res = 0;
+            for (Object idData : idArry) {
+                Map<String, Object> map = new LinkedHashMap<>();
+                JSONObject idObj = JSONObject.fromObject(idData);
+                Integer id = Integer.valueOf(idObj.getString("id"));
+                Pad tmpPad = new Pad();
+                tmpPad.setId(id);
+                tmpPad.setpModuleFront(module);
+                res = padService.update(tmpPad);
+                if (res > 0) {
+                    //发送消息 通知pad 修改显示模块
+                    map.put("event", EventType.getName(module));
+                    padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + idObj.getString("clientId"), map);
+                }
+            }
+        }
+        return MsgJson.success("设置成功！");
+
     }
 
 

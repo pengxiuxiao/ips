@@ -304,12 +304,12 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
 
     });
 
-    //监听开关机提交按钮
+    //监听显示提交按钮
     form.on('submit(addModulebtn)', function(indata){
         //ajax调用后台添加接口
         $.ajax({
             type:'post',
-            url: global + '/set/bscard',
+            url: global + '/set/bsv',
             data:{idList:localStorage.getItem("close_idList"), user_id:user_id, modules:indata.field.modules},
             dataType:'json',
             success:function (res) {
@@ -328,6 +328,10 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         return false;
     });
 
+    //点击刷新
+    $(document).on('click', '.add-refresh-btn', function () {
+        $(".layui-laypage-btn").click();
+    })
 
 
 });

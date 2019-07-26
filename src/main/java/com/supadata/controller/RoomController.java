@@ -285,7 +285,7 @@ public class RoomController {
         }
 
         if (res > 0 && "3".equals(s_module)) {
-            MQSendThread mqThread = new MQSendThread(mqtt, padServerMQTT, padService);
+            MQSendThread mqThread = new MQSendThread(mqtt, padServerMQTT, padService, null);
             mqThread.start();
             return MsgJson.success("设置成功！");
         }else {

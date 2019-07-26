@@ -27,6 +27,8 @@ public class Notice {
 
     private Integer nWordSize;
 
+    private Integer fileSize;
+
     private Date updateTime;
 
     private String nRemark;
@@ -162,5 +164,13 @@ public class Notice {
 
     public void setnWordSize(Integer nWordSize) {
         this.nWordSize = nWordSize;
+    }
+
+    public Integer getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(Integer fileSize) {
+        this.fileSize = fileSize;
     }
 }

@@ -378,6 +378,9 @@ public class NoticeController {
                     name, id, DateUtil.getCurDate());
             notice.setnUrl(config.getSERVICEURL() + "notice/fileDownLoad?name=" + fileName);
             notice.setUpdateTime(DateUtil.getCurDate());
+            double sizeD = (double) file.getSize();
+            int size = (int) sizeD /1048576;
+            notice.setFileSize(size);
 
             //将ppt转换的图片信息插入数据库
             if (map != null && (Boolean) map.get("converReturnResult")){

@@ -27,6 +27,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 ,{field:'nContent', title: '内容'}
                 ,{field:'publishRoom', title: '推送教室'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                 ,{field:'nWordSize', title: '字体大小'}
+                ,{field:'fileSize', title: '视频大小(M)'}
                 ,{field:'updateTime', title: '操作时间', templet: '#createTime'}
                 ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 180}
             ]]

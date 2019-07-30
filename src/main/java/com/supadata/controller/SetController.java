@@ -1,7 +1,9 @@
 package com.supadata.controller;
 
 import com.github.pagehelper.util.StringUtil;
+import com.supadata.constant.IntervalType;
 import com.supadata.constant.Mqtt;
+import com.supadata.pojo.Notice;
 import com.supadata.pojo.Pad;
 import com.supadata.pojo.Setting;
 import com.supadata.service.INoticeService;
@@ -23,10 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @ClassName: SetController
@@ -164,12 +163,23 @@ public class SetController {
         if (StringUtils.isEmpty(user_id) || StringUtil.isEmpty(idList) || "[]".equals(idList)) {
             return MsgJson.fail("参数包含空值。");
         }
-
+        Notice notice = noticeService.queryMaxVideo();
         logger.info("批量设置显示视频:idList=" + idList);
+
         JSONArray idArry = JSONArray.fromObject(idList);
+        Integer interval = 0;
+        int region = Integer.parseInt(mqtt.getRegion());
+        int loop = idArry.size() / region;
+        int remainder = (idArry.size() % region) > 0 ? 1: 0;
+        loop = loop + remainder;
+
+        if (idArry.size() >= Integer.parseInt(mqtt.getRegion()) ) {
+            interval = IntervalType.getInterval(notice.getFileSize());
+        }
         if ("3".equals(module)) {
-            MQSendThread mqThread = new MQSendThread(mqtt, padServerMQTT, padService, idArry);
+            MQSendThread mqThread = new MQSendThread(mqtt, padServerMQTT, padService, idArry, interval, loop);
             mqThread.start();
+            return MsgJson.success("视频下载约需要" + interval/1000*loop/60 + "分" + interval/1000*loop%60 + "秒，在此期间请勿切换显示模块！");
         } else {
             int res = 0;
             for (Object idData : idArry) {
@@ -186,9 +196,8 @@ public class SetController {
                     padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + idObj.getString("clientId"), map);
                 }
             }
+            return MsgJson.success("操作成功！");
         }
-        return MsgJson.success("设置成功！");
-
     }
 
 

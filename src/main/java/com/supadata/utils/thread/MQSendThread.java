@@ -1,12 +1,16 @@
 package com.supadata.utils.thread;
 
 import com.supadata.constant.Mqtt;
+import com.supadata.controller.CourseController;
 import com.supadata.pojo.Pad;
 import com.supadata.service.IPadService;
 import com.supadata.utils.mqtt.PadServerMQTT;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.log4j.Logger;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +22,12 @@ import java.util.Map;
  * @Date: 2019/7/12 16:56
  * @Description:
  */
+
 public class MQSendThread extends Thread {
 
+    private static Logger logger = Logger.getLogger(MQSendThread.class);
+
+    private final SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss.SSS");
 
     private Mqtt mqtt;
 
@@ -29,22 +37,27 @@ public class MQSendThread extends Thread {
 
     private JSONArray idList;
 
-    public MQSendThread(Mqtt mqtt, PadServerMQTT padServerMQTT, IPadService padService, JSONArray idList) {
+    private Integer interval;
+
+    private Integer loop;
+
+    public MQSendThread(Mqtt mqtt, PadServerMQTT padServerMQTT, IPadService padService, JSONArray idList, Integer interval, Integer loop) {
         this.mqtt = mqtt;
         this.padServerMQTT = padServerMQTT;
         this.padService = padService;
         this.idList = idList;
+        this.interval = interval;
+        this.loop = loop;
     }
 
     @Override
     public void run() {
 
+        logger.info("thread:" + Thread.currentThread().getName() + ",time:" + format.format(new Date()));
+
         //针对选中的所有的pad
         int index = 0;
         int region = Integer.parseInt(mqtt.getRegion());
-        int loop = idList.size() / region;
-        int remainder = (idList.size() % region) > 0 ? 1: 0;
-        loop = loop + remainder;
 
         //发送消息 通知全部pad 修改显示模块
         Map<String, Object> map = new LinkedHashMap<>();
@@ -65,7 +78,8 @@ public class MQSendThread extends Thread {
             }
             index = index + region;
             try {
-                Thread.sleep(15000);
+                logger.info("thread:" + Thread.currentThread().getName() + ",sllep:" + interval + "s.");
+                Thread.sleep(interval);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

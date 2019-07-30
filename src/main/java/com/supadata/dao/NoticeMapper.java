@@ -25,4 +25,6 @@ public interface NoticeMapper {
     List<Notice> selectByTypeContainsKey(@Param("type") String type, @Param("key") String key);
 
     List<Notice> selectByRoomIdStatusAndType(@Param("status") String status, @Param("type") String type, @Param("roomId") Integer roomId);
+
+    Notice selectMaxVideo();
 }

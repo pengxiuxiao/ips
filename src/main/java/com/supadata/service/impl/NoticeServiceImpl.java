@@ -112,4 +112,9 @@ public class NoticeServiceImpl implements INoticeService {
     public List<Notice> queryPushNoticeByRoomId(String status, String type, Integer roomId) {
         return noticeMapper.selectByRoomIdStatusAndType(status, type, roomId);
     }
+
+    @Override
+    public Notice queryMaxVideo() {
+        return noticeMapper.selectMaxVideo();
+    }
 }

@@ -75,4 +75,13 @@ public interface INoticeService {
      * @date: 2019/4/17 16:09
      */
     List<Notice> queryPushNoticeByRoomId(String status, String type, Integer roomId);
+
+    /**
+     * 功能描述: 按照pad分组，查询最大的视频
+     * @auther:
+     * @param:
+     * @return:
+     * @date: 2019/7/29 17:20
+     */
+    Notice queryMaxVideo();
 }

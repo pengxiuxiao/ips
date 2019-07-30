@@ -61,6 +61,17 @@
       and CONCAT(IFNULL(`n_title`,''),IFNULL(`n_content`,'')) LIKE CONCAT('%', #{key}, '%')
     </if>
   </select>
+
+  <select id="selectMaxVideo" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_notice
+    order by file_size desc
+    limit 1
+  </select>
+
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from tb_notice
     where id = #{id,jdbcType=INTEGER}

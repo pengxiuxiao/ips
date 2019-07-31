@@ -80,7 +80,7 @@ public class CourseController {
         MsgJson msgJson = new MsgJson(0,"文件上传成功！");
         String user_id = request.getParameter("user_id");
         String room_id = request.getParameter("room_id");
-        logger.info("upload:room_id=" + room_id );
+        logger.info("发布课程:room_id=" + room_id );
         if (StringUtils.isEmpty(user_id)) {
             msgJson.setCode(1);
             msgJson.setMsg("user_id为空！");
@@ -151,7 +151,7 @@ public class CourseController {
     }
 
     /**
-     * 功能描述: 获取后台发布的课程
+     * 功能描述: 删除发布的课程
      * @auther: pxx
      * @param:
      * @return:
@@ -170,7 +170,7 @@ public class CourseController {
             msg.setMsg("course_id为空！");
             return msg;
         }
-        logger.info("delete:course_id=" + course_id );
+        logger.info("删除课程:course_id=" + course_id );
         int res = courseService.deleteCourse(course_id);
         if (res != 1) {
             msg.setCode(1);
@@ -196,6 +196,7 @@ public class CourseController {
         if (StringUtils.isEmpty(user_id) || com.github.pagehelper.util.StringUtil.isEmpty(idList) || "[]".equals(idList)) {
             return MsgJson.fail("参数包含空值！");
         }
+        logger.info("批量删除课程:idList=" + idList );
         JSONArray idArry = JSONArray.fromObject(idList);
         int res = 0;
         for (Object idData : idArry) {
@@ -227,6 +228,7 @@ public class CourseController {
         String user_id = request.getParameter("user_id");
         String name = request.getParameter("name");
         String word_size = request.getParameter("word_size");
+        logger.info("编辑课程:name=" + name + ",word_size=" + word_size );
         if (StringUtils.isEmpty(user_id)) {
             msg.setCode(1);
             msg.setMsg("usre_id为空！");
@@ -354,7 +356,6 @@ public class CourseController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-
         }
         return new File(loacalPath + filePath, fileName);
     }

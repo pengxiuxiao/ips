@@ -74,6 +74,10 @@
     delete from tb_pad
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteByRoomId" parameterType="java.lang.Integer" >
+    delete from tb_pad
+    where room_id = #{room_id}
+  </delete>
   <insert id="insert" parameterType="com.supadata.pojo.Pad" >
     insert into tb_pad (id, p_ip, code,
       room_name, room_id, p_location,

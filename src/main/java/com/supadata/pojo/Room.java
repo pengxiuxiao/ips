@@ -116,4 +116,13 @@ public class Room {
         this.rRemark = rRemark == null ? null : rRemark.trim();
     }
 
+    @Override
+    public String toString() {
+        return "Room{" +
+                "id=" + id +
+                ", rName='" + rName + '\'' +
+                ", rLocation='" + rLocation + '\'' +
+                ", rIp='" + rIp + '\'' +
+                '}';
+    }
 }

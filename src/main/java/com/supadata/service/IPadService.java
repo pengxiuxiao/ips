@@ -61,4 +61,13 @@ public interface IPadService {
      * @date: 2019/5/22 17:45
      */
     List<Pad> queryByRoomId(Integer parseInt);
+
+    /**
+     * 功能描述:根据roomid删除pad
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/7/31 15:56
+     */
+    int deleteByRoomId(Integer room_id);
 }

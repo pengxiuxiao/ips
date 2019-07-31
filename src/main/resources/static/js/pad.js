@@ -86,7 +86,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             layer.confirm('确认切换黑屏 ' + obj.data.roomName + '？', function(index){
                 $.ajax({
                     type:'post',
-                    url: closePad,
+                    url: blackPad,
                     data:{id:obj.data.id, user_id:user_id},
                     dataType:'json',
                     success:function (res) {
@@ -275,7 +275,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             //ajax调用后台添加接口
             $.ajax({
                 type:'post',
-                url: global + '/pad/bclosePad',
+                url: global + '/pad/bchblackPad',
                 data:{idList:data, user_id:user_id},
                 dataType:'json',
                 success:function (res) {

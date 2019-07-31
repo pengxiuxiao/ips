@@ -5,11 +5,9 @@ import com.supadata.constant.IntervalType;
 import com.supadata.constant.Mqtt;
 import com.supadata.pojo.Notice;
 import com.supadata.pojo.Pad;
-import com.supadata.pojo.Setting;
 import com.supadata.service.INoticeService;
 import com.supadata.service.IPadService;
 import com.supadata.service.IRoomsettingService;
-import com.supadata.service.ISettingService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.enums.EventType;
@@ -40,8 +38,6 @@ public class SetController {
 
     private static Logger logger = Logger.getLogger(CourseController.class);
 
-    @Autowired
-    public ISettingService settingService;
 
     @Autowired
     public IRoomsettingService roomsettingService;
@@ -79,8 +75,8 @@ public class SetController {
             return MsgJson.fail("参数包含空值！");
         }
 
-        logger.info("批量设置显示打卡提示:idList=" + idList);
-        List<Pad> pads = padService.queryAll(null);
+        logger.info("批量设置 step1:idList=" + idList);
+
         JSONArray idArry = JSONArray.fromObject(idList);
         int res = 0;
         for (Object idData : idArry) {
@@ -94,7 +90,8 @@ public class SetController {
             Pad tmpPad = new Pad();
             tmpPad.setId(id);
             if (StringUtils.isNotEmpty(status)) {
-                tmpPad.setpClickCard("0".equals(status) ? "显示" : "关闭");
+                logger.info("批量设置-打卡提示 step2:status=" + status);
+                tmpPad.setpClickCard(status);
                 res = padService.update(tmpPad);
                 if (res > 0) {
                     //发送打卡提示切换消息
@@ -103,7 +100,8 @@ public class SetController {
                     padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
                 }
             } else if (StringUtils.isNotEmpty(state)) {
-                tmpPad.setpState("0".equals(state) ? "打开" : "关闭");
+                logger.info("批量设置-显示锁屏 step2:state=" + state);
+                tmpPad.setpState(state);
                 res = padService.update(tmpPad);
                 if (res > 0) {
                     //发送锁屏消息
@@ -112,6 +110,7 @@ public class SetController {
                     padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
                 }
             }else if (StringUtils.isNotEmpty(audio)) {
+                logger.info("批量设置-音量 step2:audio=" + audio);
                 tmpPad.setpAudio(Integer.parseInt(audio));
                 res = padService.update(tmpPad);
                 if (res > 0) {
@@ -121,6 +120,7 @@ public class SetController {
                     padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
                 }
             }else if (StringUtils.isNotEmpty(start_time) && StringUtils.isNotEmpty(end_time) ) {
+                logger.info("批量设置-开关机时间 step2:start_time=" + start_time + ",end_time" + end_time);
                 Date sDate = DateUtil.changeToDate(start_time, "yyyy-MM-dd HH:mm:ss");
                 Date eDate = DateUtil.changeToDate(end_time, "yyyy-MM-dd HH:mm:ss");
                 Map<String, Long> dateMap = DateUtil.handleOpenClosePadTime(
@@ -164,7 +164,7 @@ public class SetController {
             return MsgJson.fail("参数包含空值。");
         }
         Notice notice = noticeService.queryMaxVideo();
-        logger.info("批量设置显示视频:idList=" + idList);
+        logger.info("批量设置-显示视频 step1:idList=" + idList);
 
         JSONArray idArry = JSONArray.fromObject(idList);
         Integer interval = 0;
@@ -176,6 +176,7 @@ public class SetController {
         if (idArry.size() >= Integer.parseInt(mqtt.getRegion()) ) {
             interval = IntervalType.getInterval(notice.getFileSize());
         }
+        logger.info("批量设置-显示视频 step2:module=" + module);
         if ("3".equals(module)) {
             MQSendThread mqThread = new MQSendThread(mqtt, padServerMQTT, padService, idArry, interval, loop);
             mqThread.start();
@@ -188,7 +189,7 @@ public class SetController {
                 Integer id = Integer.valueOf(idObj.getString("id"));
                 Pad tmpPad = new Pad();
                 tmpPad.setId(id);
-                tmpPad.setpModuleFront(module);
+                tmpPad.setpModule(module);
                 res = padService.update(tmpPad);
                 if (res > 0) {
                     //发送消息 通知pad 修改显示模块

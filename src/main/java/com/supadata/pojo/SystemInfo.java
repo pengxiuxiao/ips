@@ -153,4 +153,19 @@ public class SystemInfo {
         this.cardNotice = cardNotice;
     }
 
+    @Override
+    public String toString() {
+        return "SystemInfo{" +
+                "code='" + code + '\'' +
+                ", roomId='" + roomId + '\'' +
+                ", roomName='" + roomName + '\'' +
+                ", navigation='" + navigation + '\'' +
+                ", power='" + power + '\'' +
+                ", audio='" + audio + '\'' +
+                ", wakeTime=" + wakeTime +
+                ", sleepTime=" + sleepTime +
+                ", cardNotice=" + cardNotice +
+                ", event='" + event + '\'' +
+                '}';
+    }
 }

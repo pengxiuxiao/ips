@@ -99,7 +99,7 @@ public class AppController {
         String user_id = request.getParameter("user_id");
         String version = request.getParameter("version");
         String desc = request.getParameter("desc");
-        logger.info("upload:version=" + version + ",desc="+ desc);
+        logger.info("发布新版本:version=" + version + ",desc="+ desc);
         if (StringUtils.isEmpty(user_id)) {
             msgJson.setCode(1);
             msgJson.setMsg("user_id为空！");
@@ -179,14 +179,10 @@ public class AppController {
      */
     @RequestMapping("/down")
     public ResponseEntity<byte[]> downApp(HttpServletRequest request) throws Exception{
-//        String code = request.getParameter("code");
-//        if (StringUtils.isEmpty(code)) {
-//           return null;
-//        }
         String ip = "";
         try {
             ip = request.getHeader("X-Real-Ip");
-            logger.info("App Down, ip=" + ip);
+            logger.info("安装包下载, ip=" + ip);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -227,7 +223,7 @@ public class AppController {
         if (StringUtils.isEmpty(code)) {
            return null;
         }
-        logger.info("App check, code="+code);
+        logger.info("安装包查询最新版本, code="+code);
         App app = appService.queryNewest("1");
         app.setaUrl(config.getSERVICEURL() + "app/down");
         msg.setData(app);

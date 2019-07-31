@@ -73,7 +73,7 @@ public class NoticeController {
         String content = request.getParameter("content");
         String room_list = request.getParameter("room_list");
         String wordSize = request.getParameter("word_size");
-        logger.info("addWord:title=" + title + ",content=" + content + ",room_list=" + room_list);
+        logger.info("添加文字消息:title=" + title + ",content=" + content + ",room_list=" + room_list + ",wordSize=" + wordSize);
         if (StringUtils.isEmpty(user_id)) {
             msgJson.setCode(1);
             msgJson.setMsg("user_id为空！");
@@ -129,8 +129,7 @@ public class NoticeController {
         String title = request.getParameter("title");
         String content = request.getParameter("content");
         String wordSize = request.getParameter("word_size");
-        logger.info("editWord:title=" + title + ",content=" + content );
-//        String room_list = request.getParameter("room_list");
+        logger.info("编辑文字消息:notice_id=" + notice_id + ",title=" + title  + ",content=" + content  + ",wordSize=" + wordSize );
         if (StringUtils.isEmpty(user_id)) {
             msgJson.setCode(1);
             msgJson.setMsg("user_id为空！");
@@ -178,7 +177,7 @@ public class NoticeController {
         MsgJson msgJson = new MsgJson(0,"删除成功！");
         String user_id = request.getParameter("user_id");
         String notice_id = request.getParameter("notice_id");
-        logger.info("delete:notice_id=" + notice_id );
+        logger.info("删除消息:notice_id=" + notice_id );
         if (StringUtils.isEmpty(user_id)) {
             msgJson.setCode(1);
             msgJson.setMsg("user_id为空！");
@@ -216,6 +215,7 @@ public class NoticeController {
         if (StringUtils.isEmpty(user_id) || StringUtil.isEmpty(idList) || "[]".equals(idList)) {
             return MsgJson.fail("参数包含空值！");
         }
+        logger.info("批量删除消息:idArry=" + idList );
         JSONArray idArry = JSONArray.fromObject(idList);
         int res = 0;
         for (Object idData : idArry) {
@@ -310,7 +310,7 @@ public class NoticeController {
             msgJson.setMsg("file为空！");
             return msgJson;
         }
-        logger.info("editWord:title=" + title + ",room_list=" + room_list );
+        logger.info("文件消息上传:title=" + title + ",room_list=" + room_list );
         String fileName = file.getOriginalFilename();//文件名
         String suffix =  fileName.substring(fileName.lastIndexOf("."));//文件后缀名
 
@@ -431,102 +431,6 @@ public class NoticeController {
             msgJson.setMsg("file为空！");
             return msgJson;
         }
-//
-//
-//
-//        String fileName = file.getOriginalFilename();//文件名
-//        String suffix =  fileName.substring(fileName.lastIndexOf("."));//文件后缀名
-//
-//        fileName = StringUtil.getRandom() + suffix;
-//        String loacalPath = "";
-//        if (System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") == 0) {//windows环境
-//            loacalPath = FileUtil.getProperValue("WINPATH");
-//        } else {
-//            loacalPath = FileUtil.getProperValue("LINUXDOCPATH");
-//        }
-//        String filePath =  FileType.getKey(suffix) + File.separator;
-//        File targetFile = new File(loacalPath + filePath, fileName);
-//        if (!targetFile.exists()) {
-//            targetFile.mkdirs();
-//        }
-//        // 保存
-//        try {
-//            file.transferTo(targetFile);
-//            if (System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") != 0) {
-//                Runtime.getRuntime().exec("chmod -R 777 " + loacalPath + filePath);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            msgJson.setCode(2);
-//            msgJson.setMsg("文件上传失败！");
-//            return msgJson;
-//        }
-//
-//        String room_id = "";
-//        String room_name= "";
-//        JSONArray roomArry = JSONArray.fromObject(room_list);
-//        for(int i = 0; i < roomArry.size(); i++){
-//            JSONObject jsonRoom = roomArry.getJSONObject(i);
-//            String id = jsonRoom.getString("id");
-//            String name = jsonRoom.getString("name");
-//            if (i == 0){
-//                room_id = room_id + id;
-//                room_name = room_name + name;
-//            }else{
-//                room_id = room_id + "," + id;
-//                room_name = room_name + "," + name;
-//            }
-//        }
-//        Notice notice = new Notice();
-//        notice.setPublishRoom(room_name);
-//        notice.setPublishRoomId(room_id);
-//        notice.setnType(NoticeType.getNoticeIndex(FileType.getKey(suffix))+"");
-//        if (StringUtils.isNotEmpty(title)) {
-//            notice.setnTitle(title);
-//        }
-//        notice.setnUser(user_id);
-//        notice.setnStatus("2");
-//        notice.setnUrl(FileUtil.getProperValue("SERVICEURL") + "ips/notice/fileDownLoad?name=" + fileName);
-//        notice.setUpdateTime(DateUtil.getCurDate());
-//        int res = 0;
-//
-//        //如果是ppt，需要转成图片，并存储
-//        Map<String,Object> map = null;
-//        if (".pptx".equals(suffix) || ".PPTX".equals(suffix)){
-//            map = ConverPPTFileToImageUtil.converPPTXtoImage(loacalPath + filePath + fileName,
-//                    loacalPath + filePath,
-//                    "jpg");
-//        }else if (".ppt".equals(suffix) || ".PPT".equals(suffix) ){
-//            map = ConverPPTFileToImageUtil.converPPTtoImage(loacalPath + filePath + fileName,
-//                    loacalPath + filePath,
-//                    "jpg");
-//        }
-//        //将ppt转换的图片信息插入数据库
-//        if (map != null && (Boolean) map.get("converReturnResult")){
-//            List<String> imgNames=(List<String>) map.get("imgNames");
-//            for (String imgName : imgNames) {
-//                System.out.println(imgName);
-//                notice.setFilePath(loacalPath + filePath + imgName);
-//                notice.setnUrl(FileUtil.getProperValue("SERVICEURL") + "ips/notice/fileDownLoad?name=" + imgName);
-//                res = noticeService.addNotice(notice);
-//            }
-//        }
-//        //将非ppt文件信息插入数据库
-//        else {
-//            notice.setFilePath(loacalPath + filePath + fileName);
-//            res = noticeService.addNotice(notice);
-//        }
-//        if (res != 1) {
-//            msgJson.setCode(2);
-//            msgJson.setMsg("插入数据失败！");
-//            return msgJson;
-//        }
-//        //更新轮询表
-//        Check check = new Check();
-//        check.setChModule(notice.getnType());
-//        check.setChUrl(FileUtil.getProperValue("SERVICEURL") + "ips/pad/notice");
-//        check.setUpdateTime(DateUtil.getCurDate());
-//        res = checkService.add(check);
         return msgJson;
     }
 
@@ -539,16 +443,13 @@ public class NoticeController {
      */
     @RequestMapping("/fileDownLoad")
     public ResponseEntity<byte[]> fileDownLoad(HttpServletRequest request) throws Exception{
-        long time1=System.currentTimeMillis();
-        System.out.println("开始" + time1);
-
         String ip = request.getHeader("X-Real-Ip");
 
         String fileName = request.getParameter("name");
 
         String type = request.getParameter("type");
 
-        logger.info("time1=" + DateUtil.getCurrentDateTime() + ",ip=" + ip + ",fileName=" + fileName);
+        logger.info("文件消息下载=" + DateUtil.getCurrentDateTime() + ",ip=" + ip + ",fileName=" + fileName);
 
         String suffix =  fileName.substring(fileName.lastIndexOf("."));//文件后缀名
         // 本地文件路径

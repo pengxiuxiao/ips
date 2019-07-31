@@ -71,7 +71,7 @@ public class MQSendThread extends Thread {
                     Integer id = oPad.getInt("id");
                     Pad tmpPad = new Pad();
                     tmpPad.setId(id);
-                    tmpPad.setpModuleFront("3");
+                    tmpPad.setpModule("3");
                     int res = padService.update(tmpPad);
                     padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + clientId, map);
                 }

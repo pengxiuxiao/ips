@@ -314,13 +314,16 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             dataType:'json',
             success:function (res) {
                 if(res.code == 0){//0
-                    $(".layui-laypage-btn").click();
                     layer.closeAll();
-                    layer.open({
-                        title: '消息'
-                        ,content: res.msg
-                    });
-                    // layer.msg(res.msg);
+                    $(".layui-laypage-btn").click();
+                    if (indata.field.modules == "3") {
+                        layer.open({
+                            title: '消息'
+                            , content: res.msg
+                        });
+                    } else {
+                        layer.msg(res.msg);
+                    }
                 }else {
                     layer.msg('操作失败');
                 }

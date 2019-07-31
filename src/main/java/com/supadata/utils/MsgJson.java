@@ -76,4 +76,10 @@ public class MsgJson {
 		this.count = count;
 	}
 
+	public MsgJson(Integer code, String msg, Object data, Long count) {
+		this.code = code;
+		this.msg = msg;
+		this.data = data;
+		this.count = count;
+	}
 }

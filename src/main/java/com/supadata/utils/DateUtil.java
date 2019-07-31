@@ -459,7 +459,7 @@ public class DateUtil {
         long min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
         min = hour * 60 + min;
 
-        long diff1 = endTime - startTime;
+        long diff1 = startTime - endTime;
         long day1 = diff1 / (24 * 60 * 60 * 1000);
         long hour1 = (diff1 / (60 * 60 * 1000) - day1 * 24);
         long min1 = ((diff1 / (60 * 1000)) - day1 * 24 * 60 - hour1 * 60);

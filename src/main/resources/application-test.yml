@@ -40,8 +40,8 @@ spring:
       proxy-target-class: true
     servlet:
           multipart:
-            max-file-size: 10Mb
-            max-request-size: 100Mb
+            max-file-size: 500Mb
+            max-request-size: 500Mb
 
     devtools:
         restart:

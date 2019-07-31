@@ -1,6 +1,6 @@
 // var global = 'http://10.69.3.200:8080/ips';
-var global = 'http://pengxiuxiao.55555.io';
-// var global = 'http://pad.supadata.cn/ips';
+// var global = 'http://pengxiuxiao.55555.io';
+var global = 'http://pad.supadata.cn/ips';
 // var global = 'http://localhost:8080';
 
 
@@ -10,7 +10,7 @@ var addWord=global + '/notice/addWord';
 var editWord=global + '/notice/editWord';
 //添加文件消息
 var upload=global + '/notice/upload';
-//添加文件消息
+//添加文件消息closePad
 var eUpload=global + '/notice/eUpload';
 //编辑文件消息
 var editWord=global + '/notice/editWord';
@@ -45,8 +45,8 @@ var roomList=global + '/room/list';
 
 //pad设置
 var setting=global + '/set/set';
-//锁屏
-var closePad=global + '/pad/closePad';
+//置为黑屏
+var blackPad=global + '/pad/blackPad';
 //监控
 var monitorPad=global + '/pad/monitor';
 

@@ -32,7 +32,7 @@ import java.util.Map;
 @RequestMapping("/card")
 public class CardController {
 
-    private static Logger logger = Logger.getLogger(CourseController.class);
+    private static Logger logger = Logger.getLogger(CardController.class);
 
     @Autowired
     public IStudentCardService studentCardService;
@@ -131,6 +131,7 @@ public class CardController {
             return MsgJson.fail("参数包含空值！");
         }
         JSONArray idArry = JSONArray.fromObject(idList);
+        logger.info("批量删除卡片：idList=" + idList);
         int res = 0;
         for (Object idData : idArry) {
             JSONObject idObj = JSONObject.fromObject(idData);
@@ -139,7 +140,6 @@ public class CardController {
             res = studentCardService.deleteByPrimaryKey(id);
         }
         if (res > 0) {
-            logger.info("批量删除卡片：idList=" + idArry);
             return MsgJson.success("批量删除成功!");
         }
         return MsgJson.fail("批量删除失败!");

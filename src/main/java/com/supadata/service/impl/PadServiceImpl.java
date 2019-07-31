@@ -90,4 +90,9 @@ public class PadServiceImpl implements IPadService {
     public List<Pad> queryByRoomId(Integer roomId) {
         return padMapper.selectByRoomId(roomId);
     }
+
+    @Override
+    public int deleteByRoomId(Integer room_id) {
+        return padMapper.deleteByRoomId(room_id);
+    }
 }

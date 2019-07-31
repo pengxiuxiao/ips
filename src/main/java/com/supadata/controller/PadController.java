@@ -13,6 +13,7 @@ import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.SessionMapUtil;
 import com.supadata.utils.enums.EventType;
+import com.supadata.utils.enums.ModuleType;
 import com.supadata.utils.mqtt.PadServerMQTT;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -53,9 +54,6 @@ public class PadController {
     public IRoomService roomService;
 
     @Autowired
-    public ISettingService settingService;
-
-    @Autowired
     public INoticeService noticeService;
 
     @Autowired
@@ -85,24 +83,25 @@ public class PadController {
     private PadServerMQTT padServerMQTT;
 
     /**
-     * 功能描述:
+     * 功能描述:App登录接口
      *
      * @auther: pxx
-     * @param:
+     * @param: code clientId
      * @return:
      * @date: 2018/6/11 9:09
      */
     @RequestMapping("/login")
     public @ResponseBody
-    MsgJson login(String code, String clientId) {
-        logger.info("App登录:code=" + code + ",clientId = " + clientId);
+    MsgJson applogin(String code, String clientId) {
+        logger.info("App登录step1:code=" + code + ",clientId = " + clientId);
         if (StringUtils.isEmpty(code)) {
-            return new MsgJson(1, "code为空！");
+            return MsgJson.fail("code为空！");
         }
         if (StringUtils.isEmpty(clientId)) {
-            return new MsgJson(1, "clientId为空！");
+            return MsgJson.fail("clientId为空！");
         }
         Room room = roomService.queryRoomByIp(code);
+        logger.info("App登录step2:code=" + code + ",查询到教室roomName = " + room.getrName());
         //通过code查找pad数据，有则返回，无则添加
         Pad pad = padService.queryByCode(code);
         if (pad == null) {
@@ -115,14 +114,19 @@ public class PadController {
             pad.setRoomId(room.getId());
             pad.setRoomName(room.getrName());
             pad.setClientId(clientId);
+            pad.setStartTime("2019-07-02 00:00:00");
+            pad.setEndTime("2019-07-02 00:00:00");
+            pad.setpModule("1");
+            pad.setpAudio(0);
             int res = padService.add(pad);
+            logger.info("App登录step3:code=" + code + ",注册新的设备PadId = " + pad.getId());
         }
+        logger.info("App登录step3:code=" + code + ",查询到设备PadId = " + pad.getId());
         if (StringUtils.isEmpty(pad.getClientId()) || !clientId.equals(pad.getClientId())) {
             pad.setClientId(clientId);
             int res = padService.update(pad);
         }
         lruCache.put(code, pad.getRoomId());
-        System.out.println(lruCache);
 
         //查询后台该pad的设置信息 返回其要执行的事件
         Map<String, Long> map = DateUtil.handleOpenClosePadTime(DateUtil.dateToLong(DateUtil.changeToDate(pad.getStartTime(), "yyyy-MM-dd HH:mm:ss")),
@@ -130,27 +134,27 @@ public class PadController {
         SystemInfo si = new SystemInfo(System.currentTimeMillis(), pad.getCode(),
                 pad.getRoomId().toString(), pad.getRoomName(),
                 //显示模块
-                EventType.getName(room.getrModule()),
-                //锁屏
-                "关闭".equals(pad.getpState()) ? "close" : "open",
-                //黑屏 0:黑， 1：不黑
+                EventType.getName(pad.getpModule()),
+                //锁屏 navigation
+                "0".equals(pad.getpState()) ? "open" : "close",
+                //黑屏 0:黑， 1：不黑 power
                 "0".equals(pad.getIsBlack()) ? "close" : "open",
                 //音量
-                (pad.getpAudio() * 10) + "",
+                (pad.getpAudio()) + "",
                 //开机时间
                 map.get("open"),
                 //关机shijain
                 map.get("close"),
                 //是否显示打卡提示
-                "显示".equals(pad.getpClickCard()) ? true : false
+                "0".equals(pad.getpClickCard()) ? true : false
         );
-
-        return new MsgJson(0, "登录成功！", si);
+        logger.info("App登录step4:code=" + code + ",登录成功，info = " + si.toString());
+        return MsgJson.success(si,"登录成功！");
     }
 
 
     /**
-     * 功能描述:
+     * 功能描述:后台登陆接口
      *
      * @auther: pxx
      * @param: [name, pwd]
@@ -160,104 +164,67 @@ public class PadController {
     @RequestMapping("/pclogin")
     public @ResponseBody
     MsgJson pcLogin(String name, String pwd) {
-        MsgJson msgJson = new MsgJson(0, "登录成功！");
         logger.info("PC登录:name=" + name + ",pwd=" + pwd);
         if (StringUtils.isEmpty(name)) {
-            msgJson.setCode(1);
-            msgJson.setMsg("用户名为空！");
-            return msgJson;
+            return MsgJson.fail("name为空！");
         }
         if (StringUtils.isEmpty(pwd)) {
-            msgJson.setCode(1);
-            msgJson.setMsg("密码为空！");
-            return msgJson;
+            return MsgJson.fail("密码为空！");
         }
         if (!"admin".equals(name) || !"admin".equals(pwd)) {
-            msgJson.setCode(1);
-            msgJson.setMsg("用户密码错误！");
-            return msgJson;
+            return MsgJson.fail("用户密码错误！");
         }
         Map<String, Integer> map = new HashMap<>();
         map.put("user_id", 1007);
-        msgJson.setData(map);
-        return msgJson;
+        return MsgJson.success(map,"操作成功！");
     }
 
     /**
-     * 功能描述:查询设置接口
-     *
+     * 功能描述:置为黑屏接口
      * @auther: pxx
      * @param:
      * @return:
-     * @date: 2018/6/12 19:24
+     * @date: 2019/7/31 10:58
      */
-    @RequestMapping("/setting")
+    @RequestMapping("/blackPad")
     public @ResponseBody
-    MsgJson setting(String code) {
-        MsgJson msg = new MsgJson(0, "查询成功！");
-        logger.info("setting:code=" + code);
-        if (StringUtils.isEmpty(code)) {
-            msg.setCode(1);
-            msg.setMsg("code为空！");
-            return msg;
-        }
-        Setting setting = settingService.querySetting();
-        msg.setData(setting);
-        return msg;
-    }
-
-    /**
-     * 置为黑屏接口
-     * @param id
-     * @return
-     */
-    @RequestMapping("/closePad")
-    public @ResponseBody
-    MsgJson closePad(String id) {
-        MsgJson msg = new MsgJson(0, "查询成功！");
-        logger.info("closePad:id=" + id);
+    MsgJson blackScreenPad(String id) {
+        logger.info("黑屏操作:padId=" + id);
         if (StringUtils.isEmpty(id)) {
-            msg.setCode(1);
-            msg.setMsg("code为空！");
-            return msg;
+            return MsgJson.fail("code为空！");
         }
+
         Pad pad = padService.queryById(Integer.parseInt(id));
         if (pad == null) {
-            msg.setCode(1);
-            msg.setMsg("请求失败！");
-            return msg;
+            return MsgJson.fail("code有误！");
         }
-        String state = "close";
-        if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("1")) {//未黑屏
-            pad.setIsBlack("0");
-        } else {//已黑屏
-            pad.setIsBlack("1");
-            state = "open";
-        }
+
+        pad.setIsBlack(pad.getIsBlack().equals("1") ? "0" : "1");
         int res = padService.update(pad);
         if (res > 0) {
             //发送黑屏切换消息
             Map<String, Object> map = new LinkedHashMap<>();
             map.put("event", "power");
-            map.put("state", state);
+            map.put("state", pad.getIsBlack().equals("1") ? "open" : "close");
             padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
         }
-
-        return msg;
+        return MsgJson.success("操作成功！");
     }
 
     /**
-     * 批量置为黑屏接口
-     * @param idList
-     * @return
+     * 功能描述: 批量置为黑屏接口
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/7/31 11:12
      */
-    @RequestMapping("/bclosePad")
+    @RequestMapping("/bchblackPad")
     public @ResponseBody
-    MsgJson batchclosePad(String idList, String user_id) {
+    MsgJson batchBlackScreenPad(String idList, String user_id) {
         if (StringUtils.isEmpty(user_id) || StringUtil.isEmpty(idList) || "[]".equals(idList)) {
             return MsgJson.fail("参数包含空值！");
         }
-        logger.info("batchclosePad:idList=" + idList);
+        logger.info("批量黑屏:idList=" + idList);
         JSONArray idArry = JSONArray.fromObject(idList);
         int res = 0;
         for (Object idData : idArry) {
@@ -268,51 +235,18 @@ public class PadController {
             if (pad == null) {
                 return MsgJson.fail("请求失败.");
             }
-            String state = "close";
-            if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("1")) {//未黑屏
-                pad.setIsBlack("0");
-            } else {//已黑屏
-                pad.setIsBlack("1");
-                state = "open";
-            }
+
+            pad.setIsBlack(pad.getIsBlack().equals("1") ? "0" : "1");
             res = padService.update(pad);
             if (res > 0) {
                 //发送黑屏切换消息
                 Map<String, Object> map = new LinkedHashMap<>();
                 map.put("event", "power");
-                map.put("state", state);
+                map.put("state", pad.getIsBlack().equals("1") ? "close" : "open");
                 padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
             }
         }
         return MsgJson.success("请求成功.");
-    }
-
-    /**
-     * 功能描述:查看是否锁屏
-     *
-     * @auther: pxx
-     * @param:
-     * @return:
-     * @date: 2018/6/12 19:24
-     */
-    @RequestMapping("/checkPad")
-    public @ResponseBody
-    MsgJson checkPad(String code) {
-        MsgJson msg = new MsgJson(0, "查询成功！");
-        logger.info("closePad:id=" + code);
-        if (StringUtils.isEmpty(code)) {
-            msg.setCode(1);
-            msg.setMsg("code为空！");
-            return msg;
-        }
-        Pad pad = padService.queryByCode(code);
-        if (pad == null) {
-            msg.setCode(1);
-            msg.setMsg("请求失败！");
-            return msg;
-        }
-        msg.setData(pad);
-        return msg;
     }
 
     /**
@@ -325,53 +259,24 @@ public class PadController {
      */
     @RequestMapping("/notice")
     public @ResponseBody
-    MsgJson notice(String code, String type) {
-        MsgJson msg = new MsgJson(0, "查询消息成功！");
-        logger.info("notice:code=" + code);
+    MsgJson getNotice(String code, String type) {
+//        logger.info("获取发布信息:code=" + code + ",type=" + type);
         if (StringUtils.isEmpty(code)) {
-            return new MsgJson(1,"code为空！");
+            return MsgJson.fail("code为空！");
         }
         if (StringUtils.isEmpty(type)) {
-            return new MsgJson(1,"type为空！");
+            return MsgJson.fail("type为空！");
         }
-
         if (!getPadIdByCode(code)) {
-            return new MsgJson(1,"code错误!");
+            return MsgJson.fail("code有误！");
         }
         if ("5".equals(type)) {
             Course cources = courseService.queryCourseByRoomId(lruCache.get(code));
-            msg.setData(cources);
+            return MsgJson.success(cources,"操作成功！");
         } else {
             List<Notice> notices = noticeService.queryPushNoticeByRoomId("2", type, lruCache.get(code));
-            msg.setData(notices);
+            return MsgJson.success(notices,"操作成功！");
         }
-        return msg;
-    }
-
-    /**
-     * 功能描述: 获取后台发布的课程，取课程结束时间在当前时间之前的课程
-     *
-     * @auther: pxx
-     * @param:
-     * @return:
-     * @date: 2018/6/13 15:33
-     */
-    @RequestMapping("/course")
-    public @ResponseBody
-    MsgJson course(String code) {
-        MsgJson msg = new MsgJson(0, "查询成功！");
-        logger.info("course:code=" + code);
-        if (StringUtils.isEmpty(code)) {
-            msg.setCode(1);
-            msg.setMsg("code为空！");
-            return msg;
-        }
-        if (!getPadIdByCode(code)) {
-            return new MsgJson(1,"code错误!");
-        }
-        Course cources = courseService.queryCourseByRoomId(lruCache.get(code));
-        msg.setData(cources);
-        return msg;
     }
 
 
@@ -385,41 +290,30 @@ public class PadController {
      */
     @RequestMapping("/click")
     public @ResponseBody
-    MsgJson click(String code, String card_number, Integer room_id) {
-        MsgJson msg = new MsgJson(0, "查询成功！");
-        logger.info("click:code=" + code + ",card_number=" + card_number + ",room_id" + room_id);
+    MsgJson clickCard(String code, String card_number, Integer room_id) {
+        logger.info("打卡查座次:code=" + code + ",card_number=" + card_number + ",room_id" + room_id);
         if (StringUtils.isEmpty(code)) {
-            msg.setCode(1);
-            msg.setMsg("code为空！");
-            return msg;
+            return MsgJson.fail("code为空！");
         }
         if (StringUtils.isEmpty(card_number)) {
-            msg.setCode(1);
-            msg.setMsg("card_number为空！");
-            return msg;
+            return MsgJson.fail("card_number为空！");
         }
         if (room_id == null) {
-            msg.setCode(1);
-            msg.setMsg("room_id为空！");
-            return msg;
+            return MsgJson.fail("room_id为空！");
         }
         //通过考勤卡找到人或者要上的课程，取最近的或者正在上的课程，只取一条,先查当前教室有无课程，有则取当前教室，无则查询其他教室
         //先根据卡号查当前教室的课程
         Course course = courseService.queryStudentComingCourse(card_number, room_id, DateUtil.getCurrentDateTime());
         //根据课程id查询座次表信息
         if (course == null) {
-            msg.setCode(1);
-            msg.setMsg("暂未查到您的培训课！");
-            return msg;
+            return MsgJson.fail("暂未查到您的培训课！");
         }
         Seat seat = seatService.queryByCNoAndRoomId(card_number, course.getId(), course.getcRoomId());
         if (seat == null) {
-            msg.setCode(1);
-            msg.setMsg("暂未查到您的培训课！");
+            return MsgJson.fail("暂未查到您的培训课！");
         }
         seat.setcTitle(course.getcName());
-        msg.setData(seat);
-        return msg;
+        return MsgJson.success(seat,"操作成功！");
     }
 
 
@@ -434,21 +328,16 @@ public class PadController {
     @RequestMapping("/list")
     public @ResponseBody
     MsgJson listPad(String user_id, String key, String page, String limit, String status) {
-        MsgJson msg = new MsgJson(0, "查询成功！");
+//        logger.info("获取pad列表:user_id=" + user_id + ",key=" + key);
         if (StringUtils.isEmpty(user_id)) {
-            msg.setCode(1);
-            msg.setMsg("usre_id为空！");
-            return msg;
+            return MsgJson.fail("usre_id为空！");
         }
         if (page == null) {
-            msg.setCode(1);
-            msg.setMsg("page为空！");
-            return msg;
+            return MsgJson.fail("page为空！");
+
         }
         if (limit == null) {
-            msg.setCode(1);
-            msg.setMsg("limit为空！");
-            return msg;
+            return MsgJson.fail("limit为空！");
         }
         if (StringUtils.isEmpty(key)) {
             key = "";
@@ -460,7 +349,7 @@ public class PadController {
         /**status不传时 判断在线状态*/
         if (StringUtils.isEmpty(status)) {
             for (Pad pad : pads) {
-                SessionMapUtil.SESSION_MAP.put(pad.getCode(),"离线");
+                SessionMapUtil.SESSION_MAP.put(pad.getCode(), "离线");
 
                 //发送消息 询问是否在线
                 Map<String, Object> map = new LinkedHashMap<>();
@@ -472,7 +361,7 @@ public class PadController {
             try {
                 Thread.sleep(1500);
                 for (Pad pad : pads) {
-                    pad.setpStatus( SessionMapUtil.SESSION_MAP.get(pad.getCode()));
+                    pad.setpStatus(SessionMapUtil.SESSION_MAP.get(pad.getCode()));
                     pad.setUpdateTime(DateUtil.getCurDate());
                     if (StringUtils.isEmpty(pad.getIsBlack()) || pad.getIsBlack().equals("0")) {
                         pad.setIsBlack("已黑屏");
@@ -485,12 +374,24 @@ public class PadController {
                 e.printStackTrace();
             }
 
-        }
+        } else {
+            for (Pad pad : pads) {
+                pad.setpModule(ModuleType.getName(pad.getpModule()));
+                if ("0".equals(pad.getpState())) {
+                    pad.setpState("打开");
+                } else {
+                    pad.setpState("关闭");
+                }
+                if ("0".equals(pad.getpClickCard())) {
+                    pad.setpClickCard("显示");
+                } else {
+                    pad.setpClickCard("关闭");
+                }
 
+            }
+        }
         PageInfo<Pad> pageInfo = new PageInfo<>(pads);
-        msg.setData(pads);
-        msg.setCount(pageInfo.getTotal());
-        return msg;
+        return new MsgJson(0,"操作成功！",pads,pageInfo.getTotal());
     }
 
     /**
@@ -504,6 +405,7 @@ public class PadController {
     public @ResponseBody
     MsgJson monitorPad(String user_id, String code) {
 
+        logger.info("获取监控画面请求:code=" + code);
         if (StringUtils.isEmpty(user_id)) {
             return MsgJson.fail("usre_id为空！");
         }
@@ -554,18 +456,16 @@ public class PadController {
     public @ResponseBody
     MsgJson monitorImg(@RequestParam(value = "file", required = false) MultipartFile file,
                        HttpServletRequest request) {
-        MsgJson msgJson = new MsgJson(0,"文件上传成功！");
         String code = request.getParameter("code");
+        logger.info("上传监控图片:code=" + code);
         if (StringUtils.isEmpty(code)) {
-            msgJson.setCode(1);
-            msgJson.setMsg("code为空！");
-            return msgJson;
+            return MsgJson.fail("code为空！");
         }
         String fileName = file.getOriginalFilename();//文件名
         String suffix =  fileName.substring(fileName.lastIndexOf("."));//文件后缀名
 
         fileName = code + suffix;
-        logger.info("mimg:code=" + code + ",fileName=" + fileName);
+        logger.info("上传监控图片:code=" + code + ",fileName=" + fileName);
         String loacalPath = "";
         if (System.getProperties().getProperty("os.name").toUpperCase().indexOf("WINDOWS") == 0) {//windows环境
 //            loacalPath = FileUtil.getProperValue("WINPATH");
@@ -600,9 +500,7 @@ public class PadController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            msgJson.setCode(2);
-            msgJson.setMsg("文件上传失败！");
-            return msgJson;
+            return MsgJson.fail("文件上传失败！");
         }
         if (!getPadIdByCode(code)) {
             return new MsgJson(1,"code错误!");
@@ -614,9 +512,7 @@ public class PadController {
             lrudataCache.put("mimg-" + code, mImg);
             logger.info("mimg-" + code + ",mImgId=" + mImg.getId());
         }
-
-        msgJson.setData(mImg);
-        return msgJson;
+        return MsgJson.success(mImg,"文件上传成功！");
 
     }
 

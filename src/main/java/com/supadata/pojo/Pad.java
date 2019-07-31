@@ -138,26 +138,7 @@ public class Pad {
     }
 
     public void setpModule(String pModule) {
-        switch (pModule) {
-            case "1":
-                this.pModule = "文字";
-                return;
-            case "2":
-                this.pModule = "图片";
-                return;
-            case "3":
-                this.pModule = "视频";
-                return;
-            case "4":
-                this.pModule = "PPT";
-                return;
-            case "5":
-                this.pModule = "课程";
-                return;
-        }
-    }
-    public void setpModuleFront(String pModule) {
-        this.pModule =pModule;
+        this.pModule = pModule;
     }
 
     public String getpClickCard() {

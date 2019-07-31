@@ -163,8 +163,8 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             dataType:'json',
             success:function (res) {
                 if(res.code == 0){//
-                    layer.msg('推送成功');
                     $(".layui-laypage-btn").click();
+                    layer.msg('推送成功');
                 }else {
                     layer.msg('操作失败！');
                 }

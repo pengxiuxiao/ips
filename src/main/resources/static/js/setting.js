@@ -25,15 +25,15 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             ,limit: 90
             ,cols: [[
                 {type:'checkbox', fixed: 'left'}
-                ,{field:'id', title: 'id', width: 80}
-                ,{field:'code', title: 'code标识'}
-                ,{field:'roomName', title: '所属教室'}
+                ,{field:'id', title: 'id', width: 80, sort: true}
+                ,{field:'code', title: 'code标识', sort: true}
+                ,{field:'roomName', title: '所属教室', sort: true}
                 ,{field:'startTime', title: '开机时间'}
                 ,{field:'endTime', title: '关机时间'}
-                ,{field:'pClickCard', title: '刷卡提示'}
-                ,{field:'pState', title: '是否锁屏'}
-                ,{field:'pAudio', title: '音量大小'}
-                ,{field:'pModule', title: '显示模块'}
+                ,{field:'pClickCard', title: '刷卡提示', sort: true}
+                ,{field:'pState', title: '是否锁屏', sort: true}
+                ,{field:'pAudio', title: '音量大小', sort: true}
+                ,{field:'pModule', title: '显示模块', sort: true}
                 // ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 180}
             ]]
         ,page: true

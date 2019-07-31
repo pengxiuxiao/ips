@@ -22,11 +22,11 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             ,limit: 90
             ,cols: [[
-                {field:'id', title: 'id', width: 80}
-                ,{field:'aVersion', title: '版本号', width: 150}
+                {field:'id', title: 'id', width: 80, sort: true}
+                ,{field:'aVersion', title: '版本号', width: 150, sort: true}
                 // ,{field:'aType', title: '版本类型', width: 150}
                 ,{field:'aDesc', title: '版本描述'}
-                ,{field:'updateTime', title: '更新时间', templet: '#createTime', width: 180}
+                ,{field:'updateTime', title: '更新时间', templet: '#createTime', width: 180, sort: true}
                 ,{field:'aUrl', title: '下载链接'}
                 // ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 150}
             ]]

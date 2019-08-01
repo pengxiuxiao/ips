@@ -6,7 +6,6 @@ import com.github.pagehelper.util.StringUtil;
 import com.supadata.pojo.Room;
 import com.supadata.service.IPadService;
 import com.supadata.service.IRoomService;
-import com.supadata.service.IRoomsettingService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
 import net.sf.json.JSONArray;

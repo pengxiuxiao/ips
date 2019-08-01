@@ -7,7 +7,6 @@ import com.supadata.pojo.Notice;
 import com.supadata.pojo.Pad;
 import com.supadata.service.INoticeService;
 import com.supadata.service.IPadService;
-import com.supadata.service.IRoomsettingService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.enums.EventType;

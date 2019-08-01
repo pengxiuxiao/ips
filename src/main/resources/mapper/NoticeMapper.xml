@@ -22,10 +22,6 @@
     id, n_title, n_content, n_type, n_status, publish_room, publish_room_id, n_time, n_user, n_url, file_path, n_word_size,
     file_size, update_time, n_remark
   </sql>
-  <sql id="Join_Column_List" >
-    n.id, n.n_title, n.n_content, n.n_type, n.n_status, n.publish_room, n.publish_room_id, n.n_time, n.n_user, n.n_url, n.file_path,
-    n.n_word_size, n.file_size, n.update_time, n.n_remark
-  </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -45,12 +41,12 @@
   </select>
   <select id="selectByRoomIdStatusAndType" resultMap="BaseResultMap">
     select
-    <include refid="Join_Column_List" />
-    from tb_notice n left join tb_room_notice rn on rn.notice_id = n.id
-    where rn.room_id = #{roomId}
-    and n.n_status = #{status}
-    and n.n_type  = #{type}
-    order by n.update_time desc
+    <include refid="Base_Column_List" />
+    from tb_notice
+    where publish_room_id = #{roomId}
+    and n_status = #{status}
+    and n_type  = #{type}
+    order by update_time desc
   </select>
   <select id="selectByTypeContainsKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select

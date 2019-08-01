@@ -5,9 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
 import com.supadata.constant.Config;
 import com.supadata.pojo.Notice;
-import com.supadata.pojo.RoomNotice;
 import com.supadata.service.INoticeService;
-import com.supadata.service.IRoomNoticeService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.enums.FileType;
@@ -50,9 +48,6 @@ public class NoticeController {
 
     @Autowired
     public INoticeService noticeService;
-
-    @Autowired
-    public IRoomNoticeService roomNoticeService;
 
     @Autowired
     private Config config;
@@ -108,8 +103,6 @@ public class NoticeController {
                 msgJson.setMsg("添加失败！");
                 return msgJson;
             }
-            RoomNotice rn = new RoomNotice(Integer.parseInt(id), notice.getId(),notice.getUpdateTime());
-            roomNoticeService.insertSelective(rn);
         }
         return msgJson;
     }
@@ -390,13 +383,11 @@ public class NoticeController {
                     notice.setFilePath(loacalPath + filePath + imgName);
                     notice.setnUrl(config.getSERVICEURL() + "notice/fileDownLoad?name=" + imgName);
                     noticeService.addNotice(notice);
-                    roomNoticeService.insertSelective(new RoomNotice(Integer.parseInt(id), notice.getId(),notice.getUpdateTime()));
                     notice.setId(null);
                 }
             }else {//将非ppt文件信息插入数据库
                 notice.setFilePath(loacalPath + filePath + fileName);
                 noticeService.addNotice(notice);
-                roomNoticeService.insertSelective(new RoomNotice(Integer.parseInt(id), notice.getId(),notice.getUpdateTime()));
             }
         }
         return msgJson;

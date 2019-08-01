@@ -220,7 +220,7 @@ public class CourseServiceImpl implements ICourseService {
         String titleL[] = new String[lastRowNum];
         String rowGdIndex = "";
         String columGdIndex = "";
-        int emptyRow = 0;//统计空的行头，遍历时要减掉
+        int emptyRow = 0;//统计空的行头，遍历时要减掉sheet2.get
         int emptyColum = 0;//统计空的列头，遍历时要减掉
         for (int i = firstRow.getFirstCellNum(); i < firstRow.getLastCellNum(); i++) {//行
             Cell cell = firstRow.getCell(i);
@@ -261,9 +261,9 @@ public class CourseServiceImpl implements ICourseService {
         lastCellNum = titleR.length - 1;//列
         shaeetMap.put("rGdIndex",rowGdIndex);//过道的列坐标
         shaeetMap.put("cGdIndex",columGdIndex);//过道的行坐标
-        shaeetMap.put("rank", lastRowNum-1 + "*" + (titleR.length - 1 - emptyRow));
-        shaeetMap.put("rRankLine", (titleR.length - 1 - emptyRow));
-        shaeetMap.put("rRankColum", lastRowNum-1);
+        shaeetMap.put("rank", lastRowNum-1 + "*" + (titleR.length - emptyRow));
+        shaeetMap.put("rRankColum", lastRowNum-1);//行
+        shaeetMap.put("rRankLine", (titleR.length - emptyRow));//列
         // 遍历数据转为list
         int guodaoC = 0;
         int guodaoL = 0;
@@ -297,8 +297,8 @@ public class CourseServiceImpl implements ICourseService {
                 seat.setrRank((String) shaeetMap.get("rank"));
                 seat.setrRankColum((Integer) shaeetMap.get("rRankLine"));
                 seat.setrRankLine((Integer) shaeetMap.get("rRankColum"));
-                seat.setLineRoadIndex(columGdIndex);
-                seat.setColuRoadIndex(rowGdIndex);
+                seat.setLineRoadIndex(StringUtils.isEmpty(columGdIndex) ? "0" : columGdIndex);
+                seat.setColuRoadIndex(StringUtils.isEmpty(rowGdIndex) ? "0" : rowGdIndex);
                 seat.setCourseId(course.getId());
                 seat.setRoomId(course.getcRoomId());
                 seat.setRoomName(course.getcRoomName());

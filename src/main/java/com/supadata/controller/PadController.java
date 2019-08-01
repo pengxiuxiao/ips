@@ -116,6 +116,7 @@ public class PadController {
             pad.setClientId(clientId);
             pad.setStartTime("2019-07-02 00:00:00");
             pad.setEndTime("2019-07-02 00:00:00");
+            pad.setUpdateTime(new Date());
             pad.setpModule("1");
             pad.setpAudio(0);
             int res = padService.add(pad);
@@ -291,7 +292,7 @@ public class PadController {
     @RequestMapping("/click")
     public @ResponseBody
     MsgJson clickCard(String code, String card_number, Integer room_id) {
-        logger.info("打卡查座次:code=" + code + ",card_number=" + card_number + ",room_id" + room_id);
+        logger.info("打卡查座次:code=" + code + ",card_number=" + card_number + ",room_id=" + room_id);
         if (StringUtils.isEmpty(code)) {
             return MsgJson.fail("code为空！");
         }

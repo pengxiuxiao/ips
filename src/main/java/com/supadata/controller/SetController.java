@@ -167,15 +167,13 @@ public class SetController {
         int loop = idArry.size() / region;
         int remainder = (idArry.size() % region) > 0 ? 1: 0;
         loop = loop + remainder;
-
-        if (idArry.size() >= Integer.parseInt(mqtt.getRegion()) ) {
-            interval = IntervalType.getInterval(notice.getFileSize());
-        }
+        interval = IntervalType.getInterval(notice.getFileSize());
+        int seconds = interval/1000*(loop == 0 ? 1 : loop);
         logger.info("批量设置-显示视频 step2:module=" + module);
         if ("3".equals(module)) {
             MQSendThread mqThread = new MQSendThread(mqtt, padServerMQTT, padService, idArry, interval, loop);
             mqThread.start();
-            return MsgJson.success("视频下载约需要" + interval/1000*loop/60 + "分" + interval/1000*loop%60 + "秒，在此期间请勿切换显示模块！");
+            return MsgJson.success("视频下载约需要" + seconds/60 + "分" + seconds%60 + "秒，在此期间请勿切换显示模块！");
         } else {
             int res = 0;
             for (Object idData : idArry) {

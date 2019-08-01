@@ -37,10 +37,6 @@ public class SetController {
 
     private static Logger logger = Logger.getLogger(CourseController.class);
 
-
-    @Autowired
-    public IRoomsettingService roomsettingService;
-
     @Autowired
     private Mqtt mqtt;
 

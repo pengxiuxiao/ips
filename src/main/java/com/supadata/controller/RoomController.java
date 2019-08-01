@@ -37,9 +37,6 @@ public class RoomController {
     public IRoomService roomService;
 
     @Autowired
-    public IRoomsettingService roomsettingService;
-
-    @Autowired
     public IPadService padService;
 
 

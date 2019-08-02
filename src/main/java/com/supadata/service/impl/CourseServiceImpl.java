@@ -262,8 +262,8 @@ public class CourseServiceImpl implements ICourseService {
         shaeetMap.put("rGdIndex",rowGdIndex);//过道的列坐标
         shaeetMap.put("cGdIndex",columGdIndex);//过道的行坐标
         shaeetMap.put("rank", lastRowNum-1 + "*" + (titleR.length - emptyRow));
-        shaeetMap.put("rRankColum", lastRowNum-1);//行
-        shaeetMap.put("rRankLine", (titleR.length - emptyRow));//列
+        shaeetMap.put("rRankColum", lastRowNum-1);//列
+        shaeetMap.put("rRankLine", (titleR.length - emptyRow));//行
         // 遍历数据转为list
         int guodaoC = 0;
         int guodaoL = 0;

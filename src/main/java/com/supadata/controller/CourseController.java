@@ -259,14 +259,12 @@ public class CourseController {
                 msg.setMsg("删除失败！");
                 return msg;
             }else {
-                List<Pad> pads = padService.queryByRoomId(oldCourse.getcRoomId());
-                for (Pad pad : pads) {
-                    //发送消息 通知对应的pad 修改课程字体
-                    Map<String, Object> map = new LinkedHashMap<>();
-                    map.put("event", "textSize");
-                    map.put("size", course.getcWordSize());
-                    padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
-                }
+                Pad pad = padService.queryByRoomId(oldCourse.getcRoomId());
+                //发送消息 通知对应的pad 修改课程字体
+                Map<String, Object> map = new LinkedHashMap<>();
+                map.put("event", "textSize");
+                map.put("size", course.getcWordSize());
+                padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
             }
         }
 

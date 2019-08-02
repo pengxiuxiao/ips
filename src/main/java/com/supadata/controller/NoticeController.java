@@ -4,12 +4,17 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
 import com.supadata.constant.Config;
+import com.supadata.constant.Mqtt;
 import com.supadata.pojo.Notice;
+import com.supadata.pojo.Pad;
 import com.supadata.service.INoticeService;
+import com.supadata.service.IPadService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
+import com.supadata.utils.enums.EventType;
 import com.supadata.utils.enums.FileType;
 import com.supadata.utils.enums.NoticeType;
+import com.supadata.utils.mqtt.PadServerMQTT;
 import com.supadata.utils.thread.ConverPPTFileToImageUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -30,6 +35,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +57,15 @@ public class NoticeController {
 
     @Autowired
     private Config config;
+
+    @Autowired
+    private PadServerMQTT padServerMQTT;
+
+    @Autowired
+    private Mqtt mqtt;
+
+    @Autowired
+    public IPadService padService;
 
     /**
      * 功能描述:添加文字消息
@@ -155,6 +170,13 @@ public class NoticeController {
             msgJson.setMsg("编辑失败！");
             return msgJson;
         }
+
+        Pad pad = padService.queryByRoomId(Integer.parseInt(notice.getPublishRoomId()));
+
+        //发送消息 通知pad 修改显示模块
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("event", "notice");
+        padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
         return msgJson;
     }
     /**

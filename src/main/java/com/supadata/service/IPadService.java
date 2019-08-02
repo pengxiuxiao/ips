@@ -60,7 +60,7 @@ public interface IPadService {
      * @return:
      * @date: 2019/5/22 17:45
      */
-    List<Pad> queryByRoomId(Integer parseInt);
+    Pad queryByRoomId(Integer parseInt);
 
     /**
      * 功能描述:根据roomid删除pad

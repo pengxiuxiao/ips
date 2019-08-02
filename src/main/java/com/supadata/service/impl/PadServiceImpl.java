@@ -87,7 +87,7 @@ public class PadServiceImpl implements IPadService {
     }
 
     @Override
-    public List<Pad> queryByRoomId(Integer roomId) {
+    public Pad queryByRoomId(Integer roomId) {
         return padMapper.selectByRoomId(roomId);
     }
 

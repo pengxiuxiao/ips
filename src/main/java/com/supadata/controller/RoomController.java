@@ -3,7 +3,9 @@ package com.supadata.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
+import com.supadata.pojo.Notice;
 import com.supadata.pojo.Room;
+import com.supadata.service.INoticeService;
 import com.supadata.service.IPadService;
 import com.supadata.service.IRoomService;
 import com.supadata.utils.DateUtil;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,6 +42,8 @@ public class RoomController {
     @Autowired
     public IPadService padService;
 
+    @Autowired
+    public INoticeService noticeService;
 
     /**
      * 功能描述:插入单条教室信息
@@ -74,6 +79,9 @@ public class RoomController {
         if (roomService.add(room) != 1){
             return MsgJson.fail("user_id为空！");
         }
+
+//    public Notice(String nTitle, String nType, String publishRoom, String publishRoomId, Date updateTime) {
+        noticeService.addNotice(new Notice(name,"code=" + ip + ",ip=" + location, "1", name, room.getId()+"", new Date()));
         logger.info("添加教室成功：" + room.toString());
         return MsgJson.success("添加成功！");
     }

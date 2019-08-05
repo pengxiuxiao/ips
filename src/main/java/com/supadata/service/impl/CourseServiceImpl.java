@@ -216,24 +216,24 @@ public class CourseServiceImpl implements ICourseService {
         Row firstRow = sheet2.getRow(0);
 
         // 判断列头
-        String titleR[] = new String[firstRow.getLastCellNum()];
+        String titleC[] = new String[firstRow.getLastCellNum()];
         String titleL[] = new String[lastRowNum];
-        String rowGdIndex = "";
         String columGdIndex = "";
+        String lineGdIndex = "";
         int emptyRow = 0;//统计空的行头，遍历时要减掉sheet2.get
         int emptyColum = 0;//统计空的列头，遍历时要减掉
-        for (int i = firstRow.getFirstCellNum(); i < firstRow.getLastCellNum(); i++) {//行
+        for (int i = firstRow.getFirstCellNum(); i < firstRow.getLastCellNum(); i++) {//列
             Cell cell = firstRow.getCell(i);
             try {
-                titleR[i] = cell.getStringCellValue().trim();
-                if (i > 0 && StringUtils.isEmpty( titleR[i])){
+                titleC[i] = cell.getStringCellValue().trim();
+                if (i > 0 && StringUtils.isEmpty( titleC[i])){
                     emptyColum = emptyColum + 1;
                 }
-                if ("过道".equals(titleR[i])){
-                    if (StringUtils.isEmpty(rowGdIndex)){
-                        rowGdIndex = i + rowGdIndex;
+                if ("过道".equals(titleC[i])){
+                    if (StringUtils.isEmpty(columGdIndex)){
+                        columGdIndex = i + columGdIndex;
                     }else{
-                        rowGdIndex = rowGdIndex + "," + i;
+                        columGdIndex = columGdIndex + "," + i;
                     }
                 }
             }catch (NullPointerException e){
@@ -241,7 +241,7 @@ public class CourseServiceImpl implements ICourseService {
                 e.printStackTrace();
             }
         }
-        for (int j = 0; j < titleL.length; j++){//列
+        for (int j = 0; j < titleL.length; j++){//行
             Row row = sheet2.getRow(j);
             Cell cell = row.getCell(0);
             if (j > 0 && StringUtils.isEmpty(cell.getStringCellValue().trim())){
@@ -250,20 +250,20 @@ public class CourseServiceImpl implements ICourseService {
             }
             titleL[j] = cell.getStringCellValue().trim();
             if ("过道".equals(titleL[j])){
-                if (StringUtils.isEmpty(columGdIndex)){
-                    columGdIndex = j + columGdIndex;
+                if (StringUtils.isEmpty(lineGdIndex)){
+                    lineGdIndex = j + lineGdIndex;
                 }else{
-                    columGdIndex = columGdIndex + "," + j;
+                    lineGdIndex = lineGdIndex + "," + j;
                 }
             }
         }
         lastRowNum = lastRowNum- emptyRow;//行
-        lastCellNum = titleR.length - 1;//列
-        shaeetMap.put("rGdIndex",rowGdIndex);//过道的列坐标
-        shaeetMap.put("cGdIndex",columGdIndex);//过道的行坐标
-        shaeetMap.put("rank", lastRowNum-1 + "*" + (titleR.length - emptyRow));
-        shaeetMap.put("rRankColum", lastRowNum-1);//行
-        shaeetMap.put("rRankLine", (titleR.length - emptyRow));//列
+        lastCellNum = titleC.length - 1;//列
+        shaeetMap.put("rGdIndex",lineGdIndex);//过道的行坐标
+        shaeetMap.put("cGdIndex",columGdIndex);//过道的列坐标
+        shaeetMap.put("rank", lastRowNum-1 + "*" + (lastCellNum - emptyColum));//行 * 列
+        shaeetMap.put("rRankLine", lastRowNum-1);//行
+        shaeetMap.put("rRankColum", (lastCellNum - emptyColum));//列
         // 遍历数据转为list
         int guodaoC = 0;
         int guodaoL = 0;
@@ -295,10 +295,10 @@ public class CourseServiceImpl implements ICourseService {
                 }
                 seat.setCardNo(cartNo);
                 seat.setrRank((String) shaeetMap.get("rank"));
-                seat.setrRankColum((Integer) shaeetMap.get("rRankLine"));
-                seat.setrRankLine((Integer) shaeetMap.get("rRankColum"));
-                seat.setLineRoadIndex(StringUtils.isEmpty(columGdIndex) ? "0" : columGdIndex);
-                seat.setColuRoadIndex(StringUtils.isEmpty(rowGdIndex) ? "0" : rowGdIndex);
+                seat.setrRankColum((Integer) shaeetMap.get("rRankColum"));
+                seat.setrRankLine((Integer) shaeetMap.get("rRankLine"));
+                seat.setLineRoadIndex(StringUtils.isEmpty(lineGdIndex) ? "0" : lineGdIndex);
+                seat.setColuRoadIndex(StringUtils.isEmpty(columGdIndex) ? "0" : columGdIndex);
                 seat.setCourseId(course.getId());
                 seat.setRoomId(course.getcRoomId());
                 seat.setRoomName(course.getcRoomName());

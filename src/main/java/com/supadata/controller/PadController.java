@@ -243,7 +243,7 @@ public class PadController {
                 //发送黑屏切换消息
                 Map<String, Object> map = new LinkedHashMap<>();
                 map.put("event", "power");
-                map.put("state", pad.getIsBlack().equals("1") ? "close" : "open");
+                map.put("state", pad.getIsBlack().equals("1") ? "open" : "close");
                 padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
             }
         }

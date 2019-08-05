@@ -389,7 +389,7 @@ public class NoticeController {
             String name = jsonRoom.getString("name");
 
             //String nTitle, String nType, String publishRoom, String publishRoomId, Date updateTime
-            Notice notice = new Notice(title, NoticeType.getNoticeIndex(FileType.getKey(suffix))+"",
+            Notice notice = new Notice(title, null,NoticeType.getNoticeIndex(FileType.getKey(suffix))+"",
                     name, id, DateUtil.getCurDate());
             notice.setnUrl(config.getSERVICEURL() + "notice/fileDownLoad?name=" + fileName);
             notice.setUpdateTime(DateUtil.getCurDate());

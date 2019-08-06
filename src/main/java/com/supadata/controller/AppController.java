@@ -225,8 +225,11 @@ public class AppController {
         }
         logger.info("安装包查询最新版本, code="+code);
         App app = appService.queryNewest("1");
-        app.setaUrl(config.getSERVICEURL() + "app/down");
-        msg.setData(app);
-        return msg;
+        if (app != null) {
+            app.setaUrl(config.getSERVICEURL() + "app/down");
+            msg.setData(app);
+            return msg;
+        }
+        return MsgJson.fail("没有发版记录！");
     }
 }

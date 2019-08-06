@@ -3,13 +3,16 @@ package com.supadata.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
+import com.supadata.constant.Mqtt;
 import com.supadata.pojo.Notice;
+import com.supadata.pojo.Pad;
 import com.supadata.pojo.Room;
 import com.supadata.service.INoticeService;
 import com.supadata.service.IPadService;
 import com.supadata.service.IRoomService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
+import com.supadata.utils.mqtt.PadServerMQTT;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -21,7 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: RoomController
@@ -44,6 +49,12 @@ public class RoomController {
 
     @Autowired
     public INoticeService noticeService;
+
+    @Autowired
+    private Mqtt mqtt;
+
+    @Autowired
+    private PadServerMQTT padServerMQTT;
 
     /**
      * 功能描述:插入单条教室信息
@@ -111,6 +122,7 @@ public class RoomController {
         }
 
         Room room = roomService.queryRoomById(Integer.parseInt(room_id));
+        String oldCode = room.getrIp();
         if (room == null) {
             return MsgJson.fail("更新失败！");
         }
@@ -126,7 +138,21 @@ public class RoomController {
         if (roomService.updateRoom(room) != 1){
             return MsgJson.fail("更新失败！");
         }
-        logger.info("编辑教室成功：" + room.toString());
+        /** 如果code发生变化 则pad需要重新登录 需要将旧的code对应的pad删除*/
+        if (!ip.equals(oldCode)) {
+            Pad pad = padService.queryByRoomId(Integer.parseInt(room_id));
+            if (pad != null) {
+                padService.deleteByRoomId(Integer.parseInt(room_id));
+                //发送code切换消息
+                Map<String, Object> map = new LinkedHashMap<>();
+                map.put("event", "room_code");
+                map.put("code", ip);
+                padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
+                logger.info("编辑教室成功:code=" + oldCode + "===>" + ip + ",删除padId = " + pad.getId() + room.toString());
+            }
+        } else {
+            logger.info("编辑教室成功：" + room.toString());
+        }
         return MsgJson.success("操作成功！");
     }
 

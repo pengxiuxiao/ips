@@ -119,6 +119,9 @@ public class PadController {
             pad.setUpdateTime(new Date());
             pad.setpModule("1");
             pad.setpAudio(0);
+            pad.setpState("1");
+            pad.setIsBlack("1");
+            pad.setpClickCard("1");
             int res = padService.add(pad);
             logger.info("App登录step3:code=" + code + ",注册新的设备PadId = " + pad.getId());
         }

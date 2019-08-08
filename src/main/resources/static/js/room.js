@@ -36,7 +36,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 {type:'checkbox', fixed: 'left'}
                 ,{field:'id', title: 'id', width: 80, sort: true}
                 ,{field:'rName', title: '教室名', sort: true}
-                ,{field:'rLocation', title: '教室位置'}
+                ,{field:'rLocation', title: '教室IP'}
                 ,{field:'rIp', title: '教室Code', sort: true} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
                 // ,{field:'updateTime', title: '操作时间', templet: '#createTime'}
                 ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 180}

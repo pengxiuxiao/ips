@@ -90,9 +90,6 @@ public class RoomController {
         if (roomService.add(room) != 1){
             return MsgJson.fail("user_id为空！");
         }
-
-//    public Notice(String nTitle, String nType, String publishRoom, String publishRoomId, Date updateTime) {
-        noticeService.addNotice(new Notice(name,"code=" + ip + ",ip=" + location, "1", name, room.getId()+"", new Date()));
         logger.info("添加教室成功：" + room.toString());
         return MsgJson.success("添加成功！");
     }

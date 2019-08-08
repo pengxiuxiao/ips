@@ -124,6 +124,10 @@ public class PadController {
             pad.setpClickCard("1");
             int res = padService.add(pad);
             logger.info("App登录step3:code=" + code + ",注册新的设备PadId = " + pad.getId());
+            if (res > 0) {
+                // public Notice(String nTitle, String nType, String publishRoom, String publishRoomId, Date updateTime) {
+                noticeService.addNotice(new Notice(room.getrName(),"code=" + code + ",ip=" + room.getrLocation(), "1", room.getrName(), room.getId()+"", new Date()));
+            }
         }
         logger.info("App登录step3:code=" + code + ",查询到设备PadId = " + pad.getId());
         if (StringUtils.isEmpty(pad.getClientId()) || !clientId.equals(pad.getClientId())) {
@@ -420,6 +424,13 @@ public class PadController {
         String appendTopic = "";
         if (pad != null) {
             appendTopic = "/" + pad.getClientId();
+        }
+        /** 黑屏 直接返回一个黑图片*/
+        if ("0".equals(pad.getIsBlack())) {
+            Map<String,String> map = new HashedMap();
+            map.put("url", "http://pad.supadata.cn/ips/img/black.png");
+            map.put("pModule", pad.getpModule());
+            return MsgJson.success(map, "请求成功！");
         }
         //发送消息到指定pad 通知上传图片消息
         Map<String, Object> lmap = new LinkedHashMap<>();

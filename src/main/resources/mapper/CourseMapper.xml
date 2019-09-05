@@ -15,10 +15,14 @@
     <result column="c_word_size" property="cWordSize" jdbcType="INTEGER" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="c_remark" property="cRemark" jdbcType="VARCHAR" />
+    <result column="c_type" property="cType" jdbcType="INTEGER" />
+    <result column="zao_time" property="zaoTime" jdbcType="VARCHAR" />
+    <result column="wu_time" property="wuTime" jdbcType="VARCHAR" />
+    <result column="wan_time" property="wanTime" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, c_name, c_room_id, c_room_name, c_desc, c_teacher, c_start_time, c_end_time, c_people, c_status, c_word_size, update_time,
-    c_remark
+    c_remark, c_type, zao_time, wu_time, wan_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -37,7 +41,7 @@
   <select id="selectCourseByRoomIdAndCNo" resultMap="BaseResultMap" >
     select
     cs.id, cs.c_name, cs.c_room_id, cs.c_room_name, cs.c_desc, cs.c_teacher, cs.c_start_time, cs.c_end_time, cs.c_people, cs.c_status,
-    cs.c_word_size, cs.update_time, cs.c_remark
+    cs.c_word_size, cs.update_time, cs.c_remark, cs.c_type, cs.zao_time, cs.wu_time, cs.wan_time
     from tb_course cs
     where cs.c_status = 0
     and cs.c_room_id = #{room_id}
@@ -51,7 +55,7 @@
   <select id="selectCourseByCNo" resultMap="BaseResultMap" >
     select
     cs.id, cs.c_name, cs.c_room_id, cs.c_room_name, cs.c_desc, cs.c_teacher, cs.c_start_time, cs.c_end_time, cs.c_people, cs.c_status,
-    cs.c_word_size, cs.update_time, cs.c_remark
+    cs.c_word_size, cs.update_time, cs.c_remark, cs.c_type, cs.zao_time, cs.wu_time, cs.wan_time
     from tb_course cs
     where cs.c_status = 0
     and cs.c_end_time > #{currentDateTime}
@@ -136,6 +140,18 @@
       <if test="cRemark != null" >
         c_remark,
       </if>
+      <if test="cType != null" >
+        c_type,
+      </if>
+      <if test="zaoTime != null" >
+        zao_time,
+      </if>
+      <if test="wuTime != null" >
+        wu_time,
+      </if>
+      <if test="wanTime != null" >
+        wan_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -177,6 +193,18 @@
       <if test="cRemark != null" >
         #{cRemark,jdbcType=VARCHAR},
       </if>
+      <if test="cType != null" >
+        #{cType,jdbcType=INTEGER},
+      </if>
+      <if test="zaoTime != null" >
+        #{zaoTime,jdbcType=VARCHAR},
+      </if>
+      <if test="wuTime != null" >
+        #{wuTime,jdbcType=VARCHAR},
+      </if>
+      <if test="wanTime != null" >
+        #{wanTime,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.supadata.pojo.Course" >
@@ -217,6 +245,18 @@
       </if>
       <if test="cRemark != null" >
         c_remark = #{cRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="cType != null" >
+        c_type = #{cType,jdbcType=INTEGER},
+      </if>
+      <if test="zaoTime != null" >
+        zao_time = #{zaoTime,jdbcType=VARCHAR},
+      </if>
+      <if test="wuTime != null" >
+        wu_time = #{wuTime,jdbcType=VARCHAR},
+      </if>
+      <if test="wanTime != null" >
+        wan_time = #{wanTime,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

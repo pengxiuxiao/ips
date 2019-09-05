@@ -168,6 +168,11 @@ public class CourseServiceImpl implements ICourseService {
         return courseMapper.selectCourseByRoomId(roomId);
     }
 
+    @Override
+    public int addCourse(Course course) {
+        return courseMapper.insertSelective(course);
+    }
+
     /**
      * 功能描述: 读取sheet1
      * @auther: pxx

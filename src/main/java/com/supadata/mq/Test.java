@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 public class Test {
 
     private static final String HOST = "tcp://118.178.84.40:1883";
-    private String TOPIC = "peng-test1";
+    private String TOPIC = "/messagesub/event/";
     private String MESSAGE = "123";
     private static final String clientid = "server";
 

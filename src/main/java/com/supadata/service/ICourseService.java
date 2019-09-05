@@ -88,4 +88,11 @@ public interface ICourseService {
      * @date: 2019/4/17 17:42
      */
     Course queryCourseByRoomId(Integer roomId);
+
+    /**
+     * 添加课程
+     * @param course
+     * @return
+     */
+    int addCourse(Course course);
 }

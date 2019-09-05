@@ -29,6 +29,15 @@ public class Course {
 
     private String cRemark;
 
+    /** 0:培训打卡，1:就餐打卡*/
+    private Integer cType;
+
+    private String zaoTime;
+
+    private String wuTime;
+
+    private String wanTime;
+
     public Integer getId() {
         return id;
     }
@@ -131,5 +140,53 @@ public class Course {
 
     public void setcWordSize(Integer cWordSize) {
         this.cWordSize = cWordSize;
+    }
+
+    public Integer getcType() {
+        return cType;
+    }
+
+    public void setcType(Integer cType) {
+        this.cType = cType;
+    }
+
+    public String getZaoTime() {
+        return zaoTime;
+    }
+
+    public void setZaoTime(String zaoTime) {
+        this.zaoTime = zaoTime;
+    }
+
+    public String getWuTime() {
+        return wuTime;
+    }
+
+    public void setWuTime(String wuTime) {
+        this.wuTime = wuTime;
+    }
+
+    public String getWanTime() {
+        return wanTime;
+    }
+
+    public void setWanTime(String wanTime) {
+        this.wanTime = wanTime;
+    }
+
+    public Course(String cName, Integer cRoomId, String cRoomName, Integer cStatus, Integer cWordSize, Integer cType,
+                  String zaoTime, String wuTime, String wanTime) {
+        this.cName = cName;
+        this.cRoomId = cRoomId;
+        this.cRoomName = cRoomName;
+        this.cStatus = cStatus;
+        this.cWordSize = cWordSize;
+        this.cType = cType;
+        this.zaoTime = zaoTime;
+        this.wuTime = wuTime;
+        this.wanTime = wanTime;
+    }
+
+    public Course() {
     }
 }

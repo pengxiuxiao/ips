@@ -4,15 +4,18 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
 import com.supadata.constant.Mqtt;
-import com.supadata.pojo.Notice;
 import com.supadata.pojo.Pad;
 import com.supadata.pojo.Room;
-import com.supadata.service.INoticeService;
+import com.supadata.pojo.Setting;
 import com.supadata.service.IPadService;
 import com.supadata.service.IRoomService;
+import com.supadata.service.IRoomsettingService;
+import com.supadata.service.ISettingService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
+import com.supadata.utils.enums.EventType;
 import com.supadata.utils.mqtt.PadServerMQTT;
+import com.supadata.utils.thread.MQSendThread;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -23,7 +26,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,16 +41,19 @@ import java.util.Map;
 @RequestMapping("/room")
 public class RoomController {
 
-    private static Logger logger = Logger.getLogger(RoomController.class);
+    private static Logger logger = Logger.getLogger(CourseController.class);
 
     @Autowired
     public IRoomService roomService;
 
     @Autowired
-    public IPadService padService;
+    public ISettingService settingService;
 
     @Autowired
-    public INoticeService noticeService;
+    public IRoomsettingService roomsettingService;
+
+    @Autowired
+    public IPadService padService;
 
     @Autowired
     private Mqtt mqtt;
@@ -66,20 +71,26 @@ public class RoomController {
     @RequestMapping("/add")
     public @ResponseBody
     MsgJson addRoom(HttpServletRequest request) {
+        MsgJson msg = new MsgJson(0,"添加成功！");
         String user_id = request.getParameter("user_id");
         String name = request.getParameter("name");
-        String location = request.getParameter("location");
         String ip = request.getParameter("ip");
+        String location = request.getParameter("location");
         String remark = request.getParameter("remark");
-        logger.info("添加教室:name=" + name);
         if (StringUtils.isEmpty(user_id)) {
-            return MsgJson.fail("user_id为空！");
+            msg.setCode(1);
+            msg.setMsg("user_id为空！");
+            return msg;
         }
         if (StringUtils.isEmpty(name)) {
-            return MsgJson.fail("name为空！");
+            msg.setCode(1);
+            msg.setMsg("name为空！");
+            return msg;
         }
         if (StringUtils.isEmpty(ip)) {
-            return MsgJson.fail("ip为空！");
+            msg.setCode(1);
+            msg.setMsg("ip为空！");
+            return msg;
         }
         Room room = new Room();
         room.setrName(name);
@@ -88,10 +99,12 @@ public class RoomController {
         room.setrLocation(location);
         room.setrRemark(remark);
         if (roomService.add(room) != 1){
-            return MsgJson.fail("user_id为空！");
+            msg.setCode(2);
+            msg.setMsg("添加失败！");
+            return msg;
         }
-        logger.info("添加教室成功：" + room.toString());
-        return MsgJson.success("添加成功！");
+        logger.info("添加教室成功：name=" + room.getrName() + ",code=" + room.getrIp());
+        return msg;
     }
 
     /**
@@ -104,24 +117,29 @@ public class RoomController {
     @RequestMapping("/edit")
     public @ResponseBody
     MsgJson editRoom(HttpServletRequest request) {
+        MsgJson msg = new MsgJson(0,"修改成功！");
         String user_id = request.getParameter("user_id");
         String room_id = request.getParameter("room_id");
         String name = request.getParameter("name");
         String ip = request.getParameter("ip");
         String location = request.getParameter("location");
 
-        logger.info("编辑教室:name=" + name);
         if (StringUtils.isEmpty(user_id)) {
-            return MsgJson.fail("user_id为空！");
+            msg.setCode(1);
+            msg.setMsg("user_id为空！");
+            return msg;
         }
         if (StringUtils.isEmpty(room_id)) {
-            return MsgJson.fail("room_id为空！");
+            msg.setCode(1);
+            msg.setMsg("room_id为空！");
+            return msg;
         }
 
         Room room = roomService.queryRoomById(Integer.parseInt(room_id));
-        String oldCode = room.getrIp();
         if (room == null) {
-            return MsgJson.fail("更新失败！");
+            msg.setCode(2);
+            msg.setMsg("更新失败！");
+            return msg;
         }
         if (StringUtils.isNotEmpty(name)) {
             room.setrName(name);
@@ -133,24 +151,12 @@ public class RoomController {
             room.setrLocation(location);
         }
         if (roomService.updateRoom(room) != 1){
-            return MsgJson.fail("更新失败！");
+            msg.setCode(2);
+            msg.setMsg("更新失败！");
+            return msg;
         }
-        /** 如果code发生变化 则pad需要重新登录 需要将旧的code对应的pad删除*/
-        if (!ip.equals(oldCode)) {
-            Pad pad = padService.queryByRoomId(Integer.parseInt(room_id));
-            if (pad != null) {
-                padService.deleteByRoomId(Integer.parseInt(room_id));
-                //发送code切换消息
-                Map<String, Object> map = new LinkedHashMap<>();
-                map.put("event", "room_code");
-                map.put("code", ip);
-                padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
-                logger.info("编辑教室成功:code=" + oldCode + "===>" + ip + ",删除padId = " + pad.getId() + room.toString());
-            }
-        } else {
-            logger.info("编辑教室成功：" + room.toString());
-        }
-        return MsgJson.success("操作成功！");
+        logger.info("编辑教室成功：name=" + room.getrName() + ",code=" + room.getrIp());
+        return msg;
     }
 
 
@@ -167,7 +173,6 @@ public class RoomController {
         if (StringUtils.isEmpty(user_id) || StringUtil.isEmpty(idList) || "[]".equals(idList)) {
             return MsgJson.fail("参数包含空值！");
         }
-        logger.info("批量删除教室：idList=" + idList);
         JSONArray idArry = JSONArray.fromObject(idList);
         int res = 0;
         for (Object idData : idArry) {
@@ -175,9 +180,6 @@ public class RoomController {
             Integer id = Integer.valueOf(idObj.getString("id"));
             System.out.println(id);
             res = roomService.deleteRoom(id);
-            if (res == 1){
-                res = padService.deleteByRoomId(id);
-            }
         }
 
         if (res > 0) {
@@ -197,21 +199,27 @@ public class RoomController {
     @RequestMapping("/delete")
     public @ResponseBody
     MsgJson deleteRoom(HttpServletRequest request) {
+        MsgJson msg = new MsgJson(0,"删除成功！");
         String user_id = request.getParameter("user_id");
         String room_id = request.getParameter("room_id");
-        logger.info("删除教室：room_id=" + room_id);
+
         if (StringUtils.isEmpty(user_id)) {
-            return MsgJson.fail("room_id为空！");
+            msg.setCode(1);
+            msg.setMsg("user_id为空！");
+            return msg;
         }
         if (StringUtils.isEmpty(room_id)) {
-            return MsgJson.fail("room_id为空！");
+            msg.setCode(1);
+            msg.setMsg("room_id为空！");
+            return msg;
         }
-        int res = roomService.deleteRoom(Integer.parseInt(room_id));
-        if (res == 1){
-            res = padService.deleteByRoomId(Integer.parseInt(room_id));
-            return MsgJson.success("操作成功！");
+        if (roomService.deleteRoom(Integer.parseInt(room_id)) != 1){
+            msg.setCode(2);
+            msg.setMsg("删除失败！");
+            return msg;
         }
-        return MsgJson.fail("删除失败！");
+        logger.info("删除教室成功：room_id=" + room_id);
+        return msg;
     }
 
     /**
@@ -224,20 +232,109 @@ public class RoomController {
     @RequestMapping("/list")
     public @ResponseBody
     MsgJson listRoom(String user_id, String key, Integer limit, Integer page) {
+        MsgJson msg = new MsgJson(0,"查询成功！");
+
+
         if (StringUtils.isEmpty(user_id)) {
-            return MsgJson.fail("user_id为空！");
+            msg.setCode(1);
+            msg.setMsg("user_id为空！");
+            return msg;
         }
         if (limit == null) {
-            return MsgJson.fail("limit为空！");
+            msg.setCode(1);
+            msg.setMsg("limit为空！");
+            return msg;
         }
         if (page == null) {
-            return MsgJson.fail("page为空！");
+            msg.setCode(1);
+            msg.setMsg("page为空！");
+            return msg;
         }
         PageHelper.startPage(page,limit);
         List<Room> rooms = roomService.queryRoom(key);
         PageInfo<Room> pageInfo = new PageInfo<Room>(rooms);
-        return new MsgJson(0,"操作成功！",rooms,pageInfo.getTotal());
+        msg.setData(rooms);
+        msg.setCount(pageInfo.getTotal());
+        return msg;
     }
 
 
+    /**
+     * 功能描述:设置全部教室显示模块
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/4/19 15:33
+     */
+    @RequestMapping("/set")
+    public @ResponseBody
+    MsgJson setRoomModule (HttpServletRequest request) {
+        String user_id = request.getParameter("user_id");
+        String s_module = request.getParameter("s_module");
+
+        logger.info("全部设置显示="+ s_module );
+        if (StringUtils.isEmpty(user_id)) {
+            return MsgJson.fail("usre_id为空！");
+        }
+        int res = 0;
+        List<Room> rooms = roomService.slelectAllRoom();
+        for (Room room : rooms) {
+            room.setrModule(s_module);
+            roomService.updateRoom(room);
+            res ++;
+        }
+
+        /** 视频做等待处理*/
+        if (res > 0 && "3".equals(s_module)) {
+            MQSendThread mqThread = new MQSendThread(mqtt, padServerMQTT, padService);
+            mqThread.start();
+            return MsgJson.success("设置成功！");
+        }else {
+            Setting setting = settingService.querySetting();
+            setting.setsModule(s_module);
+            res = settingService.upadate(setting);
+            //发送消息 通知全部pad 修改显示模块
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("event", EventType.getName(s_module));
+            padServerMQTT.publishMessage(mqtt.getSubTopic(), map);
+            return MsgJson.success("设置成功！");
+        }
+
+    }
+
+    /**
+     * 功能描述:设置一个教室显示模块
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/4/19 15:33
+     */
+    @RequestMapping("/setone")
+    public @ResponseBody
+    MsgJson setOneRoomModule (HttpServletRequest request) {
+        String user_id = request.getParameter("user_id");
+        String s_module = request.getParameter("s_module");
+        String room_id = request.getParameter("room_id");
+
+        logger.info("全部设置显示="+ s_module );
+        if (StringUtils.isEmpty(user_id)) {
+            return MsgJson.fail("usre_id为空！");
+        }
+        if (StringUtils.isEmpty(room_id)) {
+            return MsgJson.fail("room_id！");
+        }
+        Room room = new Room();
+        room.setId(Integer.parseInt(room_id));
+        room.setrModule(s_module);
+        int res = roomService.updateRoom(room);
+        List<Pad> pads = padService.queryByRoomId(Integer.parseInt(room_id));
+        for (Pad pad : pads) {
+            //发送消息 通知全部pad 修改显示模块
+            Map<String, Object> map = new LinkedHashMap<>();
+            map.put("event", EventType.getName(s_module));
+            padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
+        }
+        return res > 0 ? MsgJson.success("设置成功！") : MsgJson.fail("设置失败！");
+
+    }
 }

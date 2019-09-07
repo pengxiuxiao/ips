@@ -118,6 +118,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                     $(".layui-laypage-btn").click();
                 }else {
                     layer.msg(res.msg);
+                    $(".layui-laypage-btn").click();
                 }
             },
             error:function (err) {

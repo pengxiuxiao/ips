@@ -117,6 +117,14 @@
 
 <div class="add-card">
     <form class="layui-form" action="" id="cardForm" onsubmit="return false">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">培训课程：</label>
+            <div class="layui-input-block">
+                <select name="course_id" id="course_id" lay-filter="course" lay-verify="course" class="layui-input course_id">
+                </select>
+            </div>
+        </div>
         <div class="layui-form-item">
             <label class="layui-form-label">持卡人：</label>
             <div class="layui-input-block">
@@ -126,7 +134,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">卡号：</label>
             <div class="layui-input-block">
-                <input type="text" name="number" lay-verify="number" autocomplete="off" placeholder="请输入卡号" class="layui-input number">
+                <input type="text" name="number" lay-verify="number" autocomplete="off" placeholder="请通过读卡器读取卡号" class="layui-input number">
                 <input type="text" style="display:none" name="cId" lay-verify="cId" autocomplete="off" class="layui-input cId">
             </div>
         </div>

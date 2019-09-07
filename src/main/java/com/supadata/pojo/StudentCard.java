@@ -15,6 +15,10 @@ public class StudentCard {
 
     private String scRemark;
 
+    private String courseName;
+
+    private Integer courseId;
+
     public StudentCard() {
     }
 
@@ -71,5 +75,21 @@ public class StudentCard {
 
     public void setSecretNumber(String secretNumber) {
         this.secretNumber = secretNumber;
+    }
+
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
     }
 }

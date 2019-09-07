@@ -3,7 +3,9 @@ package com.supadata.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.util.StringUtil;
+import com.supadata.pojo.Course;
 import com.supadata.pojo.StudentCard;
+import com.supadata.service.ICourseService;
 import com.supadata.service.IStudentCardService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.ExcelUtil;
@@ -37,6 +39,9 @@ public class CardController {
     @Autowired
     public IStudentCardService studentCardService;
 
+    @Autowired
+    public ICourseService courseService;
+
     /**
      * 功能描述:添加卡片信息
      * @auther: pxx
@@ -45,7 +50,7 @@ public class CardController {
      * @date: 2019/4/18 15:49
      */
     @RequestMapping("/add")
-    public MsgJson AddCard(String user_id, String cardNo,  String name){
+    public MsgJson AddCard(String user_id, String cardNo, String course_id,  String name){
         if (StringUtils.isEmpty(user_id) || StringUtils.isEmpty(cardNo) || StringUtils.isEmpty(name)) {
             return MsgJson.fail("参数包含空值！");
         }
@@ -54,6 +59,11 @@ public class CardController {
         StudentCard card = studentCardService.selectByNumber(cardNo);
         if (card == null) {
             StudentCard sc = new StudentCard(name, cardNo, secretNo, DateUtil.getCurDate());
+            Course course = courseService.queryById(Integer.parseInt(course_id));
+            if (course != null) {
+                sc.setCourseId(Integer.parseInt(course_id));
+                sc.setCourseName(course.getcName());
+            }
             int res = 0;
             try {
                 res = studentCardService.insertSelective(sc);

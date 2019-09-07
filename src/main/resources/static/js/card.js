@@ -56,6 +56,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         $(".add-card form input").each(function(){
             $(this).val('');
         });
+        getCourse();
         layer.open({
             type: 1,
             title: false,
@@ -169,11 +170,12 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         var postUrl;
         if(c_id == ""){
             postUrl = addCard;
-            postData = {cardNo:indata.field.number, name:indata.field.name, user_id:user_id};
+            postData = {cardNo:indata.field.number, name:indata.field.name, course_id:indata.field.course_id, user_id:user_id};
         }else{
             postUrl = editCard;
-            postData = {id:indata.field.cId, name:indata.field.name, user_id:user_id};
+            postData = {id:indata.field.cId, name:indata.field.name, course_id:indata.field.course_id, user_id:user_id};
         }
+        localStorage.setItem("tem_course_id",indata.field.course_id);
         //ajax调用后台添加接口
         $.ajax({
             type:'post',
@@ -191,10 +193,32 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 }
             },
             error:function (err) {
-                $.hideLoading();
                 $.toptip('请求失败，请稍后重试！', 'error');
             }
         })
     }
 
+    //查询学校所有课程
+    function getCourse() {
+        $.ajax({
+            url:global + '/course/list',
+            type:"post",
+            data:{"user_id":localStorage.getItem("user_id"),page:1,limit:100},
+            dataType:"json",
+            success:function (data) {
+                var data = data.data;
+                var coursehtml = '<option value="0" class="tdstyle texts">'+"请选择课程"+'</option>';
+                for (var i = 0; i < data.length; i++){
+                    var course_id = localStorage.getItem("tem_course_id");
+                    if (course_id != null && course_id != undefined && course_id != '' && course_id == data[i].id) {
+                        coursehtml += '<option value="'+data[i].id+'"selected class="tdstyle texts">'+data[i].cName+'</option>';
+                    } else {
+                        coursehtml += '<option value="'+data[i].id+'" class="tdstyle texts">'+data[i].cName+'</option>';
+                    }
+                }
+                $("#course_id").html(coursehtml);
+                form.render();
+            }
+        })
+    }
 });

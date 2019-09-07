@@ -339,7 +339,8 @@ public class PadController {
 
             if(course == null){
                 return MsgJson.fail("未查到餐厅信息！");
-            }if(studentCard == null){
+            }
+            if(studentCard == null || studentCard.getCourseId() == null || !studentCard.getCourseId().equals(course.getId())){
                 return MsgJson.fail("未查到卡片信息！");
             }
             course.getZaoTime();

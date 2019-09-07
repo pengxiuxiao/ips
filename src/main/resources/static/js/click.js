@@ -13,7 +13,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     //首次渲染列表
 
     var startDate = '', endDate = '';
-
+    var course_id = GetQueryString("course");
     //获取列表接口
     var getOrderList = function (url) {
         table.render({
@@ -35,13 +35,13 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         });
 
     };
-    var url = global + '/click/list' + '?user_id='+ user_id;
+    var url = global + '/click/list' + '?user_id='+ user_id + "&course_id=" + course_id;
     getOrderList(url);
 
     //搜索
     $(".doSearch").click(function () {
         var content = $(".keyWord").val();
-        url = global + '/click/list' + '?user_id='+ user_id + '&key=' + content;
+        url = global + '/click/list' + '?user_id='+ user_id + '&key=' + content + "&course_id=" + course_id;
         getOrderList(url);
     })
 

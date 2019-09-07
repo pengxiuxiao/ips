@@ -17,14 +17,24 @@
     id, student_name, card_number, secret_number, course_id, course_name, c_type, click_time, 
     click_number, c_remark
   </sql>
-  <select id="queryAllClick" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="queryAllClick" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />
     from tb_click
     where 1 = 1
+    <if test="course_id != null" >
+      and course_id = #{course_id}
+    </if>
     <if test="key != null" >
       and CONCAT(IFNULL(`course_name`,''), IFNULL(`student_name`,'')) like CONCAT('%', #{key}, '%')
     </if>
+  </select>
+  <select id="selectByTypeAndDate" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_click
+    where c_type = #{type}
+    and click_time between #{startDate} and #{endDate}
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select

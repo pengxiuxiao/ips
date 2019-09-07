@@ -443,7 +443,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * 功能描述:
+	 * 功能描述: 判断开关机时间设置正确否
 	 * @auther: pxx
 	 * @param:
 	 * @return:
@@ -477,16 +477,91 @@ public class DateUtil {
 		return map;
 	}
 
+	/**
+	 * 功能描述: 比较两个时间先后
+	 * @auther: pxx
+	 * @param:
+	 * @return: -1 0 1
+	 * @date: 2019/9/7 13:30
+	 */
+	public static Integer compareTime(String start, String end) {
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");//这个地方时间规格可根据自己的需求修改
+		long result = 0;
+		try {
+			result = sdf.parse(start).getTime() - sdf.parse(end).getTime();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return result < 0L?Integer.valueOf(-1):(result == 0L?Integer.valueOf(0):Integer.valueOf(1));
+	}
+
+	/**
+	 * 功能描述: 判断时间是否落入区间
+	 * @auther: pxx
+	 * @param:
+	 * @return: -1 0 1
+	 * @date: 2019/9/7 13:30
+	 */
+	public static boolean compareBetweenTime(String compareTime, String start, String end) {
+	    boolean flag = false;
+        int compares = compareTime(compareTime,start);
+        int compared = compareTime(compareTime,end);
+        if (compares == 1 && compared == -1) {
+            flag = true;
+        }
+		return flag;
+	}
+
+	/**
+	 * 功能描述: 获取当前时分秒
+	 * @auther: pxx
+	 * @param:
+	 * @return: -1 0 1
+	 * @date: 2019/9/7 13:30
+	 */
+	public static String getCurHms() {
+        Calendar cal = Calendar.getInstance();
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int minute = cal.get(Calendar.MINUTE);
+        int second = cal.get(Calendar.SECOND);
+       return hour + ":" + minute + ":" + second;
+	}
+
+
+    /**
+     * 功能描述:判断打卡时区 早中晚
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/9/7 14:00
+     */
+    public static String judgeTimeType(String curTime, String zaoTime, String wuTime, String wanTime) {
+        String type = "0";
+        String[] zao = zaoTime.split(" - ");
+        String[] wu = wuTime.split(" - ");
+        String[] wan = wanTime.split(" - ");
+
+        if (compareBetweenTime(curTime, zao[0],zao[1])) {
+            type = "1";
+        }
+        if (compareBetweenTime(curTime, wu[0],wu[1])) {
+            type = "2";
+        }
+        if (compareBetweenTime(curTime, wan[0],wan[1])) {
+            type = "3";
+        }
+        return type;
+    }
 
 
 	public static void main(String[] args) {
-		
-//		String time1="2016-10-21";
-//		String time2="2016-10-21 03:59:00";
-//		System.out.println(getTimestamp());
-//		System.out.println(getDistanceTimes("2018-07-02 03:59:00","2018-07-02 03:57:10"));
 
-		System.out.println(dateToLong(new java.util.Date()));
-		System.out.println(System.currentTimeMillis());
+		String time1="18:09:02";
+		System.out.println(judgeTimeType(time1,"07:30:00 - 08:30:00", "12:00:00 - 13:00:00","17:30:00 - 18:30:00"));
+
+
+
 	}
+
+
 }

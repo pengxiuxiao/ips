@@ -39,6 +39,14 @@ public class Seat {
 
     private Integer rRankLine;
 
+    private String sCall;
+
+    private String sFlag;
+
+    private String sMsg;
+
+
+
     public Integer getId() {
         return id;
     }
@@ -181,5 +189,29 @@ public class Seat {
 
     public void setrRankLine(Integer rRankLine) {
         this.rRankLine = rRankLine;
+    }
+
+    public String getsCall() {
+        return sCall;
+    }
+
+    public void setsCall(String sCall) {
+        this.sCall = sCall;
+    }
+
+    public String getsFlag() {
+        return sFlag;
+    }
+
+    public void setsFlag(String sFlag) {
+        this.sFlag = sFlag;
+    }
+
+    public String getsMsg() {
+        return sMsg;
+    }
+
+    public void setsMsg(String sMsg) {
+        this.sMsg = sMsg;
     }
 }

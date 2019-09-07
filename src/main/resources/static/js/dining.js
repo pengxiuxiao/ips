@@ -100,7 +100,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         dataj.append('wan_time', $(".layui-input.wan_time").val());
 
         var postUrl;
-        if (nid != null) {
+        if (nid != null && nid != "") {
             postUrl = global + '/dining/edit';
         } else {
             postUrl = global + '/dining/add';
@@ -126,33 +126,6 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         });
         layer.closeAll();
         return false;
-    });
-
-    //监听添加提交按钮
-    form.on('submit(editbtn)', function(indata){
-        //添加、编辑学生信息post请求
-        var postData = {name:indata.field.name, course_id:indata.field.nId,
-            zao_time:indata.field.zao_time, wu_time:indata.field.wu_time, wan_time:indata.field.wan_time,
-            user_id:user_id, word_size: indata.field.word_size};
-        //ajax调用后台添加接口
-        $.ajax({
-            type:'post',
-            async: false,
-            url:global + '/dining/edit',
-            data:postData,
-            dataType:'json',
-            success:function (res) {
-                if(res.code == 0){//0
-                    layer.closeAll();
-                    $(".layui-laypage-btn").click();
-                }else {
-                    layer.msg('操作失败，请稍后重试！', 'error');
-                }
-            },
-            error:function (err) {
-                layer.msg('操作失败，请稍后重试！', 'error');
-            }
-        })
     });
 
 
@@ -211,7 +184,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 })
             })
         }else if(obj.event === 'cCard'){//打卡记录
-            window.location.href="click.html?user_id=" + obj.data.uId;
+            window.location.href="click.html?user_id=" + obj.data.uId + "&course=" +  obj.data.id;
         }
     })
 

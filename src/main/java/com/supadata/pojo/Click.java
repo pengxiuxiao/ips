@@ -102,4 +102,15 @@ public class Click {
     public void setcRemark(String cRemark) {
         this.cRemark = cRemark == null ? null : cRemark.trim();
     }
+
+    public Click(String studentName, String cardNumber, Integer courseId, String courseName, Date clickTime) {
+        this.studentName = studentName;
+        this.cardNumber = cardNumber;
+        this.courseId = courseId;
+        this.courseName = courseName;
+        this.clickTime = clickTime;
+    }
+
+    public Click() {
+    }
 }

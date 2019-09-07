@@ -2,18 +2,11 @@ package com.supadata.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.supadata.constant.Config;
-import com.supadata.constant.Mqtt;
 import com.supadata.pojo.Click;
-import com.supadata.pojo.Course;
-import com.supadata.pojo.Room;
-import com.supadata.pojo.StudentCard;
-import com.supadata.service.*;
+import com.supadata.service.IClickService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.ExcelUtil;
 import com.supadata.utils.MsgJson;
-import com.supadata.utils.mqtt.PadServerMQTT;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.MalformedParameterizedTypeException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,16 +45,17 @@ public class ClickController {
      */
     @RequestMapping("/list")
     public @ResponseBody
-    MsgJson lisyClick(String user_id, String key, String page, String limit) {
+    MsgJson lisyClick(String user_id, String key, String course_id, String page, String limit) {
         if (StringUtils.isEmpty(user_id) || page == null || limit == null) {
             return MsgJson.fail("参数包含空值！");
         }
+        Map<String,String> map = new HashMap<>();
         if (StringUtils.isEmpty(key)) {
             key = "";
         }
-        PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
-        Map<String,String> map = new HashMap<>();
         map.put("key",key);
+        map.put("course_id",course_id);
+        PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         List<Click> clicks = clickService.queryAllClick(map);
         PageInfo<Click> pageInfo = new PageInfo<>(clicks);
         MsgJson msg = new MsgJson(0,"请求成功！");

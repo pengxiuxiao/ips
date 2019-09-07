@@ -51,4 +51,9 @@ public class ClickServiceImpl implements IClickService {
         return clickMapper.queryAllClick(map);
     }
 
+    @Override
+    public Click selectByTypeAndDate(Map<String, String> map) {
+        return clickMapper.selectByTypeAndDate(map);
+    }
+
 }

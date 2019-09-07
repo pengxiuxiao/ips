@@ -27,4 +27,6 @@ public interface IClickService {
     int updateByPrimaryKeySelective(Click record);
 
     List<Click> queryAllClick(Map<String, String> map);
+
+    Click selectByTypeAndDate(Map<String, String> map);
 }

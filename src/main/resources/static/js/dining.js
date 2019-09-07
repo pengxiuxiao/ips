@@ -26,11 +26,11 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 {type:'checkbox', fixed: 'left'}
                 ,{field:'id', title: 'id', width: 80}
                 ,{field:'cName', title: '培训名'}
-                ,{field:'cWordSize', title: '文字大小', width: 120}
-                ,{field:'cRoomName', title: '所在教室', width: 260}
-                ,{field:'zaoTime', title: '早餐区间', templet: '#zaoTime', width: 180} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
-                ,{field:'wuTime', title: '午餐区间', templet: '#wuTime', width: 180}
-                ,{field:'wanTime', title: '晚餐区间', templet: '#wanTime', width: 180}
+                ,{field:'cWordSize', title: '文字大小'}
+                ,{field:'cRoomName', title: '所在教室'}
+                ,{field:'zaoTime', title: '早餐区间', templet: '#zaoTime'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
+                ,{field:'wuTime', title: '午餐区间', templet: '#wuTime'}
+                ,{field:'wanTime', title: '晚餐区间', templet: '#wanTime'}
                 ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 200}
             ]]
             ,page: true
@@ -83,6 +83,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             title: false,
             closeBtn: 0,
             area: '516px',
+            shadeClose: true,
             content: $('.course-content')
         });
     });
@@ -90,15 +91,23 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     $(".addCourseBtn").click(function(){
         //data.field是提交数据
         var dataj = new FormData($("#addCourseForm")[0]);
+        var nid = $(".layui-input.nId").val();
         dataj.append('user_id', user_id);
+        dataj.append('nId', nid);
         dataj.append('room_id', $(".layui-input.room_id").val());
         dataj.append('zao_time', $(".layui-input.zao_time").val());
         dataj.append('wu_time', $(".layui-input.wu_time").val());
         dataj.append('wan_time', $(".layui-input.wan_time").val());
 
+        var postUrl;
+        if (nid != null) {
+            postUrl = global + '/dining/edit';
+        } else {
+            postUrl = global + '/dining/add';
+        }
         $.ajax({
             type:'post',
-            url: global + '/dining/add',
+            url: postUrl,
             data:dataj,
             dataType:'json',
             processData: false,
@@ -114,7 +123,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             error:function (err) {
                 layer.msg('操作失败，请稍后重试！', 'error');
             }
-        })
+        });
         layer.closeAll();
         return false;
     });

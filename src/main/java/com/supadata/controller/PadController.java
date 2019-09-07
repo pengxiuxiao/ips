@@ -309,6 +309,8 @@ public class PadController {
         if (room_id == null) {
             return MsgJson.fail("room_id为空！");
         }
+        //TODO
+
         //通过考勤卡找到人或者要上的课程，取最近的或者正在上的课程，只取一条,先查当前教室有无课程，有则取当前教室，无则查询其他教室
         //先根据卡号查当前教室的课程
         Course course = courseService.queryStudentComingCourse(card_number, room_id, DateUtil.getCurrentDateTime());

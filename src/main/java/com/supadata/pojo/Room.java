@@ -23,6 +23,8 @@ public class Room {
 
     private String rRemark;
 
+    private Integer rType;
+
     public Integer getId() {
         return id;
     }
@@ -114,6 +116,14 @@ public class Room {
 
     public void setrRemark(String rRemark) {
         this.rRemark = rRemark == null ? null : rRemark.trim();
+    }
+
+    public Integer getrType() {
+        return rType;
+    }
+
+    public void setrType(Integer rType) {
+        this.rType = rType;
     }
 
     @Override

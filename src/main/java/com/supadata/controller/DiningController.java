@@ -100,6 +100,8 @@ public class DiningController {
         }
         Course course = new Course(name,Integer.parseInt(room_id),room.getrName(),0,Integer.parseInt(word_size),1,zao_time,wu_time,wan_time);
         int res = courseService.addCourse(course);
+        room.setrType(2);//标记为餐厅
+        res = roomService.updateRoom(room);
 
         return MsgJson.success("添加成功！");
     }
@@ -112,29 +114,58 @@ public class DiningController {
     @RequestMapping("/edit")
     public @ResponseBody
     MsgJson editCourse(HttpServletRequest request) {
-        String id = request.getParameter("id");
+        String id = request.getParameter("nId");
         String user_id = request.getParameter("user_id");
         String room_id = request.getParameter("room_id");
         String name = request.getParameter("name");
-        String word_size = request.getParameter("word_size");
         String zao_time = request.getParameter("zao_time");
-        String wu_time = request.getParameter("wu_time");
+        String word_size = request.getParameter("word_size");
         String wan_time = request.getParameter("wan_time");
+        String wu_time = request.getParameter("wu_time");
         logger.info("编辑就餐打卡课程:room_id=" + room_id + ",name=" + name + ",zao_time=" + zao_time + ",wu_time=" + wu_time + ",wan_time=" + wan_time + ",word_size=" + word_size);
         if (StringUtils.isEmpty(user_id) || StringUtils.isEmpty(room_id) || StringUtils.isEmpty(name)
                 || StringUtils.isEmpty(zao_time) || StringUtils.isEmpty(wu_time) || StringUtils.isEmpty(wan_time)
                 || StringUtils.isEmpty(word_size)|| StringUtils.isEmpty(id)) {
             return MsgJson.fail("参数包含空值！");
         }
-        Room room = roomService.queryRoomById(Integer.parseInt(room_id));
-        if (room == null) {
-            return MsgJson.fail("教室不存在！");
+        boolean isUpdate = false;
+        Room room = null;
+        Course oCourse = courseService.queryById(Integer.parseInt(id));
+        if (!oCourse.getcName().equals(name)) {
+            oCourse.setcName(name);
+            isUpdate = true;
         }
-//        courseService.
-        Course course = new Course(name,Integer.parseInt(room_id),room.getrName(),0,Integer.parseInt(word_size),1,zao_time,wu_time,wan_time);
-        int res = courseService.addCourse(course);
-
-        return MsgJson.success("添加成功！");
+        if (!oCourse.getZaoTime().equals(zao_time)) {
+            oCourse.setZaoTime(zao_time);
+            isUpdate = true;
+        }
+        if (!oCourse.getWuTime().equals(wu_time)) {
+            oCourse.setWuTime(wu_time);
+            isUpdate = true;
+        }
+        if (!oCourse.getWanTime().equals(wan_time)) {
+            oCourse.setWanTime(wan_time);
+            isUpdate = true;
+        }
+        if (oCourse.getcWordSize() != Integer.parseInt(word_size)) {
+            oCourse.setcWordSize(Integer.parseInt(word_size));
+            isUpdate = true;
+        }
+        if (oCourse.getcRoomId() != Integer.parseInt(room_id)) {
+            room = roomService.queryRoomById(Integer.parseInt(room_id));
+            if (room == null) {
+                return MsgJson.fail("教室不存在！");
+            }
+            oCourse.setcRoomId(Integer.parseInt(room_id));
+            oCourse.setcRoomName(room.getrName());
+            isUpdate = true;
+        }
+        if (isUpdate) {
+            int res = courseService.updateCourse(oCourse);
+            room.setrType(2);//标记为餐厅
+            res = roomService.updateRoom(room);
+        }
+        return MsgJson.success("更新成功！");
     }
 
     /**
@@ -200,7 +231,6 @@ public class DiningController {
             msg.setMsg("删除失败！");
             return msg;
         }
-
         return msg;
     }
 

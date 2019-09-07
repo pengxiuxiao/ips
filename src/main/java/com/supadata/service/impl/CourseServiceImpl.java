@@ -173,6 +173,11 @@ public class CourseServiceImpl implements ICourseService {
         return courseMapper.insertSelective(course);
     }
 
+    @Override
+    public int updateCourse(Course course) {
+        return courseMapper.updateByPrimaryKeySelective(course);
+    }
+
     /**
      * 功能描述: 读取sheet1
      * @auther: pxx

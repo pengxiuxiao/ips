@@ -95,4 +95,13 @@ public interface ICourseService {
      * @return
      */
     int addCourse(Course course);
+
+    /**
+     * 功能描述: 更新课程
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/9/6 10:59
+     */
+    int updateCourse(Course course);
 }

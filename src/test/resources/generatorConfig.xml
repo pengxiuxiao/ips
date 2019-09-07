@@ -12,8 +12,8 @@
 		</commentGenerator>
 		<!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://118.178.84.40:3306/ips_new?useUnicode=true&amp;characterEncoding=UTF-8"
-			userId="root" password="MageNB9527">
+			connectionURL="jdbc:mysql://localhost:3306/ips_new?useUnicode=true&amp;characterEncoding=UTF-8"
+			userId="root" password="123456">
 		</jdbcConnection>
 
 		<!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL 
@@ -51,15 +51,8 @@
 
 		<!-- 指定数据库表,domainObjectName生成实体等名字模板 -->
 
-		<table tableName="tb_room_setting" domainObjectName="RoomSetting"
-			   enableCountByExample="false" enableUpdateByExample="false"
-			   enableDeleteByExample="false" enableSelectByExample="false"
-			   selectByExampleQueryId="false" />
-		<table tableName="tb_room_notice" domainObjectName="RoomNotice"
-			   enableCountByExample="false" enableUpdateByExample="false"
-			   enableDeleteByExample="false" enableSelectByExample="false"
-			   selectByExampleQueryId="false" />
-		<table tableName="tb_mesage" domainObjectName="Message"
+
+		<table tableName="tb_click" domainObjectName="Click"
 			   enableCountByExample="false" enableUpdateByExample="false"
 			   enableDeleteByExample="false" enableSelectByExample="false"
 			   selectByExampleQueryId="false" />

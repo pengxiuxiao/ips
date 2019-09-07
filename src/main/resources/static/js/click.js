@@ -25,25 +25,23 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             ,cols: [[
                 {type:'checkbox', fixed: 'left'}
                 ,{field:'id', title: 'id', width: 80}
-                ,{field:'cName', title: '培训名'}
-                ,{field:'cWordSize', title: '文字大小', width: 120}
-                ,{field:'cRoomName', title: '所在教室', width: 260}
-                // ,{field:'cStartTime', title: '开始时间', templet: '#cStartTime', width: 180} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
-                // ,{field:'cEndTime', title: '结束时间', templet: '#cEndTime', width: 180}
-                // ,{field:'updateTime', title: '操作时间', templet: '#createTime', width: 180}
-                ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 180}
+                ,{field:'studentName', title: '学员姓名'}
+                ,{field:'cardNumber', title: '卡号', width: 120}
+                ,{field:'courseName', title: '课程名', width: 260}
+                ,{field:'cType', title: '签到区间', width: 260}
+                ,{field:'clickTime', title: '打卡时间', templet: '#clickTime', width: 180}
             ]]
             ,page: true
         });
 
     };
-    var url = global + '/course/list' + '?user_id='+ user_id;
+    var url = global + '/click/list' + '?user_id='+ user_id;
     getOrderList(url);
 
     //搜索
     $(".doSearch").click(function () {
         var content = $(".keyWord").val();
-        url = global + '/course/list' + '?user_id='+ user_id + '&key=' + content;
+        url = global + '/click/list' + '?user_id='+ user_id + '&key=' + content;
         getOrderList(url);
     })
 

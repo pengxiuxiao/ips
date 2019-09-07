@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.supadata.dao.ClickMapper" >
+  <resultMap id="BaseResultMap" type="com.supadata.pojo.Click" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="student_name" property="studentName" jdbcType="VARCHAR" />
+    <result column="card_number" property="cardNumber" jdbcType="VARCHAR" />
+    <result column="secret_number" property="secretNumber" jdbcType="VARCHAR" />
+    <result column="course_id" property="courseId" jdbcType="INTEGER" />
+    <result column="course_name" property="courseName" jdbcType="VARCHAR" />
+    <result column="c_type" property="cType" jdbcType="VARCHAR" />
+    <result column="click_time" property="clickTime" jdbcType="TIMESTAMP" />
+    <result column="click_number" property="clickNumber" jdbcType="INTEGER" />
+    <result column="c_remark" property="cRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, student_name, card_number, secret_number, course_id, course_name, c_type, click_time, 
+    click_number, c_remark
+  </sql>
+  <select id="queryAllClick" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_click
+    where 1 = 1
+    <if test="key != null" >
+      and CONCAT(IFNULL(`course_name`,''), IFNULL(`student_name`,'')) like CONCAT('%', #{key}, '%')
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_click
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_click
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.supadata.pojo.Click" >
+    insert into tb_click (id, student_name, card_number, 
+      secret_number, course_id, course_name, 
+      c_type, click_time, click_number, 
+      c_remark)
+    values (#{id,jdbcType=INTEGER}, #{studentName,jdbcType=VARCHAR}, #{cardNumber,jdbcType=VARCHAR}, 
+      #{secretNumber,jdbcType=VARCHAR}, #{courseId,jdbcType=INTEGER}, #{courseName,jdbcType=VARCHAR}, 
+      #{cType,jdbcType=VARCHAR}, #{clickTime,jdbcType=TIMESTAMP}, #{clickNumber,jdbcType=INTEGER}, 
+      #{cRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.supadata.pojo.Click" >
+    insert into tb_click
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="studentName != null" >
+        student_name,
+      </if>
+      <if test="cardNumber != null" >
+        card_number,
+      </if>
+      <if test="secretNumber != null" >
+        secret_number,
+      </if>
+      <if test="courseId != null" >
+        course_id,
+      </if>
+      <if test="courseName != null" >
+        course_name,
+      </if>
+      <if test="cType != null" >
+        c_type,
+      </if>
+      <if test="clickTime != null" >
+        click_time,
+      </if>
+      <if test="clickNumber != null" >
+        click_number,
+      </if>
+      <if test="cRemark != null" >
+        c_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="studentName != null" >
+        #{studentName,jdbcType=VARCHAR},
+      </if>
+      <if test="cardNumber != null" >
+        #{cardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="secretNumber != null" >
+        #{secretNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="courseId != null" >
+        #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="courseName != null" >
+        #{courseName,jdbcType=VARCHAR},
+      </if>
+      <if test="cType != null" >
+        #{cType,jdbcType=VARCHAR},
+      </if>
+      <if test="clickTime != null" >
+        #{clickTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clickNumber != null" >
+        #{clickNumber,jdbcType=INTEGER},
+      </if>
+      <if test="cRemark != null" >
+        #{cRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.supadata.pojo.Click" >
+    update tb_click
+    <set >
+      <if test="studentName != null" >
+        student_name = #{studentName,jdbcType=VARCHAR},
+      </if>
+      <if test="cardNumber != null" >
+        card_number = #{cardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="secretNumber != null" >
+        secret_number = #{secretNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="courseId != null" >
+        course_id = #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="courseName != null" >
+        course_name = #{courseName,jdbcType=VARCHAR},
+      </if>
+      <if test="cType != null" >
+        c_type = #{cType,jdbcType=VARCHAR},
+      </if>
+      <if test="clickTime != null" >
+        click_time = #{clickTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clickNumber != null" >
+        click_number = #{clickNumber,jdbcType=INTEGER},
+      </if>
+      <if test="cRemark != null" >
+        c_remark = #{cRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.supadata.pojo.Click" >
+    update tb_click
+    set student_name = #{studentName,jdbcType=VARCHAR},
+      card_number = #{cardNumber,jdbcType=VARCHAR},
+      secret_number = #{secretNumber,jdbcType=VARCHAR},
+      course_id = #{courseId,jdbcType=INTEGER},
+      course_name = #{courseName,jdbcType=VARCHAR},
+      c_type = #{cType,jdbcType=VARCHAR},
+      click_time = #{clickTime,jdbcType=TIMESTAMP},
+      click_number = #{clickNumber,jdbcType=INTEGER},
+      c_remark = #{cRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

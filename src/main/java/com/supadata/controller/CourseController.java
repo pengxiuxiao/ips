@@ -100,6 +100,10 @@ public class CourseController {
             Workbook workbook = WorkbookFactory.create(FileUtils.openInputStream(targetFile));
             Room room = roomService.queryRoomById(Integer.parseInt(room_id));
             MsgJson res = courseService.handleCourseExcel(workbook, room);
+            if (room.getrType() == 2) {
+                room.setrType(1);
+                roomService.updateRoom(room);
+            }
             if (res.getCode() == 1) {
                 return res;
             }

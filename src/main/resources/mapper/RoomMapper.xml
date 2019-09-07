@@ -11,9 +11,10 @@
     <result column="r_module" property="rModule" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="r_remark" property="rRemark" jdbcType="VARCHAR" />
+    <result column="r_type" property="rType" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, r_name, r_location, capacity, r_rank, r_ip, r_module, update_time, r_remark
+    id, r_name, r_location, capacity, r_rank, r_ip, r_module, update_time, r_remark, r_type
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -83,6 +84,9 @@
       <if test="rRemark != null" >
         r_remark,
       </if>
+      <if test="rType != null" >
+        r_type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -112,6 +116,9 @@
       <if test="rRemark != null" >
         #{rRemark,jdbcType=VARCHAR},
       </if>
+      <if test="rType != null" >
+        #{rType,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.supadata.pojo.Room" >
@@ -140,6 +147,9 @@
       </if>
       <if test="rRemark != null" >
         r_remark = #{rRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="rType != null" >
+        r_type = #{rType,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

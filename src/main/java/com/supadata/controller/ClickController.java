@@ -58,6 +58,15 @@ public class ClickController {
         PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         List<Click> clicks = clickService.queryAllClick(map);
         PageInfo<Click> pageInfo = new PageInfo<>(clicks);
+        for (Click click : clicks) {
+            if ("1".equals(click.getcType())) {
+                click.setcType("早餐");
+            } else if ("2".equals(click.getcType())) {
+                click.setcType("午餐");
+            } else {
+                click.setcType("晚餐");
+            }
+        }
         MsgJson msg = new MsgJson(0,"请求成功！");
         msg.setData(clicks);
         msg.setCount(pageInfo.getTotal());

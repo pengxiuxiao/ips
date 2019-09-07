@@ -129,7 +129,7 @@ public class DiningController {
             return MsgJson.fail("参数包含空值！");
         }
         boolean isUpdate = false;
-        Room room = null;
+
         Course oCourse = courseService.queryById(Integer.parseInt(id));
         if (!oCourse.getcName().equals(name)) {
             oCourse.setcName(name);
@@ -151,11 +151,12 @@ public class DiningController {
             oCourse.setcWordSize(Integer.parseInt(word_size));
             isUpdate = true;
         }
+        Room room = roomService.queryRoomById(Integer.parseInt(room_id));
+        if (room == null) {
+            return MsgJson.fail("教室不存在！");
+        }
         if (oCourse.getcRoomId() != Integer.parseInt(room_id)) {
-            room = roomService.queryRoomById(Integer.parseInt(room_id));
-            if (room == null) {
-                return MsgJson.fail("教室不存在！");
-            }
+
             oCourse.setcRoomId(Integer.parseInt(room_id));
             oCourse.setcRoomName(room.getrName());
             isUpdate = true;

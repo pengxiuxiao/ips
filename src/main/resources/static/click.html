@@ -98,8 +98,7 @@
                             <button class="layui-btn doSearch" style="margin-top: -4px;">搜索</button>
                         </div>
 
-                        <button class="layui-btn add-course-btn" style="float: right; margin-right: 40px">上传培训表</button>
-                        <a class="layui-btn down-course-btn"  href="course/efd" style="float: right; margin-right: 10px">下载模板</a>
+                        <button class="layui-btn out-click-btn" style="float: right; margin-right: 40px">导出记录</button>
                     </div>
 
                     <!--操作全选-->
@@ -113,15 +112,10 @@
                         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
                     </script>
 
-                    <script type="text/html" id="createTime">
-                        {{new Date(d.updateTime).format("yyyy-MM-dd hh:mm:ss")}}
+                    <script type="text/html" id="clickTime">
+                        {{new Date(d.clickTime).format("yyyy-MM-dd hh:mm:ss")}}
                     </script>
-                    <script type="text/html" id="cStartTime">
-                        {{new Date(d.cStartTime).format("yyyy-MM-dd hh:mm:ss")}}
-                    </script>
-                    <script type="text/html" id="cEndTime">
-                        {{new Date(d.cEndTime).format("yyyy-MM-dd hh:mm:ss")}}
-                    </script>
+
                 </div>
             </div>
         </div>

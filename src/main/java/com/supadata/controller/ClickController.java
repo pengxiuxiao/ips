@@ -7,9 +7,13 @@ import com.supadata.constant.Mqtt;
 import com.supadata.pojo.Click;
 import com.supadata.pojo.Course;
 import com.supadata.pojo.Room;
+import com.supadata.pojo.StudentCard;
 import com.supadata.service.*;
+import com.supadata.utils.DateUtil;
+import com.supadata.utils.ExcelUtil;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.mqtt.PadServerMQTT;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.MalformedParameterizedTypeException;
 import java.util.HashMap;
 import java.util.List;
@@ -61,9 +66,44 @@ public class ClickController {
         map.put("key",key);
         List<Click> clicks = clickService.queryAllClick(map);
         PageInfo<Click> pageInfo = new PageInfo<>(clicks);
-        MsgJson msg = new MsgJson();
+        MsgJson msg = new MsgJson(0,"请求成功！");
         msg.setData(clicks);
         msg.setCount(pageInfo.getTotal());
         return msg;
+    }
+
+    /**
+     * 功能描述:导出打卡记录列表信息
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/4/18 15:49
+     */
+    @RequestMapping("/export")
+    public void exportClicks(String user_id,  String key, HttpServletResponse response){
+        if (StringUtils.isEmpty(user_id)) {
+            return;
+        }
+        if (StringUtils.isEmpty(key)) {
+            key = "";
+        }
+        Map<String,String> map = new HashMap<>();
+        map.put("key",key);
+        List<Click> clicks = clickService.queryAllClick(map);
+        String sheetName = "签到表";
+        String fileName = "签到记录表-" + DateUtil.getTimestamp();
+
+
+        int columnNumber = 6;
+        int[] columnWidth = {5, 30, 20, 20, 10, 20,};
+        String[] columnName = {"id", "课程名", "学员姓名", "卡号", "签到区间", "打卡时间"};
+
+        try {
+            ExcelUtil.ExportClicksWithResponse(sheetName, fileName, columnNumber, columnWidth, columnName, clicks, response);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 }

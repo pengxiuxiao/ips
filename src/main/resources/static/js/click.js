@@ -25,11 +25,11 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             ,cols: [[
                 {type:'checkbox', fixed: 'left'}
                 ,{field:'id', title: 'id', width: 80}
-                ,{field:'studentName', title: '学员姓名'}
-                ,{field:'cardNumber', title: '卡号', width: 120}
-                ,{field:'courseName', title: '课程名', width: 260}
-                ,{field:'cType', title: '签到区间', width: 260}
-                ,{field:'clickTime', title: '打卡时间', templet: '#clickTime', width: 180}
+                ,{field:'courseName', title: '课程名', width: 260, sort: true}
+                ,{field:'studentName', title: '学员姓名', sort: true}
+                ,{field:'cardNumber', title: '卡号', width: 120, sort: true}
+                ,{field:'cType', title: '签到区间', width: 260, sort: true}
+                ,{field:'clickTime', title: '打卡时间', templet: '#clickTime', width: 180, sort: true}
             ]]
             ,page: true
         });
@@ -198,6 +198,11 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     })
 
 
+    //导出
+    $(".out-click-btn").click(function () {
+        var content = $(".keyWord").val();
+        window.location.href = global + "/click/export?user_id=" + user_id + '&key=' + content;
+    })
 
 //    切换消息类型，刷新数据
     form.on('select(msg-type)', function(data){

@@ -33,7 +33,7 @@
     select
     <include refid="Base_Column_List" />
     from tb_student_card
-    where card_number = #{number}
+    where secret_number = #{number}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from tb_student_card

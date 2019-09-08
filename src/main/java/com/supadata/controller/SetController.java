@@ -159,15 +159,17 @@ public class SetController {
             return MsgJson.fail("参数包含空值。");
         }
         Notice notice = noticeService.queryMaxVideo();
+        Integer interval = 0;
+        if(notice != null){
+            interval = IntervalType.getInterval(notice.getFileSize());
+        }
         logger.info("批量设置-显示视频 step1:idList=" + idList);
 
         JSONArray idArry = JSONArray.fromObject(idList);
-        Integer interval = 0;
         int region = Integer.parseInt(mqtt.getRegion());
         int loop = idArry.size() / region;
         int remainder = (idArry.size() % region) > 0 ? 1: 0;
         loop = loop + remainder;
-        interval = IntervalType.getInterval(notice.getFileSize());
         int seconds = interval/1000*(loop == 0 ? 1 : loop);
         logger.info("批量设置-显示视频 step2:module=" + module);
         if ("3".equals(module)) {

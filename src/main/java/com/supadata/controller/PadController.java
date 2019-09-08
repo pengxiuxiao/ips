@@ -340,13 +340,16 @@ public class PadController {
             if(course == null){
                 return MsgJson.fail("未查到餐厅信息！");
             }
-            if(studentCard == null || studentCard.getCourseId() == null || !studentCard.getCourseId().equals(course.getId())){
+            if(studentCard == null){
                 return MsgJson.fail("未查到卡片信息！");
+            }
+            if(studentCard.getCourseId() == null){
+                return MsgJson.fail("未查到课程信息！");
             }
             course.getZaoTime();
             Date curDate = DateUtil.getCurDate();
             String type = DateUtil.judgeTimeType(DateUtil.getCurHms(),course.getZaoTime(),course.getWuTime(),course.getWanTime());
-            Click click = new Click(studentCard.getStudentName(),card_number,course.getId(),course.getcName(),curDate);
+            Click click = new Click(studentCard.getStudentName(),card_number,studentCard.getCourseId(),studentCard.getCourseName(),curDate);
             seat.setId(1);
             seat.setCourseId(course.getId());
             seat.setrRank("1*1");
@@ -361,7 +364,7 @@ public class PadController {
             seat.setrRankLine(1);
 
 
-            seat.setcTitle(course.getcName());
+            seat.setcTitle(studentCard.getCourseName());
             seat.setStuName(studentCard.getStudentName());
             seat.setCardNo(card_number);
             seat.setsFlag("1");
@@ -375,6 +378,7 @@ public class PadController {
                 map.put("type",type);
                 map.put("startDate", DateUtil.getCurrentDate() + " 00:00:01");
                 map.put("endDate", DateUtil.getCurrentDate() + " 23:59:59");
+                map.put("cardNumber", card_number);
                 Click isClick = clickService.selectByTypeAndDate(map);
                 if (isClick == null) {
                     clickService.insertSelective(click);
@@ -489,7 +493,7 @@ public class PadController {
         /** 黑屏 直接返回一个黑图片*/
         if ("0".equals(pad.getIsBlack())) {
             Map<String,String> map = new HashedMap();
-            map.put("url", "http://pad.supadata.cn/ips/img/black.png");
+            map.put("url", "http://10.69.3.200:8080/ips/img/black.png");
             map.put("pModule", pad.getpModule());
             return MsgJson.success(map, "请求成功！");
         }

@@ -27,6 +27,9 @@
         .set-module{
             display: none;
         }
+        .set-canting{
+            display: none;
+        }
         .layui-form-selected dl{
             margin-bottom: 15px;
         }
@@ -112,6 +115,7 @@
                     <button class="layui-btn bdpad-state" data-type="getCheckData">锁屏设置</button>
                     <button class="layui-btn bdpad-audio" data-type="getCheckData">音量设置</button>
                     <button class="layui-btn bdpad-module" data-type="getCheckData">显示模块</button>
+                    <button class="layui-btn bdpad-canting" data-type="getCheckData">餐厅设置</button>
                 </div>
                 <table class="layui-hide" id="pads" lay-filter="order-form"></table>
 
@@ -278,6 +282,32 @@
         </div>
     </form>
 </div>
+
+<div class="set-canting">
+    <form class="layui-form" action="" id="cantingForm" onsubmit="return false">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">置为餐厅：</label>
+            <div class="layui-input-inline">
+                <select name="canting" id="canting" lay-verify="required" lay-filter="canting" class="layui-input canting">
+                    <option value="2" selected>是</option>
+                    <option value="1">否</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-input-block">
+            <input type="text" style="display:none">
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="addCantingbtn">立即提交</button>
+                <button class="layui-btn layui-btn-primary cancel-btn">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+
 <div id="outerdiv" style="position:fixed;top:0;left:0;background:rgba(0,0,0,0.7);z-index:99999999999;width:100%;height:100%;display:none;">
     <div id="innerdiv" style="position:absolute;">
         <img id="bigimg" style="border:5px solid #fff;" src="" />

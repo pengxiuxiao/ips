@@ -5,8 +5,10 @@ import com.supadata.constant.IntervalType;
 import com.supadata.constant.Mqtt;
 import com.supadata.pojo.Notice;
 import com.supadata.pojo.Pad;
+import com.supadata.pojo.Room;
 import com.supadata.service.INoticeService;
 import com.supadata.service.IPadService;
+import com.supadata.service.IRoomService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.MsgJson;
 import com.supadata.utils.enums.EventType;
@@ -47,6 +49,9 @@ public class SetController {
     public IPadService padService;
 
     @Autowired
+    public IRoomService roomService;
+
+    @Autowired
     public INoticeService noticeService;
 
     /**
@@ -66,6 +71,7 @@ public class SetController {
         String audio = request.getParameter("audio");
         String end_time = request.getParameter("end_time");
         String start_time = request.getParameter("start_time");
+        String canting = request.getParameter("canting");
         if (StringUtils.isEmpty(user_id) || StringUtil.isEmpty(idList) || "[]".equals(idList)) {
             return MsgJson.fail("参数包含空值！");
         }
@@ -134,6 +140,18 @@ public class SetController {
                     map.put("sleepTime", dateMap.get("close"));
                     logger.info("开关机=code：" + pad.getCode() + "，set: sleepTime=" + end_time + ", wakeTime " + start_time);
                     padServerMQTT.publishMessage(mqtt.getSubTopic() + "/" + pad.getClientId(), map);
+                }
+
+            }else if (StringUtils.isNotEmpty(canting)) {//将教室设为餐厅
+                logger.info("批量设置-餐厅 step2:canting=" + canting);
+
+                Room room = new Room();
+                room.setId(pad.getRoomId());
+                room.setrType(Integer.parseInt(canting));
+                res = roomService.updateRoom(room);
+                if (res > 0) {
+                    tmpPad.setIsCanTing("2".equals(canting) ? "是" : "否");
+                    res = padService.update(tmpPad);
                 }
 
             }

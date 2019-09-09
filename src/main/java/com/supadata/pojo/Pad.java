@@ -37,6 +37,8 @@ public class Pad {
 
     private Integer pAudio;
 
+    private String isCanTing;
+
     public Integer getId() {
         return id;
     }
@@ -171,5 +173,13 @@ public class Pad {
 
     public void setpAudio(Integer pAudio) {
         this.pAudio = pAudio;
+    }
+
+    public String getIsCanTing() {
+        return isCanTing;
+    }
+
+    public void setIsCanTing(String isCanTing) {
+        this.isCanTing = isCanTing;
     }
 }

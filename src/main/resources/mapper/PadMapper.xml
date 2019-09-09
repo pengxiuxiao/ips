@@ -19,6 +19,7 @@
     <result column="p_state" property="pState" jdbcType="VARCHAR" />
     <result column="p_click_card" property="pClickCard" jdbcType="VARCHAR" />
     <result column="p_audio" property="pAudio" jdbcType="INTEGER" />
+    <result column="is_canting" property="isCanTing" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="JoinResultMap" type="com.supadata.pojo.Pad" >
     <id column="id" property="id" jdbcType="INTEGER" />
@@ -38,10 +39,11 @@
     <result column="p_state" property="pState" jdbcType="VARCHAR" />
     <result column="p_click_card" property="pClickCard" jdbcType="VARCHAR" />
     <result column="p_audio" property="pAudio" jdbcType="INTEGER" />
+    <result column="is_canting" property="isCanTing" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, p_ip, code, client_id, room_name, room_id, p_location, p_status, update_time, start_time,
-    end_time, is_black, p_remark, p_module, p_state, p_click_card, p_audio
+    end_time, is_black, p_remark, p_module, p_state, p_click_card, p_audio, is_canting
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -142,6 +144,9 @@
       <if test="pAudio != null" >
         p_audio,
       </if>
+      <if test="isCanTing != null" >
+        is_canting,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -195,6 +200,9 @@
       <if test="pAudio != null" >
         #{pAudio,jdbcType=INTEGER},
       </if>
+      <if test="isCanTing != null" >
+        #{isCanTing,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.supadata.pojo.Pad" >
@@ -247,6 +255,9 @@
       </if>
       <if test="pAudio != null" >
         p_audio = #{pAudio,jdbcType=INTEGER},
+      </if>
+      <if test="isCanTing != null" >
+        is_canting = #{isCanTing,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

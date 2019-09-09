@@ -34,6 +34,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 ,{field:'pState', title: '是否锁屏', sort: true}
                 ,{field:'pAudio', title: '音量大小', sort: true}
                 ,{field:'pModule', title: '显示模块', sort: true}
+                ,{field:'isCanTing', title: '是否餐厅', sort: true}
                 // ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 180}
             ]]
         ,page: true
@@ -324,6 +325,52 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                     } else {
                         layer.msg(res.msg);
                     }
+                }else {
+                    layer.msg('操作失败');
+                }
+            },
+            error:function (err) {
+                layer.msg('操作失败');
+            }
+        })
+        return false;
+    });
+
+
+    //批量设置餐厅
+    $('.bdpad-canting').on('click', function(){
+        var checkStatus = table.checkStatus('pads');
+        var data = JSON.stringify(checkStatus.data);
+        if (data == "" || data == "[]") {
+            layer.msg('请先选择Pad！');
+            return;
+        }
+        localStorage.setItem('canting_idList',data);
+        //打开显示下拉框
+        layer.open({
+            type: 1,
+            title: false,
+            closeBtn: 0,
+            area: '516px',
+            shadeClose: true,
+            content: $('.set-canting')
+        });
+
+    });
+
+    //监听锁屏提交按钮
+    form.on('submit(addCantingbtn)', function(indata){
+        //ajax调用后台添加接口
+        $.ajax({
+            type:'post',
+            url: global + '/set/bscard',
+            data:{idList:localStorage.getItem("canting_idList"), user_id:user_id, canting:indata.field.canting},
+            dataType:'json',
+            success:function (res) {
+                if(res.code == 0){//0
+                    layer.msg('操作成功');
+                    layer.closeAll();
+                    $(".layui-laypage-btn").click();
                 }else {
                     layer.msg('操作失败');
                 }

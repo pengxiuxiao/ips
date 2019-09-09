@@ -24,4 +24,6 @@ public interface StudentCardMapper {
     List<StudentCard> selectAllList(Map<String, String> map);
 
     StudentCard selectByNumber(@Param("number") String number);
+
+    int deleteByCourseId(@Param("course_id") Integer course_id);
 }

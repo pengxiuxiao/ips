@@ -26,7 +26,7 @@ public interface CourseMapper {
 
     Course selectCourseByCNo(@Param("card_number") String card_number, @Param("currentDateTime") String currentDateTime);
 
-    List<Course> selectAllCourse(@Param("key") String key);
+    List<Course> selectAllCourse(@Param("key") String key, @Param("type") Integer type);
 
     int updateDeleteStatus(@Param("id") Integer id);
 

@@ -25,4 +25,6 @@ public interface IStudentCardService {
     List<StudentCard> selectAllList(Map<String, String> map);
 
     StudentCard selectByNumber(String number);
+
+    int deleteByCourseId(Integer course_id);
 }

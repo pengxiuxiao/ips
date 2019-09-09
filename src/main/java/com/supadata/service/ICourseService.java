@@ -42,7 +42,7 @@ public interface ICourseService {
      * @date: 2018/6/21 22:23
      * @param key
      */
-    List<Course> queryAllCourse(String key);
+    List<Course> queryAllCourse(String key,Integer type);
 
     /**
      * 功能描述:删除课程

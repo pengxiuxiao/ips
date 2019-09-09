@@ -26,7 +26,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 {type:'checkbox', fixed: 'left'}
                 ,{field:'id', title: 'id', width: 80}
                 ,{field:'cName', title: '培训名', sort: true}
-                ,{field:'cTypeDes', title: '培训类别', width: 120, sort: true}
+                // ,{field:'cTypeDes', title: '培训类别', width: 120, sort: true}
                 ,{field:'cWordSize', title: '文字大小', width: 120}
                 ,{field:'cRoomName', title: '所在教室', width: 260, sort: true}
                 // ,{field:'cStartTime', title: '开始时间', templet: '#cStartTime', width: 180} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增

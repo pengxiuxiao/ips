@@ -39,6 +39,10 @@
     delete from tb_student_card
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteByCourseId" parameterType="java.lang.Integer" >
+    delete from tb_student_card
+    where course_id = #{course_id}
+  </delete>
   <insert id="insert" parameterType="com.supadata.pojo.StudentCard" >
     insert into tb_student_card (id, student_name, card_number, 
       update_time, sc_remark)

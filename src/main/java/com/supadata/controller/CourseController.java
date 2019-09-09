@@ -100,10 +100,7 @@ public class CourseController {
             Workbook workbook = WorkbookFactory.create(FileUtils.openInputStream(targetFile));
             Room room = roomService.queryRoomById(Integer.parseInt(room_id));
             MsgJson res = courseService.handleCourseExcel(workbook, room);
-            if (room.getrType() == 2) {
-                room.setrType(1);
-                roomService.updateRoom(room);
-            }
+
             if (res.getCode() == 1) {
                 return res;
             }
@@ -147,7 +144,7 @@ public class CourseController {
         }
         PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
 //        PageHelper.startPage(page, limit);
-        List<Course> cources = courseService.queryAllCourse(key);
+        List<Course> cources = courseService.queryAllCourse(key, 0);
         for (Course cource : cources) {
             if (cource.getcType().equals(0)) {
                 cource.setcTypeDes("培训签到");

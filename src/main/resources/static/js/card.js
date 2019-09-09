@@ -27,7 +27,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 ,{field:'id', title: 'id', width: 80, sort: true}
                 ,{field:'studentName', title: '持卡人', sort: true}
                 ,{field:'cardNumber', title: '卡号1', sort: true}
-                // ,{field:'secretNumber', title: '卡号'}
+                ,{field:'courseName', title: '培训课程'}
                 ,{field:'updateTime', title: '操作时间', templet: '#createTime', sort: true}
                 ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 150}
             ]]

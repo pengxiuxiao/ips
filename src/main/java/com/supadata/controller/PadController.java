@@ -334,35 +334,21 @@ public class PadController {
             return MsgJson.success(seat,"操作成功！");
         }else {//餐厅
             Seat seat = new Seat();
-            Course course = courseService.queryCourseByRoomId(room_id);
             StudentCard studentCard = studentCardService.selectByNumber(card_number);
-
-            if(course == null){
-                return MsgJson.fail("未查到餐厅信息！");
-            }
             if(studentCard == null){
                 return MsgJson.fail("未查到卡片信息！");
             }
             if(studentCard.getCourseId() == null){
                 return MsgJson.fail("未查到课程信息！");
             }
+            Course course = courseService.queryById(studentCard.getCourseId());
+            if(course == null){
+                return MsgJson.fail("未查到课程！");
+            }
             course.getZaoTime();
             Date curDate = DateUtil.getCurDate();
             String type = DateUtil.judgeTimeType(DateUtil.getCurHms(),course.getZaoTime(),course.getWuTime(),course.getWanTime());
             Click click = new Click(studentCard.getStudentName(),card_number,studentCard.getCourseId(),studentCard.getCourseName(),curDate);
-            seat.setId(1);
-            seat.setCourseId(course.getId());
-            seat.setrRank("1*1");
-            seat.setLineRoadIndex("0");
-            seat.setColuRoadIndex("0");
-            seat.setsLine(1);
-            seat.setsColumn(1);
-            seat.setRoomId(room_id);
-            seat.setRoomName("");
-            seat.setUpdateTime(curDate);
-            seat.setrRankColum(1);
-            seat.setrRankLine(1);
-
 
             seat.setcTitle(studentCard.getCourseName());
             seat.setStuName(studentCard.getStudentName());

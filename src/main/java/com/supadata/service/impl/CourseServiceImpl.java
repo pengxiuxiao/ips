@@ -86,8 +86,8 @@ public class CourseServiceImpl implements ICourseService {
      * @param key
      */
     @Override
-    public List<Course> queryAllCourse(String key) {
-        return courseMapper.selectAllCourse(key);
+    public List<Course> queryAllCourse(String key, Integer type) {
+        return courseMapper.selectAllCourse(key,type);
     }
 
     /**

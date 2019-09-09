@@ -51,4 +51,9 @@ public class StudentCardServiceImpl implements IStudentCardService {
     public StudentCard selectByNumber(String number) {
         return studentCardMapper.selectByNumber(number);
     }
+
+    @Override
+    public int deleteByCourseId(Integer course_id) {
+        return studentCardMapper.deleteByCourseId(course_id);
+    }
 }

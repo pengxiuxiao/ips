@@ -100,8 +100,6 @@ public class DiningController {
         }
         Course course = new Course(name,Integer.parseInt(room_id),room.getrName(),0,Integer.parseInt(word_size),1,zao_time,wu_time,wan_time);
         int res = courseService.addCourse(course);
-        room.setrType(2);//标记为餐厅
-        res = roomService.updateRoom(room);
 
         return MsgJson.success("添加成功！");
     }
@@ -197,8 +195,7 @@ public class DiningController {
             key = "";
         }
         PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
-//        PageHelper.startPage(page, limit);
-        List<Course> cources = courseService.queryAllCourse(key);
+        List<Course> cources = courseService.queryAllCourse(key,1);
         PageInfo<Course> pageInfo = new PageInfo<>(cources);
         msg.setData(cources);
         msg.setCount(pageInfo.getTotal());
@@ -227,10 +224,8 @@ public class DiningController {
         }
         logger.info("删除课程:course_id=" + course_id );
         int res = courseService.deleteCourse(course_id);
-        if (res != 1) {
-            msg.setCode(1);
-            msg.setMsg("删除失败！");
-            return msg;
+        if (res != 0) {
+            res = studentCardService.deleteByCourseId(course_id);
         }
         return msg;
     }
@@ -258,6 +253,9 @@ public class DiningController {
             Integer id = Integer.valueOf(idObj.getString("id"));
             System.out.println(id);
             res = courseService.deleteCourse(id);
+            if (res != 0) {
+                res = studentCardService.deleteByCourseId(id);
+            }
         }
 
         if (res > 0) {

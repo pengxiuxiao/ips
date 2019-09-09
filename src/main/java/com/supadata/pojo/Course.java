@@ -32,6 +32,8 @@ public class Course {
     /** 0:培训打卡，1:就餐打卡*/
     private Integer cType;
 
+    private String cTypeDes;
+
     private String zaoTime;
 
     private String wuTime;
@@ -172,6 +174,14 @@ public class Course {
 
     public void setWanTime(String wanTime) {
         this.wanTime = wanTime;
+    }
+
+    public String getcTypeDes() {
+        return cTypeDes;
+    }
+
+    public void setcTypeDes(String cTypeDes) {
+        this.cTypeDes = cTypeDes;
     }
 
     public Course(String cName, Integer cRoomId, String cRoomName, Integer cStatus, Integer cWordSize, Integer cType,

@@ -81,7 +81,7 @@ public class ClickController {
      * @date: 2019/4/18 15:49
      */
     @RequestMapping("/export")
-    public void exportClicks(String user_id,  String key, HttpServletResponse response){
+    public void exportClicks(String user_id,  String key, String course_id,HttpServletResponse response){
         if (StringUtils.isEmpty(user_id)) {
             return;
         }
@@ -90,6 +90,7 @@ public class ClickController {
         }
         Map<String,String> map = new HashMap<>();
         map.put("key",key);
+        map.put("course_id",course_id);
         List<Click> clicks = clickService.queryAllClick(map);
         String sheetName = "签到表";
         String fileName = "签到记录表-" + DateUtil.getTimestamp();

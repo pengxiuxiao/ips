@@ -148,6 +148,13 @@ public class CourseController {
         PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
 //        PageHelper.startPage(page, limit);
         List<Course> cources = courseService.queryAllCourse(key);
+        for (Course cource : cources) {
+            if (cource.getcType().equals(0)) {
+                cource.setcTypeDes("培训签到");
+            }else{
+                cource.setcTypeDes("餐厅签到");
+            }
+        }
         PageInfo<Course> pageInfo = new PageInfo<>(cources);
         msg.setData(cources);
         msg.setCount(pageInfo.getTotal());

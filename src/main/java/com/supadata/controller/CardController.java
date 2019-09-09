@@ -56,7 +56,7 @@ public class CardController {
         }
 
         String secretNo = com.supadata.utils.StringUtil.HexToLongString(com.supadata.utils.StringUtil.overturnHexString(cardNo));
-        StudentCard card = studentCardService.selectByNumber(cardNo);
+        StudentCard card = studentCardService.selectByNumber(secretNo);
         if (card == null) {
             StudentCard sc = new StudentCard(name, cardNo, secretNo, DateUtil.getCurDate());
             Course course = courseService.queryById(Integer.parseInt(course_id));
@@ -73,7 +73,7 @@ public class CardController {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                return MsgJson.fail("姓名重复!");
+                return MsgJson.fail("卡号重复!");
             }
 
         }
@@ -169,7 +169,8 @@ public class CardController {
         }
         Map<String, String> map = new HashedMap();
         if (StringUtils.isNotEmpty(number)) {
-            map.put("key", number);
+            String secretNo = com.supadata.utils.StringUtil.HexToLongString(com.supadata.utils.StringUtil.overturnHexString(number));
+            map.put("key", secretNo);
         }
         PageHelper.startPage(page,limit);
         List<StudentCard> cards = studentCardService.selectAllList(map);

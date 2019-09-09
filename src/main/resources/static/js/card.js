@@ -56,7 +56,9 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         $(".add-card form input").each(function(){
             $(this).val('');
         });
-        getCourse();
+
+        var course_id = localStorage.getItem("tem_course_id");
+        getCourse(course_id);
         layer.open({
             type: 1,
             title: false,
@@ -81,6 +83,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             $(".layui-input.cId").val(obj.data.id);
             $(".layui-input.name").val(obj.data.studentName);
             $(".layui-input.number").val(obj.data.cardNumber);
+            getCourse(obj.data.courseId)
         }else if(obj.event === 'del'){//删除
             layer.confirm('确认删除 ' + obj.data.cardNumber + '？', function(index){
                 $.ajax({
@@ -193,13 +196,13 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 }
             },
             error:function (err) {
-                $.toptip('请求失败，请稍后重试！', 'error');
+                layer.msg(res.msg);
             }
         })
     }
 
     //查询学校所有课程
-    function getCourse() {
+    function getCourse(course_id) {
         $.ajax({
             url:global + '/course/list',
             type:"post",
@@ -209,7 +212,6 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 var data = data.data;
                 var coursehtml = '<option value="0" class="tdstyle texts">'+"请选择课程"+'</option>';
                 for (var i = 0; i < data.length; i++){
-                    var course_id = localStorage.getItem("tem_course_id");
                     if (course_id != null && course_id != undefined && course_id != '' && course_id == data[i].id) {
                         coursehtml += '<option value="'+data[i].id+'"selected class="tdstyle texts">'+data[i].cName+'</option>';
                     } else {

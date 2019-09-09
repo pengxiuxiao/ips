@@ -26,7 +26,7 @@
     from tb_student_card
     where 1 = 1
     <if test="key != null" >
-      and card_number = #{key}
+      and secret_number = #{key}
     </if>
   </select>
   <select id="selectByNumber" resultMap="BaseResultMap" >

@@ -84,7 +84,7 @@
     from tb_course
     where  c_room_id = #{roomId}
     and c_status = 0
-    and cs.c_type = '0'
+    and c_type = '0'
     order by update_time desc
     limit 1
   </select>

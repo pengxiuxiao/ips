@@ -124,7 +124,7 @@ public class CourseController {
      */
     @RequestMapping("/list")
     public @ResponseBody
-    MsgJson listCourse (String user_id, String key, String page, String limit) {
+    MsgJson listCourse (String user_id, String key, String type, String page, String limit) {
         MsgJson msg = new MsgJson(0,"查询成功！");
         if (StringUtils.isEmpty(user_id)) {
             msg.setCode(1);
@@ -144,7 +144,7 @@ public class CourseController {
         }
         PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
 //        PageHelper.startPage(page, limit);
-        List<Course> cources = courseService.queryAllCourse(key, 0);
+        List<Course> cources = courseService.queryAllCourse(key, Integer.parseInt(type));
         for (Course cource : cources) {
             if (cource.getcType().equals(0)) {
                 cource.setcTypeDes("培训签到");

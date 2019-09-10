@@ -38,13 +38,13 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         });
 
     };
-    var url = global + '/course/list' + '?user_id='+ user_id;
+    var url = global + '/course/list' + '?user_id='+ user_id + '&type=0';
     getOrderList(url);
 
     //搜索
     $(".doSearch").click(function () {
         var content = $(".keyWord").val();
-        url = global + '/course/list' + '?user_id='+ user_id + '&key=' + content;
+        url = global + '/course/list' + '?user_id='+ user_id + '&key=' + content + '&type=0';
         getOrderList(url);
     })
 

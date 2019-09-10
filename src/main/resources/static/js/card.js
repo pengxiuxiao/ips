@@ -206,7 +206,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         $.ajax({
             url:global + '/course/list',
             type:"post",
-            data:{"user_id":localStorage.getItem("user_id"),page:1,limit:100},
+            data:{"user_id":localStorage.getItem("user_id"),type:1,page:1,limit:100},
             dataType:"json",
             success:function (data) {
                 var data = data.data;

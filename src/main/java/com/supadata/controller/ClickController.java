@@ -7,6 +7,8 @@ import com.supadata.service.IClickService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.ExcelUtil;
 import com.supadata.utils.MsgJson;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +96,15 @@ public class ClickController {
         List<Click> clicks = clickService.queryAllClick(map);
         String sheetName = "签到表";
         String fileName = "签到记录表-" + DateUtil.getTimestamp();
-
+        for (Click click : clicks) {
+            if ("1".equals(click.getcType())) {
+                click.setcType("早餐");
+            } else if ("2".equals(click.getcType())) {
+                click.setcType("午餐");
+            } else {
+                click.setcType("晚餐");
+            }
+        }
 
         int columnNumber = 6;
         int[] columnWidth = {5, 30, 20, 20, 10, 20,};
@@ -107,5 +117,32 @@ public class ClickController {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * 功能描述:批量删除教室列表数据
+     *
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2018/12/11 16:39
+     */
+    @RequestMapping(value = "/bdc")
+    public MsgJson batchDeleteClick(String idList, String user_id) {
+        if (StringUtils.isEmpty(user_id) || com.github.pagehelper.util.StringUtil.isEmpty(idList) || "[]".equals(idList)) {
+            return MsgJson.fail("参数包含空值！");
+        }
+        logger.info("批量删除考勤信息:idList=" + idList );
+        JSONArray idArry = JSONArray.fromObject(idList);
+        int res = 0;
+        for (Object idData : idArry) {
+            JSONObject idObj = JSONObject.fromObject(idData);
+            Integer id = Integer.valueOf(idObj.getString("id"));
+            res = clickService.deleteByPrimaryKey(id);
+        }
+        if (res > 0) {
+            return MsgJson.success( "考勤删除成功");
+        }
+        return MsgJson.success( "考勤删除失败");
     }
 }

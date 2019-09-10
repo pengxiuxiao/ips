@@ -127,8 +127,12 @@ public class StringUtil {
 		System.out.println(data.length());
 		long longNo = Long.parseLong(data);
 		data = Long.toHexString(longNo);
+//		data = "06971c5d";
 		//01234567
 		//12345678
+		if (data.length() == 7) {
+			data = "0" + data;
+		}
 		StringBuffer sb = new StringBuffer(data.substring(data.length()-2));
 		sb = sb.append(new StringBuffer(data.substring(data.length()-4, data.length()-2)));
 		sb = sb.append(new StringBuffer(data.substring(data.length()-6, data.length()-4)));
@@ -139,7 +143,10 @@ public class StringUtil {
 	
 	
 	public static void main(String[] args) {
-		
+
+		String aa = overturnHexString("0110566493");
+		String dd = HexToLongString(aa);
+		System.out.println(dd);
 
 	}
 

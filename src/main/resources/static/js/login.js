@@ -44,7 +44,7 @@ $(function () {
                      if(res.code == 0){//0
                     	 var user_id = res.data.user_id;
                     	 localStorage.setItem('user_id',user_id);
-                    	 window.location.href = 'index.html';
+                    	 window.location.href = 'card.html';
                      }else {
                          $.toptip(res.message, 'error');
                      }

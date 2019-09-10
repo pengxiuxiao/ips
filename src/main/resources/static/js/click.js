@@ -11,6 +11,19 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         window.location.href = 'login.html';
     }
     //首次渲染列表
+    if (user_id == "1007") {
+        $(".index").css("display","block");
+        $(".course").css("display","block");
+        $(".room").css("display","block");
+        $(".setting").css("display","block");
+        $(".pad").css("display","block");
+        $(".app").css("display","block");
+        $(".dining").css("display","block");
+        $(".card").css("display","block");
+    }else{
+        $(".dining").css("display","block");
+        $(".card").css("display","block");
+    }
 
     var startDate = '', endDate = '';
     var course_id = GetQueryString("course");
@@ -243,7 +256,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             //ajax调用后台添加接口
             $.ajax({
                 type:'post',
-                url: global + '/course/bdc',
+                url: global + '/click/bdc',
                 data:{idList:data, user_id:user_id},
                 dataType:'json',
                 success:function (res) {

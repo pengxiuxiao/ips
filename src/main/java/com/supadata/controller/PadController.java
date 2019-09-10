@@ -185,11 +185,17 @@ public class PadController {
         if (StringUtils.isEmpty(pwd)) {
             return MsgJson.fail("密码为空！");
         }
-        if (!"admin".equals(name) || !"admin".equals(pwd)) {
-            return MsgJson.fail("用户密码错误！");
-        }
         Map<String, Integer> map = new HashMap<>();
-        map.put("user_id", 1007);
+
+        if ("admin".equals(name) && "admin".equals(pwd)) {
+            map.put("user_id", 1007);
+            return MsgJson.success(map,"操作成功！");
+        }
+        if ("canting".equals(name) && "canting".equals(pwd)) {
+            map.put("user_id", 1008);
+            return MsgJson.success(map,"操作成功！");
+        }
+
         return MsgJson.success(map,"操作成功！");
     }
 

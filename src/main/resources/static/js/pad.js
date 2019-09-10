@@ -11,6 +11,19 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         window.location.href = 'login.html';
     }
     //首次渲染列表
+    if (user_id == "1007") {
+        $(".index").css("display","block");
+        $(".course").css("display","block");
+        $(".room").css("display","block");
+        $(".setting").css("display","block");
+        $(".pad").css("display","block");
+        $(".app").css("display","block");
+        $(".dining").css("display","block");
+        $(".card").css("display","block");
+    }else{
+        $(".dining").css("display","block");
+        $(".card").css("display","block");
+    }
 
     var startDate = '', endDate = '';
 
@@ -25,7 +38,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             ,limit: 90
             ,cols: [[
                 {type:'checkbox', fixed: 'left'}
-                ,{field:'id', title: 'id', width: 80, sort: true}
+                ,{field:'roomId', title: 'roomId', width: 80, sort: true}
                 ,{field:'code', title: 'code标识', sort: true}
                 ,{field:'roomName', title: '所属教室', sort: true}
                 // ,{field:'pLocation', title: '安装位置'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增

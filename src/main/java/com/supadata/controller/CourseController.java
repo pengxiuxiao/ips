@@ -147,9 +147,11 @@ public class CourseController {
         List<Course> cources = courseService.queryAllCourse(key, Integer.parseInt(type));
         for (Course cource : cources) {
             if (cource.getcType().equals(0)) {
-                cource.setcTypeDes("培训签到");
+                cource.setcTypeDes("打卡查座次");
+            }else if(cource.getcType().equals(1)){
+                cource.setcTypeDes("餐厅打卡");
             }else{
-                cource.setcTypeDes("餐厅签到");
+                cource.setcTypeDes("上课签到");
             }
         }
         PageInfo<Course> pageInfo = new PageInfo<>(cources);

@@ -133,32 +133,42 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">文字大小：</label>
-            <div class="layui-input-block">
-                <input type="text" name="word_size" lay-verify="word_size" autocomplete="off" placeholder="请输入字号大小" class="layui-input word_size">
-                <input type="text" style="display:none" name="nId" lay-verify="nId" autocomplete="off" class="layui-input nId">
+            <label class="layui-form-label">培训类型：</label>
+            <div class="layui-input-inline">
+                <select name="course_type" id="course_type" lay-verify="required" lay-filter="course_type" class="layui-input course_type">
+                    <option value="1" selected>餐厅打卡</option>
+                    <option value="2">上课签到</option>
+                </select>
             </div>
         </div>
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label">文字大小：</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<input type="text" name="word_size" lay-verify="word_size" autocomplete="off" placeholder="请输入字号大小" class="layui-input word_size">-->
+                <!--<input type="text" style="display:none" name="nId" lay-verify="nId" autocomplete="off" class="layui-input nId">-->
+            <!--</div>-->
+        <!--</div>-->
         <div class="layui-form-item">
             <label class="layui-form-label">培训班名：</label>
             <div class="layui-input-block">
                 <input name="name" id="name" lay-filter="name" lay-verify="name" placeholder="请输入培训班名称"class="layui-input name">
+                <input type="text" style="display:none" name="nId" lay-verify="nId" autocomplete="off" class="layui-input nId">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">早餐区间：</label>
+            <label class="layui-form-label">上午区间：</label>
             <div class="layui-input-inline">
                 <input type="text" class="layui-input zao_time" id="zao_time" placeholder="yyyy-MM-dd HH:mm:ss">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">午餐区间：</label>
+            <label class="layui-form-label">下午区间：</label>
             <div class="layui-input-inline">
                 <input type="text" class="layui-input wu_time" id="wu_time" placeholder="yyyy-MM-dd HH:mm:ss">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">晚餐区间：</label>
+            <label class="layui-form-label">晚上区间：</label>
             <div class="layui-input-inline">
                 <input type="text" class="layui-input wan_time" id="wan_time" placeholder="yyyy-MM-dd HH:mm:ss">
             </div>

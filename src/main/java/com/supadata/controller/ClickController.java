@@ -3,7 +3,9 @@ package com.supadata.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.supadata.pojo.Click;
+import com.supadata.pojo.Course;
 import com.supadata.service.IClickService;
+import com.supadata.service.ICourseService;
 import com.supadata.utils.DateUtil;
 import com.supadata.utils.ExcelUtil;
 import com.supadata.utils.MsgJson;
@@ -38,6 +40,9 @@ public class ClickController {
     @Autowired
     public IClickService clickService;
 
+    @Autowired
+    public ICourseService courseService;
+
     /**
      * 功能描述: 查询打卡列表
      * @auther: pxx
@@ -60,13 +65,15 @@ public class ClickController {
         PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(limit));
         List<Click> clicks = clickService.queryAllClick(map);
         PageInfo<Click> pageInfo = new PageInfo<>(clicks);
+
+        Course course = courseService.queryById(Integer.parseInt(course_id));
         for (Click click : clicks) {
             if ("1".equals(click.getcType())) {
-                click.setcType("早餐");
+                click.setcType(course.getcType().equals(1) ? "早餐" : "上午");
             } else if ("2".equals(click.getcType())) {
-                click.setcType("午餐");
+                click.setcType(course.getcType().equals(1) ? "午餐" : "下午");
             } else {
-                click.setcType("晚餐");
+                click.setcType(course.getcType().equals(1) ? "晚餐" :  "晚课");
             }
         }
         MsgJson msg = new MsgJson(0,"请求成功！");
@@ -96,13 +103,15 @@ public class ClickController {
         List<Click> clicks = clickService.queryAllClick(map);
         String sheetName = "签到表";
         String fileName = "签到记录表-" + DateUtil.getTimestamp();
+
+        Course course = courseService.queryById(Integer.parseInt(course_id));
         for (Click click : clicks) {
             if ("1".equals(click.getcType())) {
-                click.setcType("早餐");
+                click.setcType(course.getcType().equals(1) ? "早餐" : "上午");
             } else if ("2".equals(click.getcType())) {
-                click.setcType("午餐");
+                click.setcType(course.getcType().equals(1) ? "午餐" : "下午");
             } else {
-                click.setcType("晚餐");
+                click.setcType(course.getcType().equals(1) ? "晚餐" :  "晚课");
             }
         }
 

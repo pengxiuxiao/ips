@@ -217,7 +217,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     //查询学校所有课程
     function getCourse(course_id) {
         $.ajax({
-            url:global + '/course/list',
+            url:global + '/dining/list',
             type:"post",
             data:{"user_id":localStorage.getItem("user_id"),type:1,page:1,limit:100},
             dataType:"json",

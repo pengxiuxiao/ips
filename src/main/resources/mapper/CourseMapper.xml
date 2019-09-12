@@ -88,6 +88,15 @@
     order by update_time desc
     limit 1
   </select>
+  <select id="selectClickCardCourse" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_course
+    where  c_room_id = #{roomId}
+    and c_type =  #{type}
+    order by update_time desc
+    limit 1
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from tb_course
     where id = #{id,jdbcType=INTEGER}

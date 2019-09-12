@@ -115,7 +115,7 @@
                     <button class="layui-btn bdpad-state" data-type="getCheckData">锁屏设置</button>
                     <button class="layui-btn bdpad-audio" data-type="getCheckData">音量设置</button>
                     <button class="layui-btn bdpad-module" data-type="getCheckData">显示模块</button>
-                    <button class="layui-btn bdpad-canting" data-type="getCheckData">餐厅设置</button>
+                    <button class="layui-btn bdpad-canting" data-type="getCheckData">教室类型</button>
                 </div>
                 <table class="layui-hide" id="pads" lay-filter="order-form"></table>
 
@@ -287,11 +287,12 @@
     <form class="layui-form" action="" id="cantingForm" onsubmit="return false">
 
         <div class="layui-form-item">
-            <label class="layui-form-label">置为餐厅：</label>
+            <label class="layui-form-label">教室类型：</label>
             <div class="layui-input-inline">
                 <select name="canting" id="canting" lay-verify="required" lay-filter="canting" class="layui-input canting">
-                    <option value="2" selected>是</option>
-                    <option value="1">否</option>
+                    <option value="0" selected>普通教室</option>
+                    <option value="1">餐厅打卡</option>
+                    <option value="2">上课签到</option>
                 </select>
             </div>
         </div>

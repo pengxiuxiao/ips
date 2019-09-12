@@ -36,6 +36,7 @@
     where c_type = #{type}
     and click_time between #{startDate} and #{endDate}
     and card_number = #{cardNumber}
+    and course_id = #{courseId}
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select

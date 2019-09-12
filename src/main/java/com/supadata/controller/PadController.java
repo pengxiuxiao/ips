@@ -323,7 +323,7 @@ public class PadController {
         }
         //TODO 先查询教室属性 是否是餐厅
         Room room = roomService.queryRoomById(room_id);
-        if (room != null && room.getrType() == 1) {//普通教室
+        if (room != null && room.getrType() == 0) {//普通教室
             //通过考勤卡找到人或者要上的课程，取最近的或者正在上的课程，只取一条,先查当前教室有无课程，有则取当前教室，无则查询其他教室
             //先根据卡号查当前教室的课程
             Course course = courseService.queryStudentComingCourse(card_number, room_id, DateUtil.getCurrentDateTime());
@@ -338,7 +338,7 @@ public class PadController {
             seat.setcTitle(course.getcName());
             seat.setsFlag("0");//培训打卡
             return MsgJson.success(seat,"操作成功！");
-        }else {//餐厅
+        }else if(room != null && room.getrType() == 1) {//餐厅
             Seat seat = new Seat();
             StudentCard studentCard = studentCardService.selectByNumber(card_number);
             if(studentCard == null){
@@ -351,7 +351,7 @@ public class PadController {
             if(course == null){
                 return MsgJson.fail("未查到课程！");
             }
-            course.getZaoTime();
+
             Date curDate = DateUtil.getCurDate();
             String type = DateUtil.judgeTimeType(DateUtil.getCurHms(),course.getZaoTime(),course.getWuTime(),course.getWanTime());
             Click click = new Click(studentCard.getStudentName(),card_number,studentCard.getCourseId(),studentCard.getCourseName(),curDate);
@@ -361,7 +361,7 @@ public class PadController {
             seat.setCardNo(card_number);
             seat.setsFlag("1");
             seat.setsCall("学员");
-            seat.setsMsg("祝您用餐愉快");
+            seat.setsMsg(course.getcType() == 1 ? "祝您用餐愉快" : "签到成功");
 
             if (!"0".equals(type)) {//无效打卡，不入库
                 click.setcType(type);
@@ -371,6 +371,48 @@ public class PadController {
                 map.put("startDate", DateUtil.getCurrentDate() + " 00:00:01");
                 map.put("endDate", DateUtil.getCurrentDate() + " 23:59:59");
                 map.put("cardNumber", card_number);
+                map.put("courseId", course.getId()+"");
+                Click isClick = clickService.selectByTypeAndDate(map);
+                if (isClick == null) {
+                    clickService.insertSelective(click);
+                }
+            }
+            return MsgJson.success(seat,"操作成功！");
+        }else {//上课打卡
+            Seat seat = new Seat();
+            //直接查当前教室的打卡课程
+            Course course = courseService.queryClickCardCourse( room_id,"2");
+            //根据课程id查询座次表信息
+            if (course == null) {
+                return MsgJson.fail("暂未查到您的培训课！");
+            }
+            StudentCard studentCard = studentCardService.selectByNumber(card_number);
+            if(studentCard == null){
+                return MsgJson.fail("未查到卡片信息！");
+            }
+            if(studentCard.getCourseId() == null){
+                return MsgJson.fail("未查到课程信息！");
+            }
+            Date curDate = DateUtil.getCurDate();
+            String type = DateUtil.judgeTimeType(DateUtil.getCurHms(),course.getZaoTime(),course.getWuTime(),course.getWanTime());
+            Click click = new Click(studentCard.getStudentName(),card_number,course.getId(),course.getcName(),curDate);
+
+            seat.setcTitle(studentCard.getCourseName());
+            seat.setStuName(studentCard.getStudentName());
+            seat.setCardNo(card_number);
+            seat.setsFlag("1");
+            seat.setsCall("学员");
+            seat.setsMsg(course.getcType() == 1 ? "祝您用餐愉快" : "签到成功");
+
+            if (!"0".equals(type)) {//无效打卡，不入库
+                click.setcType(type);
+                //根据区间查询是否已经有记录了
+                Map<String, String> map = new HashMap<>();
+                map.put("type",type);
+                map.put("startDate", DateUtil.getCurrentDate() + " 00:00:01");
+                map.put("endDate", DateUtil.getCurrentDate() + " 23:59:59");
+                map.put("cardNumber", card_number);
+                map.put("courseId", course.getId()+"");
                 Click isClick = clickService.selectByTypeAndDate(map);
                 if (isClick == null) {
                     clickService.insertSelective(click);

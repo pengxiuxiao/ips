@@ -31,4 +31,6 @@ public interface CourseMapper {
     int updateDeleteStatus(@Param("id") Integer id);
 
     Course selectCourseByRoomId(@Param("roomId") Integer roomId);
+
+    Course selectClickCardCourse(@Param("roomId") Integer room_id, @Param("type") String type);
 }

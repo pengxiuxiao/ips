@@ -104,4 +104,13 @@ public interface ICourseService {
      * @date: 2019/9/6 10:59
      */
     int updateCourse(Course course);
+
+    /**
+     * 功能描述:查询打卡课程
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/9/11 16:15
+     */
+    Course queryClickCardCourse(Integer room_id, String type);
 }

@@ -37,13 +37,14 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             ,limit: 90
             ,cols: [[
                 {type:'checkbox', fixed: 'left'}
-                ,{field:'id', title: 'id', width: 80}
-                ,{field:'cName', title: '培训名'}
-                ,{field:'cWordSize', title: '文字大小'}
-                ,{field:'cRoomName', title: '所在教室'}
-                ,{field:'zaoTime', title: '早餐区间', templet: '#zaoTime'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
-                ,{field:'wuTime', title: '午餐区间', templet: '#wuTime'}
-                ,{field:'wanTime', title: '晚餐区间', templet: '#wanTime'}
+                ,{field:'id', title: 'id', width: 80, sort: true}
+                ,{field:'cName', title: '培训名', sort: true}
+                ,{field:'cTypeDes', title: '培训类别', sort: true}
+                // ,{field:'cWordSize', title: '文字大小'}
+                ,{field:'cRoomName', title: '所在教室', sort: true}
+                ,{field:'zaoTime', title: '上午区间', templet: '#zaoTime'} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
+                ,{field:'wuTime', title: '下午区间', templet: '#wuTime'}
+                ,{field:'wanTime', title: '晚上区间', templet: '#wanTime'}
                 ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 200}
             ]]
             ,page: true
@@ -170,7 +171,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                     $(".layui-input.zao_time").val(obj.data.zaoTime);
                     $(".layui-input.wu_time").val(obj.data.wuTime);
                     $(".layui-input.wan_time").val(obj.data.wanTime);
-                    $(".layui-input.word_size").val(obj.data.cWordSize);
+                    setcTypeSelect(obj.data.cType);
                 },
                 error:function (err) {
                     layer.msg('操作失败，请稍后重试！', 'error');
@@ -288,13 +289,13 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         })
     }
 
-    //初始化讲师下拉菜单
+    //初始化教室下拉菜单
     function setRoomSelect(rooms,rid){
         var roomshtml;
         if(rid == ''){
-            roomshtml = '<option value="0" selected >'+"请选择餐厅"+'</option>';
+            roomshtml = '<option value="0" selected >'+"请选择教室"+'</option>';
         }else{
-            roomshtml = '<option value="0" >'+"请选择餐厅"+'</option>';
+            roomshtml = '<option value="0" >'+"请选择教室"+'</option>';
         }
         for (var i = 0; i < rooms.length; i++){
             if(rid == rooms[i].id){
@@ -304,6 +305,18 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             }
         }
         $("#room_id").html(roomshtml);
+        form.render();
+    };
+
+    //初始化培训类型下拉菜单
+    function setcTypeSelect(type){
+        var roomshtml;
+        if (type == "1") {
+            roomshtml = '<option value="1" selected>餐厅打卡</option>';
+        } else {
+            roomshtml = '<option value="2" selected>上课签到</option>'
+        }
+        $("#course_type").html(roomshtml);
         form.render();
     };
 });

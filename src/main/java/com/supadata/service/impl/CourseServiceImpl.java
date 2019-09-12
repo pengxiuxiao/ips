@@ -178,6 +178,11 @@ public class CourseServiceImpl implements ICourseService {
         return courseMapper.updateByPrimaryKeySelective(course);
     }
 
+    @Override
+    public Course queryClickCardCourse(Integer room_id, String type) {
+        return courseMapper.selectClickCardCourse(room_id, type);
+    }
+
     /**
      * 功能描述: 读取sheet1
      * @auther: pxx

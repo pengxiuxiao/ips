@@ -47,7 +47,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 ,{field:'pState', title: '是否锁屏', sort: true}
                 ,{field:'pAudio', title: '音量大小', sort: true}
                 ,{field:'pModule', title: '显示模块', sort: true}
-                ,{field:'isCanTing', title: '是否餐厅', sort: true}
+                ,{field:'isCanTing', title: '教室类型', sort: true}
                 // ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 180}
             ]]
         ,page: true

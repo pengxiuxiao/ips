@@ -150,7 +150,13 @@ public class SetController {
                 room.setrType(Integer.parseInt(canting));
                 res = roomService.updateRoom(room);
                 if (res > 0) {
-                    tmpPad.setIsCanTing("2".equals(canting) ? "是" : "否");
+                    if ("0".equals(canting)) {
+                        tmpPad.setIsCanTing("普通教室");
+                    }else if ("1".equals(canting)) {
+                        tmpPad.setIsCanTing("餐厅打卡");
+                    }else {
+                        tmpPad.setIsCanTing("上课签到");
+                    }
                     res = padService.update(tmpPad);
                 }
 

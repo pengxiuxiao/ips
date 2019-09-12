@@ -29,7 +29,7 @@ public class Course {
 
     private String cRemark;
 
-    /** 0:培训打卡，1:就餐打卡*/
+    /** 0:打卡查座次，1:就餐打卡，2:上课签到 */
     private Integer cType;
 
     private String cTypeDes;

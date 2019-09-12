@@ -397,7 +397,7 @@ public class PadController {
             String type = DateUtil.judgeTimeType(DateUtil.getCurHms(),course.getZaoTime(),course.getWuTime(),course.getWanTime());
             Click click = new Click(studentCard.getStudentName(),card_number,course.getId(),course.getcName(),curDate);
 
-            seat.setcTitle(studentCard.getCourseName());
+            seat.setcTitle(course.getcName());
             seat.setStuName(studentCard.getStudentName());
             seat.setCardNo(card_number);
             seat.setsFlag("1");

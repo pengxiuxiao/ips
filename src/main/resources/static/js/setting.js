@@ -121,7 +121,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
         $.ajax({
             type:'post',
             url: global + '/set/bscard',
-            data:{idList:localStorage.getItem("card_idList"), user_id:user_id, status:indata.field.card},
+            data:{idList:localStorage.getItem("card_idList"), user_id:user_id, status:indata.field.card1},
             dataType:'json',
             success:function (res) {
                 if(res.code == 0){//0

@@ -73,7 +73,7 @@ public class ClickController {
             } else if ("2".equals(click.getcType())) {
                 click.setcType(course.getcType().equals(1) ? "午餐" : "下午");
             } else {
-                click.setcType(course.getcType().equals(1) ? "晚餐" :  "晚课");
+                click.setcType(course.getcType().equals(1) ? "晚餐" :  "晚上");
             }
         }
         MsgJson msg = new MsgJson(0,"请求成功！");
@@ -111,7 +111,7 @@ public class ClickController {
             } else if ("2".equals(click.getcType())) {
                 click.setcType(course.getcType().equals(1) ? "午餐" : "下午");
             } else {
-                click.setcType(course.getcType().equals(1) ? "晚餐" :  "晚课");
+                click.setcType(course.getcType().equals(1) ? "晚餐" :  "晚上");
             }
         }
 

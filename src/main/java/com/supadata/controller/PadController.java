@@ -404,20 +404,24 @@ public class PadController {
             seat.setsCall("学员");
             seat.setsMsg(course.getcType() == 1 ? "祝您用餐愉快" : "签到成功");
 
+            int res = 0;
             if (!"0".equals(type)) {//无效打卡，不入库
                 click.setcType(type);
                 //根据区间查询是否已经有记录了
                 Map<String, String> map = new HashMap<>();
-                map.put("type",type);
+                map.put("type", type);
                 map.put("startDate", DateUtil.getCurrentDate() + " 00:00:01");
                 map.put("endDate", DateUtil.getCurrentDate() + " 23:59:59");
                 map.put("cardNumber", card_number);
-                map.put("courseId", course.getId()+"");
+                map.put("courseId", course.getId() + "");
                 Click isClick = clickService.selectByTypeAndDate(map);
                 if (isClick == null) {
-                    clickService.insertSelective(click);
+                    res = clickService.insertSelective(click);
                 }
+            } else {
+                seat.setsMsg(course.getcType() == 1 ? "祝您用餐愉快" : "未到签到时间");
             }
+
             return MsgJson.success(seat,"操作成功！");
         }
 

@@ -92,7 +92,8 @@
     select
     <include refid="Base_Column_List" />
     from tb_course
-    where  c_room_id = #{roomId}
+    where  c_status = 0
+    and c_room_id = #{roomId}
     and c_type =  #{type}
     order by update_time desc
     limit 1

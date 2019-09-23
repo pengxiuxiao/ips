@@ -362,6 +362,7 @@ public class PadController {
             seat.setsFlag("1");
             seat.setsCall("学员");
             seat.setsMsg(course.getcType() == 1 ? "祝您用餐愉快" : "签到成功");
+            seat.setuPic(studentCard.getScRemark());
 
             if (!"0".equals(type)) {//无效打卡，不入库
                 click.setcType(type);
@@ -403,6 +404,7 @@ public class PadController {
             seat.setsFlag("1");
             seat.setsCall("学员");
             seat.setsMsg(course.getcType() == 1 ? "祝您用餐愉快" : "签到成功");
+            seat.setuPic(studentCard.getScRemark());
 
             int res = 0;
             if (!"0".equals(type)) {//无效打卡，不入库

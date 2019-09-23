@@ -45,6 +45,8 @@ public class Seat {
 
     private String sMsg;
 
+    private String uPic;
+
 
 
     public Integer getId() {
@@ -213,5 +215,13 @@ public class Seat {
 
     public void setsMsg(String sMsg) {
         this.sMsg = sMsg;
+    }
+
+    public String getuPic() {
+        return uPic;
+    }
+
+    public void setuPic(String uPic) {
+        this.uPic = uPic;
     }
 }

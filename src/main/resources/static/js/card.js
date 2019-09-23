@@ -169,8 +169,10 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     //监听添加提交按钮
     form.on('submit(addbtn)', function(indata){
         //data.field是提交数据
-        console.log(indata.field);
-        postRoomEdit(indata);
+        var dataj = new FormData($("#cardForm")[0]);
+        dataj.append("user_id",user_id);
+
+        postRoomEdit(indata, dataj);
         return false;
     });
 
@@ -181,16 +183,14 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
 
 
     //添加、编辑学生信息post请求
-    function postRoomEdit(indata) {
+    function postRoomEdit(indata,dataj) {
         var c_id = indata.field.cId;
-        var postData;
         var postUrl;
         if(c_id == ""){
             postUrl = addCard;
-            postData = {cardNo:indata.field.number, name:indata.field.name, course_id:indata.field.course_id, user_id:user_id};
         }else{
             postUrl = editCard;
-            postData = {id:indata.field.cId, name:indata.field.name, course_id:indata.field.course_id, user_id:user_id};
+            dataj.append("id", c_id);
         }
         localStorage.setItem("tem_course_id",indata.field.course_id);
         //ajax调用后台添加接口
@@ -198,8 +198,10 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             type:'post',
             async: false,
             url:postUrl,
-            data:postData,
+            data:dataj,
             dataType:'json',
+            processData: false,
+            contentType: false,
             success:function (res) {
                 if(res.code == 0){//0
                     layer.msg('操作成功');

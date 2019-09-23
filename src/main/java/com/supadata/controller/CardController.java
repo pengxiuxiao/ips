@@ -163,14 +163,18 @@ public class CardController {
      * @date: 2019/4/18 15:49
      */
     @RequestMapping("/list")
-    public MsgJson listCards(String user_id, Integer page, Integer limit, String number){
+    public MsgJson listCards(String user_id, Integer page, Integer limit, String key){
         if (StringUtils.isEmpty(user_id)) {
             return MsgJson.fail("参数包含空值！");
         }
         Map<String, String> map = new HashedMap();
-        if (StringUtils.isNotEmpty(number)) {
-            String secretNo = com.supadata.utils.StringUtil.HexToLongString(com.supadata.utils.StringUtil.overturnHexString(number));
-            map.put("key", secretNo);
+        if (StringUtils.isNotEmpty(key)) {
+            try {
+                String secretNo = com.supadata.utils.StringUtil.HexToLongString(com.supadata.utils.StringUtil.overturnHexString(key));
+                map.put("number", secretNo);
+            } catch (Exception e) {
+                map.put("name", key);
+            }
         }
         PageHelper.startPage(page,limit);
         List<StudentCard> cards = studentCardService.selectAllList(map);
@@ -188,11 +192,20 @@ public class CardController {
      * @date: 2019/4/18 15:49
      */
     @RequestMapping("/export")
-    public void exportCards(String user_id,  HttpServletResponse response){
+    public void exportCards(String user_id,String key,  HttpServletResponse response){
         if (StringUtils.isEmpty(user_id)) {
             return;
         }
-        List<StudentCard> cards = studentCardService.selectAllList(new HashedMap());
+        Map<String, String> map = new HashedMap();
+        if (StringUtils.isNotEmpty(key)) {
+            try {
+                String secretNo = com.supadata.utils.StringUtil.HexToLongString(com.supadata.utils.StringUtil.overturnHexString(key));
+                map.put("number", secretNo);
+            } catch (Exception e) {
+                map.put("name", key);
+            }
+        }
+        List<StudentCard> cards = studentCardService.selectAllList(map);
         String sheetName = "付费用户";
         String fileName = "卡片信息表-" + DateUtil.getTimestamp();
 //        int columnNumber = 3;

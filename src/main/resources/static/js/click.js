@@ -214,7 +214,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     //导出
     $(".out-click-btn").click(function () {
         var content = $(".keyWord").val();
-        window.location.href = global + "/click/export?user_id=" + user_id + "&course_id=" + course_id;
+        window.location.href = global + "/click/export?user_id=" + user_id + '&key=' + content  + "&course_id=" + course_id;
     })
 
 //    切换消息类型，刷新数据

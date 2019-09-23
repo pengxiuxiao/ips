@@ -74,6 +74,10 @@ public class FileUtil {
 		}
 		return true;
 	}
-	
+
+	public static void main(String[] args) {
+		String a1 = new String("aa");
+		a1.intern();
+	}
 	
 }

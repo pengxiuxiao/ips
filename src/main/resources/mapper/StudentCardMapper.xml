@@ -25,8 +25,11 @@
     <include refid="Base_Column_List" />
     from tb_student_card
     where 1 = 1
-    <if test="key != null" >
-      and secret_number = #{key}
+    <if test="number != null" >
+      and secret_number = #{number}
+    </if>
+    <if test="name != null" >
+      and CONCAT(IFNULL(`student_name`,'')) like CONCAT('%', #{name}, '%')
     </if>
   </select>
   <select id="selectByNumber" resultMap="BaseResultMap" >

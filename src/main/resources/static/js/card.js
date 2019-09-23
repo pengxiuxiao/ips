@@ -53,13 +53,14 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
     //搜索
     $(".doSearch").click(function () {
         var content = $(".keyWord").val();
-        url = global + '/card/list' + '?user_id='+ user_id + '&number=' + content;
+        url = global + '/card/list' + '?user_id='+ user_id + '&key=' + content;
         getCardList(url);
     })
 
     //导出
     $(".out-card-btn").click(function () {
-        window.location.href = global + "/card/export?user_id=" + user_id;
+        var content = $(".keyWord").val();
+        window.location.href = global + "/card/export?user_id=" + user_id + '&key=' + content;
     })
 
 

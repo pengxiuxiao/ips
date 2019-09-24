@@ -111,13 +111,20 @@ public class CardController {
      * @date: 2019/4/18 15:49
      */
     @RequestMapping("/edit")
-    public MsgJson editCard(String user_id, Integer id,  String name){
+    public MsgJson editCard(String user_id, Integer id,  String name,
+                            @RequestParam(value = "file", required = false) MultipartFile file){
         if (StringUtils.isEmpty(user_id) || id == null || StringUtils.isEmpty(name)) {
             return MsgJson.fail("参数包含空值！");
         }
         StudentCard sc = studentCardService.selectByPrimaryKey(id);
         if (sc == null) {
             return MsgJson.success( "卡片id有误！");
+        }
+        //存储文件
+        if (file.getSize() > 0) {
+            String fileName = file.getOriginalFilename();
+            String url = storageFile(sc.getCardNumber() + fileName.substring(fileName.lastIndexOf(".")), file);
+            sc.setScRemark(url);
         }
         sc.setStudentName(name);
         sc.setUpdateTime(DateUtil.getCurDate());

@@ -41,8 +41,9 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                 ,{field:'studentName', title: '持卡人', sort: true}
                 ,{field:'cardNumber', title: '卡号1', sort: true}
                 ,{field:'courseName', title: '培训课程'}
+                ,{field:'scRemark', title: '头像地址'}
                 ,{field:'updateTime', title: '操作时间', templet: '#createTime', sort: true}
-                ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 150}
+                ,{field:'', title: '操作', templet: '#barDemo', unresize: true, align: 'center', width: 180}
             ]]
         ,page: true
         });
@@ -97,6 +98,7 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
             $(".layui-input.cId").val(obj.data.id);
             $(".layui-input.name").val(obj.data.studentName);
             $(".layui-input.number").val(obj.data.cardNumber);
+            $("input[type='file']").val("");
             getCourse(obj.data.courseId)
         }else if(obj.event === 'del'){//删除
             layer.confirm('确认删除 ' + obj.data.cardNumber + '？', function(index){
@@ -119,6 +121,31 @@ layui.use(['element', 'table', 'laydate', 'jquery','upload'], function(){
                     }
                 })
             })
+        }else if(obj.event === 'preview'){
+
+            var preview = $("#preview");
+            var nUrl = obj.data.scRemark;
+            if (nUrl == '' || nUrl == null){
+                layer.msg('暂无图片');
+            }else {
+                preview.find('img').attr('src', nUrl);
+                layer.msg('正在加载图片···', {
+                    icon: 16
+                    ,shade: 0.01
+                });
+                setTimeout(function () {
+                    layer.open({
+                        type: 1,
+                        title: false,
+                        closeBtn: 0,
+                        area: '516px',
+                        skin: 'layui-layer-nobg', //没有背景色
+                        shadeClose: true,
+                        content: preview
+                    });
+                }, 2000);
+            }
+
         }
     })
 

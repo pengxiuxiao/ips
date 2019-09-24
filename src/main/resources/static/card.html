@@ -103,6 +103,7 @@
                 <!--</table>-->
                 <table class="layui-hide" id="cards" lay-filter="order-form"></table>
                 <script type="text/html" id="barDemo">
+                    <a class="layui-btn layui-btn-xs preview-a preview-hide" lay-event="preview">头像</a>
                     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
                 </script>
@@ -113,6 +114,10 @@
             </div>
         </div>
     </div>
+</div>
+
+<div id="preview" style="display: none">
+    <img src="" style="width: 100%" >
 </div>
 
 <div class="add-card">

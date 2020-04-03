@@ -1,6 +1,6 @@
 // var global = 'http://10.69.3.200:8080/ips';
-// var global = 'http://pengxiuxiao.55555.io';
-var global = 'http://pad.supadata.cn/ips';
+var global = 'http://pengxiuxiao.55555.io';
+// var global = 'http://pad.supadata.cn/ips';
 // var global = 'http://localhost:8080';
 
 

@@ -16,22 +16,31 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.ParseException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
+import org.apache.ibatis.annotations.Param;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -332,5 +341,62 @@ public class CardController {
         ResponseEntity<byte[]> response=new ResponseEntity<byte[]>(body, headers, statusCode);
         return response;
 
+    }
+
+    /**
+     * 功能描述:同步接收卡片列表信息
+     * @auther: pxx
+     * @param:
+     * @return:
+     * @date: 2019/4/18 15:49
+     */
+    @RequestMapping(value = "/synchci",method = RequestMethod.POST)
+    public MsgJson synchronizeCardsInfo(HttpServletRequest request){
+        String datas = getParm(request);
+
+        if (StringUtils.isEmpty(datas)) {
+            return MsgJson.fail("参数包含空值！");
+        }
+        System.out.println(datas);
+        JSONObject fromObject = JSONObject.fromObject(datas);
+        JSONArray jsonArray = fromObject.getJSONArray("datas");
+
+        for (int i = 0; i < jsonArray.size();i ++){
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            String name = jsonObject.getString("name");
+            String number = jsonObject.getString("number");
+            System.out.println("name=" + name + ",number="+number);
+        }
+
+        MsgJson msgJson = MsgJson.success(null, "接收成功！");
+        return msgJson;
+
+    }
+
+
+    /**
+     * 获取POST请求中Body参数
+     * @param request
+     * @return 字符串
+     */
+    public String getParm(HttpServletRequest request) {
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new InputStreamReader(request.getInputStream(), "UTF-8"));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        String line = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 }

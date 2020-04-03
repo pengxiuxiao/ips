@@ -51,8 +51,15 @@
 
 		<!-- 指定数据库表,domainObjectName生成实体等名字模板 -->
 
-
-		<table tableName="tb_click" domainObjectName="Click"
+		<table tableName="tb_room_setting" domainObjectName="RoomSetting"
+			   enableCountByExample="false" enableUpdateByExample="false"
+			   enableDeleteByExample="false" enableSelectByExample="false"
+			   selectByExampleQueryId="false" />
+		<table tableName="tb_room_notice" domainObjectName="RoomNotice"
+			   enableCountByExample="false" enableUpdateByExample="false"
+			   enableDeleteByExample="false" enableSelectByExample="false"
+			   selectByExampleQueryId="false" />
+		<table tableName="tb_mesage" domainObjectName="Message"
 			   enableCountByExample="false" enableUpdateByExample="false"
 			   enableDeleteByExample="false" enableSelectByExample="false"
 			   selectByExampleQueryId="false" />

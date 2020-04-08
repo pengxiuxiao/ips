@@ -364,12 +364,27 @@ public class CardController {
         for (int i = 0; i < jsonArray.size();i ++){
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             String name = jsonObject.getString("name");
-            String number = jsonObject.getString("number");
-            System.out.println("name=" + name + ",number="+number);
-        }
+            if (StringUtils.isEmpty(name)) {
+                return MsgJson.fail("name为空！");
+            }
 
-        MsgJson msgJson = MsgJson.success(null, "接收成功！");
-        return msgJson;
+            String number = jsonObject.getString("number");
+            if (StringUtils.isEmpty(number)) {
+                return MsgJson.fail("number为空！");
+            }
+
+            String startDate = jsonObject.getString("startDate");
+            if (StringUtils.isEmpty(startDate)) {
+                return MsgJson.fail("startDate为空！");
+            }
+
+            String endDate = jsonObject.getString("endDate");
+            if (StringUtils.isEmpty(endDate)) {
+                return MsgJson.fail("endDate为空！");
+            }
+            System.out.println("name=" + name + ",number="+number+ ",startDate="+startDate+ ",endDate="+endDate);
+        }
+        return MsgJson.success( "接收成功！");
 
     }
 

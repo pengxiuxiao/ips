@@ -220,6 +220,7 @@ public class AppController {
     MsgJson AppCheck(HttpServletRequest request){
         MsgJson msg = new MsgJson(0,"请求成功!");
         String code = request.getParameter("code");
+
         if (StringUtils.isEmpty(code)) {
            return null;
         }
